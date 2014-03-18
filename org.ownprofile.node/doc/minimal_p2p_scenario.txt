@@ -1,0 +1,16 @@
+a minimal p2p setup
+========================
+
+lenny = localhost:9080
+carl  = localhost:9090
+------------------------
+
+// lenny: createNewProfile
+lenny@hal:~$  curl -X POST -H "Content-Type: application/json" -d '{"firstName":"Lenny","lastName":"Leonard"}' http://localhost:9080/webapi/owner/profiles
+
+
+- carl.createNewProfile
+- carl.addPeer(lenny)  // peerClient(lenny).getProfiles 
+- carl.getAddressbook() => contains lenny 
+- lenny.editProfile()
+- carl.addressbook.getContact(lenny).refresh()
