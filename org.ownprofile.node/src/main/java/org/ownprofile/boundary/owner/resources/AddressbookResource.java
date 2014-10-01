@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -31,9 +32,6 @@ import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileSource;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
 @Path(BoundaryConstants.RESOURCEPATH_OWNER_ADDRESSBOOK)
 public class AddressbookResource {
 
@@ -54,15 +52,9 @@ public class AddressbookResource {
 		final List<ContactEntity> contacts = this.addressbookService.getContacts();
 
 		final MyUriBuilderCallback uriBuilderCallback = new MyUriBuilderCallback(uriInfo);
-		
-		// TODO: use lambdas instead, once eclipse supports Java8 properly: http://wiki.eclipse.org/JDT_Core/Java8
-//		final List<Contact> result = contacts.stream().map(c -> converter.convertToView(c));
-		final List<ContactDTO> result = Lists.transform(contacts, new Function<ContactEntity, ContactDTO>() {
-			@Override
-			public ContactDTO apply(ContactEntity in) {
-				return contactConverter.convertToView(in, uriBuilderCallback);
-			}
-		});
+		final List<ContactDTO> result = contacts.stream()
+				.map(c -> contactConverter.convertToView(c, uriBuilderCallback))
+				.collect(Collectors.toList());
 		
 		return result;
 	}

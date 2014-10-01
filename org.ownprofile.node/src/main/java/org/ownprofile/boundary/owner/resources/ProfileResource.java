@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -25,9 +26,6 @@ import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-
 @Path(BoundaryConstants.RESOURCEPATH_OWNER_PROFILES)
 public class ProfileResource {
 
@@ -44,15 +42,10 @@ public class ProfileResource {
 
 		final MyUriBuilderCallback uriBuilderCallback = new MyUriBuilderCallback(uriInfo);
 		
-		// TODO: use lambdas instead, once eclipse supports Java8 properly: http://wiki.eclipse.org/JDT_Core/Java8
-//		final List<Profile> result = profiles.stream().map(p -> converter.convertToProfile(p));
-		final List<ProfileDTO> result = Lists.transform(profiles, new Function<ProfileEntity, ProfileDTO>() {
-			@Override
-			public ProfileDTO apply(ProfileEntity in) {
-				return converter.convertToView(in, uriBuilderCallback);
-			}
-		});
-
+		final List<ProfileDTO> result = profiles.stream()
+				.map(p -> converter.convertToView(p, uriBuilderCallback))
+				.collect(Collectors.toList());
+		
 		return result;
 	}
 	
