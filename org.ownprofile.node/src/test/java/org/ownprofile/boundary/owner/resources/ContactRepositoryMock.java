@@ -12,16 +12,19 @@ import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileSource;
 
-public class MockContactRepository extends ContactRepository {
+public class ContactRepositoryMock implements ContactRepository {
 	private long contactEntityCount;
-	private long profileEntityCount;   // TODO: possible conflict with MockProfileRepository?
+	private long profileEntityCount;   // TODO: possible conflict with MockProfileRepository?  -> parametrized with new IdGenerator class
 
 	private final List<ContactEntity> contacts = new ArrayList<ContactEntity>();
 	public ContactEntity addedContact;
 
 	private final Field contactIdField;
 	
-	public MockContactRepository() {
+	// TODO: start out with empty repo, expose <public> create method for kottan
+	// TODO: getContactById() - searchById
+	// TODO: getContactProfileById - searchById
+	public ContactRepositoryMock() {
 		this.contacts.add(createContactForKottan());
 		
 		try {

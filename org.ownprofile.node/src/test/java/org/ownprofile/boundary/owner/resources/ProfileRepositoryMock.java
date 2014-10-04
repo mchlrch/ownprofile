@@ -10,7 +10,7 @@ import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileRepository;
 import org.ownprofile.profile.entity.ProfileSource;
 
-public class MockProfileRepository extends ProfileRepository {
+public class ProfileRepositoryMock implements ProfileRepository {
 
 	private final List<ProfileEntity> ownerProfiles = Arrays.asList(new ProfileEntity[] { new TestProfileEntity(17L, ProfileSource.createLocalSource(), "private") });
 
@@ -21,7 +21,7 @@ public class MockProfileRepository extends ProfileRepository {
 	private final Field profileIdField;
 	private long profileEntityCount;
 	
-	public MockProfileRepository() {
+	public ProfileRepositoryMock() {
 		try {
 			this.profileIdField = ProfileEntity.class.getDeclaredField("id");
 			this.profileIdField.setAccessible(true);

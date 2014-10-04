@@ -6,7 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ownprofile.boundary.IntegrationTestSession;
+import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.setup.GuiceModule;
 
 import com.google.inject.Guice;
@@ -19,18 +19,18 @@ import com.google.inject.persist.PersistService;
 public class ContactRepositoryIT {
 
 	private static Injector injector;
-	private static ContactRepository repo;
+	private static ContactRepositoryJPA repo;
 
 	@BeforeClass
 	public static void before() {
-		injector = Guice.createInjector(IntegrationTestSession.defaultJpaModule, new GuiceModule() {
+		injector = Guice.createInjector(SystemTestSession.defaultJpaModule, new GuiceModule() {
 			@Override
 			protected void configure() {
-				bind(ContactRepository.class);
+				bind(ContactRepositoryJPA.class);
 			}
 		});
 
-		repo = injector.getInstance(ContactRepository.class);
+		repo = injector.getInstance(ContactRepositoryJPA.class);
 		injector.getInstance(PersistService.class).start();
 	}
 

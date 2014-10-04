@@ -6,20 +6,21 @@ import javax.ws.rs.client.WebTarget;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.ownprofile.boundary.BoundaryConstants;
-import org.ownprofile.boundary.IntegrationTestSession;
+import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.setup.GuiceModule;
 
 public class AddressbookResourceContextTest {
 
-	private static IntegrationTestSession session;
+	private static SystemTestSession session;
 
 	private final TestClient client;
 
 	@BeforeClass
 	public static void startJetty() throws Exception {
-		session = new IntegrationTestSession(IntegrationTestSession.defaultJpaModule, new GuiceModule());
+		session = new SystemTestSession(SystemTestSession.defaultJpaModule, new GuiceModule());
 		session.server.start();
 	}
 
@@ -34,7 +35,7 @@ public class AddressbookResourceContextTest {
 		this.client = new TestClient(session.testConfig.host, session.testConfig.port);
 	}
 
-	@Test
+	@Ignore @Test
 	public void shouldCallTestOperation() {
 		this.client.doTest();
 		

@@ -6,6 +6,8 @@ import org.ownprofile.boundary.owner.ContactConverter;
 import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ContactRepository;
+import org.ownprofile.profile.entity.ContactRepositoryJPA;
+import org.ownprofile.profile.entity.ProfileRepositoryJPA;
 import org.ownprofile.profile.entity.ProfileRepository;
 
 import com.google.inject.AbstractModule;
@@ -18,7 +20,7 @@ public class GuiceModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(GuiceFilter.class);
-		bind(PersistFilter.class);
+		bindPersistFilter();
 
 		bindContactRepository();
 		bindProfileRepository();
@@ -35,12 +37,16 @@ public class GuiceModule extends AbstractModule {
 		// TODO: http://code.google.com/p/google-guice/wiki/JPA -> comment about
 		// bindIntercepter() to autoclear jpa session
 	}
+	
+	protected void bindPersistFilter() {
+		bind(PersistFilter.class);
+	}
 
 	protected void bindContactRepository() {
-		bind(ContactRepository.class).in(ServletScopes.REQUEST);		
+		bind(ContactRepository.class).to(ContactRepositoryJPA.class).in(ServletScopes.REQUEST);		
 	}
 	
 	protected void bindProfileRepository() {
-		bind(ProfileRepository.class).in(ServletScopes.REQUEST);		
+		bind(ProfileRepository.class).to(ProfileRepositoryJPA.class).in(ServletScopes.REQUEST);		
 	}
 }

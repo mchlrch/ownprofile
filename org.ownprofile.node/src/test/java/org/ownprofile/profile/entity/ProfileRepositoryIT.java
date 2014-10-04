@@ -6,7 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ownprofile.boundary.IntegrationTestSession;
+import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.setup.GuiceModule;
 
 import com.google.inject.Guice;
@@ -19,18 +19,18 @@ import com.google.inject.persist.PersistService;
 public class ProfileRepositoryIT {
 
 	private static Injector injector;
-	private static ProfileRepository repo;
+	private static ProfileRepositoryJPA repo;
 
 	@BeforeClass
 	public static void before() {
-		injector = Guice.createInjector(IntegrationTestSession.defaultJpaModule, new GuiceModule() {
+		injector = Guice.createInjector(SystemTestSession.defaultJpaModule, new GuiceModule() {
 			@Override
 			protected void configure() {
-				bind(ProfileRepository.class);
+				bind(ProfileRepositoryJPA.class);
 			}
 		});
 
-		repo = injector.getInstance(ProfileRepository.class);
+		repo = injector.getInstance(ProfileRepositoryJPA.class);
 		injector.getInstance(PersistService.class).start();
 	}
 
