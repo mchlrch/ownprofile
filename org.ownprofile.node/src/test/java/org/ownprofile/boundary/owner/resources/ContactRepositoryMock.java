@@ -8,25 +8,19 @@ import java.util.Optional;
 
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepository;
-import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
-import org.ownprofile.profile.entity.ProfileSource;
 
 public class ContactRepositoryMock implements ContactRepository {
-	private long contactEntityCount;
-	private long profileEntityCount;   // TODO: possible conflict with MockProfileRepository?  -> parametrized with new IdGenerator class
+	public final IdSource contactIdSource = new IdSource();
 
 	private final List<ContactEntity> contacts = new ArrayList<ContactEntity>();
 	public ContactEntity addedContact;
 
 	private final Field contactIdField;
-	
-	// TODO: start out with empty repo, expose <public> create method for kottan
+
 	// TODO: getContactById() - searchById
 	// TODO: getContactProfileById - searchById
 	public ContactRepositoryMock() {
-		this.contacts.add(createContactForKottan());
-		
 		try {
 			this.contactIdField = ContactEntity.class.getDeclaredField("id");
 			this.contactIdField.setAccessible(true);
@@ -34,12 +28,12 @@ public class ContactRepositoryMock implements ContactRepository {
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
 	@Override
 	public List<ContactEntity> getAllContacts() {
 		return Collections.unmodifiableList(this.contacts);
 	}
-	
+
 	@Override
 	public Optional<ContactEntity> getContactById(long id) {
 		return Optional.of(contacts.get(0));
@@ -49,31 +43,23 @@ public class ContactRepositoryMock implements ContactRepository {
 	public void addContact(ContactEntity contact) {
 		initializeIdIfNull(contact);
 		
+		this.contacts.add(contact);
 		this.addedContact = contact;
 	}
-	
+
 	private void initializeIdIfNull(ContactEntity contact) {
 		try {
 			if (this.contactIdField.get(contact) == null) {
-				this.contactIdField.set(contact, contactEntityCount++);
+				this.contactIdField.set(contact, this.contactIdSource.nextId());
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
-		}		
+		}
 	}
-	
+
 	@Override
 	public Optional<ProfileEntity> getContactProfileById(long id) {
 		return Optional.of(this.contacts.get(0).getProfiles().get(0));
-	}
-	
-	private ContactEntity createContactForKottan() {
-		final TestContactEntity result = new TestContactEntity(contactEntityCount++, "kottan");
-		
-		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"Alfred\",\"lastName\":\"Kottan\",\"address\":{\"city\":\"Wien\"}}");
-		final TestProfileEntity profile = new TestProfileEntity(profileEntityCount++, result, ProfileSource.createLocalSource(), "privat", body);
-		
-		return result;
 	}
 
 }

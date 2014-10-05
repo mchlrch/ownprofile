@@ -22,7 +22,9 @@ import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
 import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.boundary.owner.client.OwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
+import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileSource;
 
 // each testmethod invokes at most one method on the resource
 public class AddressbookResourceIT {
@@ -35,6 +37,8 @@ public class AddressbookResourceIT {
 	private OwnerClient client;
 	private ContactRepositoryMock contactRepoMock;
 	private ProfileRepositoryMock profileRepoMock;
+	
+	private ContactEntity kottan;
 
 	@BeforeClass
 	public static void startJetty() throws Exception {
@@ -55,17 +59,29 @@ public class AddressbookResourceIT {
 		// TODO: once we have shared API <if>, we could dynamically proxy OwnerClient
 		// .. and assert that each method got invoked exactly once after all testcases have run
 		
-		contactRepoMock = new ContactRepositoryMock();
-		profileRepoMock = new ProfileRepositoryMock();
+		this.contactRepoMock = new ContactRepositoryMock();
+		this.profileRepoMock = new ProfileRepositoryMock();
 		repoProxies.setContactRepository(contactRepoMock);
 		repoProxies.setProfileRepository(profileRepoMock);
+		
+		this.kottan = createContactWithProfileForKottan();
+		this.contactRepoMock.addContact(kottan);
 	}
 	
 	@After
 	public void tearDown() {
 		repoProxies.clearDelegates();
 	}
-
+	
+	private ContactEntity createContactWithProfileForKottan() {
+		final TestContactEntity result = new TestContactEntity(this.contactRepoMock.contactIdSource.nextId(), "kottan");
+		
+		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"Alfred\",\"lastName\":\"Kottan\",\"address\":{\"city\":\"Wien\"}}");
+		final TestProfileEntity profile = new TestProfileEntity(this.profileRepoMock.profileIdSource.nextId(), result, ProfileSource.createLocalSource(), "privat", body);
+		
+		return result;
+	}
+	
 	// -------------------------------------------------------------
 	
 	@Test
@@ -83,11 +99,13 @@ public class AddressbookResourceIT {
 
 	@Test
 	public void shouldGetContactById() {
-		final ContactAggregateDTO contact = client.getContactById(1L);
+		final Long contactId = this.kottan.getId().get();
+		
+		final ContactAggregateDTO contact = client.getContactById(contactId);
 
 		Assert.assertNotNull(contact);
 
-		final ContactEntity expected = contactRepoMock.getContactById(1L).get();
+		final ContactEntity expected = contactRepoMock.getContactById(contactId).get();
 		ContactDtoOutCompareUtil.assertContentIsEqual(expected, contact);
 	}
 	
@@ -105,18 +123,19 @@ public class AddressbookResourceIT {
 
 	@Test
 	public void shouldGetContactProfileById() {
-		final ProfileDTO profile = client.getContactProfileById(1L);
+		final Long profileId = this.kottan.getProfiles().iterator().next().getId().get();
+		
+		final ProfileDTO profile = client.getContactProfileById(profileId);
 		
 		Assert.assertNotNull(profile);
 		
-		final ProfileEntity expected = contactRepoMock.getContactProfileById(1L).get();
+		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
 		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile);
 	}
 	
 	@Test
 	public void shouldAddNewContactProfile() {
-		final ContactEntity contact = contactRepoMock.getAllContacts().get(0);
-		final Long contactId = contact.getId().get();		
+		final Long contactId = this.kottan.getId().get();
 		Assert.assertNotNull(contactId);
 		
 		final Map<String, Object> body = Collections.emptyMap();
@@ -130,4 +149,5 @@ public class AddressbookResourceIT {
 		
 		Assert.assertNotNull(location);
 	}
+	
 }

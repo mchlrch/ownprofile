@@ -18,6 +18,7 @@ import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.OwnerClient;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileSource;
 
 // each testmethod invokes at most one method on the resource
 public class ProfileResourceIT {
@@ -45,13 +46,20 @@ public class ProfileResourceIT {
 	public void setup() {
 		this.client = session.getOrCreateOwnerClient();
 		
-		profileRepoMock = new ProfileRepositoryMock();
+		this.profileRepoMock = new ProfileRepositoryMock();
 		repoProxies.setProfileRepository(profileRepoMock);
+		
+		this.profileRepoMock.addProfile(createOwnerProfile());
 	}
-	
+
 	@After
 	public void tearDown() {
 		repoProxies.clearDelegates();
+	}
+	
+	private ProfileEntity createOwnerProfile() {
+		return new TestProfileEntity(this.profileRepoMock.profileIdSource.nextId(), ProfileSource.createLocalSource(), "private");
+		// new TestProfileEntity(92L, ProfileSource.createRemoteSource("http://localhost"), "professional");
 	}
 
 	// -------------------------------------------------------------

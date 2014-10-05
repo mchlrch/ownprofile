@@ -1,25 +1,23 @@
 package org.ownprofile.boundary.owner.resources;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileRepository;
-import org.ownprofile.profile.entity.ProfileSource;
 
 public class ProfileRepositoryMock implements ProfileRepository {
-
-	private final List<ProfileEntity> ownerProfiles = Arrays.asList(new ProfileEntity[] { new TestProfileEntity(17L, ProfileSource.createLocalSource(), "private") });
-
-	private final List<ProfileEntity> profiles = Arrays.asList(new ProfileEntity[] { new TestProfileEntity(92L, ProfileSource.createRemoteSource("http://localhost"), "professional") });
+	public final IdSource profileIdSource = new IdSource();
+	
+	private final List<ProfileEntity> ownerProfiles = new ArrayList<ProfileEntity>();
+//	private final List<ProfileEntity> profiles = new ArrayList<ProfileEntity>();
 
 	public ProfileEntity addedProfile;
 
 	private final Field profileIdField;
-	private long profileEntityCount;
 	
 	public ProfileRepositoryMock() {
 		try {
@@ -41,21 +39,22 @@ public class ProfileRepositoryMock implements ProfileRepository {
 	}
 	
 	// TODO: legacy? still needed?
-	public List<ProfileEntity> getProfiles() {
-		return Collections.unmodifiableList(this.profiles);
-	}
+//	public List<ProfileEntity> getProfiles() {
+//		return Collections.unmodifiableList(this.profiles);
+//	}
 
 	@Override
 	public void addProfile(ProfileEntity profile) {
 		initializeIdIfNull(profile);
 		
+		this.ownerProfiles.add(profile);
 		this.addedProfile = profile;
 	}
 	
 	private void initializeIdIfNull(ProfileEntity profile) {
 		try {
 			if (this.profileIdField.get(profile) == null) {
-				this.profileIdField.set(profile, profileEntityCount++);
+				this.profileIdField.set(profile, this.profileIdSource.nextId());
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
