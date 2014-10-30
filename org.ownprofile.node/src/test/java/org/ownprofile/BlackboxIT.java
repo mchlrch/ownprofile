@@ -27,7 +27,7 @@ public class BlackboxIT {
 	private final OwnerClient client;
 
 	public BlackboxIT() {
-		this.client = new OwnerClient("localhost", port);
+		this.client = new OwnerClient("http", "localhost", port);
 	}
 
 	@Test

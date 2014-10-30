@@ -20,7 +20,7 @@ import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
 import org.ownprofile.boundary.owner.ContactNewDTO;
-import org.ownprofile.boundary.owner.client.OwnerClient;
+import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
@@ -34,7 +34,7 @@ public class AddressbookResourceIT {
 	private static final RepoProxies repoProxies = new RepoProxies();
 	private static ServiceIntegrationTestSession session;
 
-	private OwnerClient client;
+	private TestOwnerClient client;
 	private ContactRepositoryMock contactRepoMock;
 	private ProfileRepositoryMock profileRepoMock;
 	
@@ -93,7 +93,7 @@ public class AddressbookResourceIT {
 		final Iterator<ContactEntity> expectedIt = contactRepoMock.getAllContacts().iterator();
 		final Iterator<ContactDTO> actualIt = contacts.iterator();
 		while (expectedIt.hasNext()) {
-			ContactDtoOutCompareUtil.assertContentIsEqual(expectedIt.next(), actualIt.next());
+			ContactDtoOutCompareUtil.assertContentIsEqual(expectedIt.next(), actualIt.next(), client.getUriBuilder());
 		}		
 	}
 
@@ -106,7 +106,7 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(contact);
 
 		final ContactEntity expected = contactRepoMock.getContactById(contactId).get();
-		ContactDtoOutCompareUtil.assertContentIsEqual(expected, contact);
+		ContactDtoOutCompareUtil.assertContentIsEqual(expected, contact, client.getUriBuilder());
 	}
 	
 	@Test
@@ -118,7 +118,9 @@ public class AddressbookResourceIT {
 		final ContactEntity actual = contactRepoMock.addedContact;
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newContact.petname, actual.getPetname());
-		Assert.assertNotNull(location);
+		
+		final URI expectedLocation = client.getUriBuilder().resolveContactURI(actual.getId().get());
+		Assert.assertEquals(expectedLocation, location);
 	}
 
 	@Test
@@ -130,7 +132,7 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(profile);
 		
 		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
-		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile);
+		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile, client.getUriBuilder());
 	}
 	
 	@Test
@@ -147,7 +149,8 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		
-		Assert.assertNotNull(location);
+		final URI expectedLocation = client.getUriBuilder().resolveContactProfileURI(actual.getId().get());
+		Assert.assertEquals(expectedLocation, location);
 	}
 	
 }

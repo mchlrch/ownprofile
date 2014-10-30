@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.jetty.server.Server;
 import org.ownprofile.JettyLauncher;
-import org.ownprofile.boundary.owner.client.OwnerClient;
+import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.boundary.peer.client.PeerClient;
 import org.ownprofile.setup.GuiceSetup;
 
@@ -13,17 +13,18 @@ import com.google.inject.Module;
 
 public class ServiceIntegrationTestSession {
 
-	protected static final String DEFAULT_HOST = "localhost";
-	protected static final int DEFAULT_PORT = JettyLauncher.DEFAULT_PORT;
+	public static final String DEFAULT_SCHEME = "http";
+	public static final String DEFAULT_HOST = "localhost";
+	public static final int DEFAULT_PORT = JettyLauncher.DEFAULT_PORT;
 
 	public final Server server;
 	public final IntegrationTestConfig testConfig;
 
-	private OwnerClient ownerClient;
+	private TestOwnerClient ownerClient;
 	private PeerClient peerClient;
 
 	public ServiceIntegrationTestSession(Module... modules) {
-		this(new IntegrationTestConfig(DEFAULT_HOST, DEFAULT_PORT), modules);
+		this(new IntegrationTestConfig(DEFAULT_SCHEME, DEFAULT_HOST, DEFAULT_PORT), modules);
 	}
 
 	public ServiceIntegrationTestSession(IntegrationTestConfig testConfig,
@@ -36,9 +37,11 @@ public class ServiceIntegrationTestSession {
 				guiceInjector);
 	}
 
-	public OwnerClient getOrCreateOwnerClient() {
+	public TestOwnerClient getOrCreateOwnerClient() {
 		if (this.ownerClient == null) {
-			this.ownerClient = new OwnerClient(this.testConfig.host,
+			this.ownerClient = new TestOwnerClient(
+					this.testConfig.scheme,
+					this.testConfig.host,
 					this.testConfig.port);
 		}
 		return this.ownerClient;

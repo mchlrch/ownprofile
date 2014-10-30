@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
+import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
@@ -22,15 +23,30 @@ public class ProfileConverter {
 		this.jsonMapper = jsonMapper;
 	}
 
+	// TODO: remove this method, one OwnerUriBuilder is established
 	public ProfileHeaderDTO convertToHeaderView(ProfileEntity in, UriBuilderCallback uriBuilderCallback) {
 		final URI href = uriBuilderCallback.buildProfileUri(in);
 		final ProfileHeaderDTO out = new ProfileHeaderDTO(in.getId().get(), href, in.getProfileName());
 		return out;
 	}
 	
-	public ProfileDTO convertToView(ProfileEntity in, UriBuilderCallback uriBuilderCallback) {
-		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilderCallback);
-		
+	public ProfileHeaderDTO convertToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final URI href = uriBuilder.resolveOwnerProfileURI(in.getId().get());
+		final ProfileHeaderDTO out = new ProfileHeaderDTO(in.getId().get(), href, in.getProfileName());
+		return out;
+	}
+	
+	public ProfileDTO convertToView(ProfileEntity in, UriBuilderCallback uriBuilder) {
+		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilder);
+		return convertToView(in, header);
+	}
+	
+	public ProfileDTO convertToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilder);
+		return convertToView(in, header);
+	}
+	
+	private ProfileDTO convertToView(ProfileEntity in, ProfileHeaderDTO header) {
 		Map<String, Object> body = Collections.emptyMap();
 		try {
 			body = jsonMapper.readValue(in.getBody().getValueAsJson(), new TypeReference<Map<String, Object>>() {

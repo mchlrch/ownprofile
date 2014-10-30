@@ -1,6 +1,7 @@
 package org.ownprofile.boundary.owner.resources;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
-import org.ownprofile.boundary.owner.client.OwnerClient;
+import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileSource;
 
@@ -26,7 +27,7 @@ public class ProfileResourceIT {
 	private static final RepoProxies repoProxies = new RepoProxies();
 	private static ServiceIntegrationTestSession session;
 
-	private OwnerClient client;
+	private TestOwnerClient client;
 	private ProfileRepositoryMock profileRepoMock;
 
 	@BeforeClass
@@ -43,7 +44,7 @@ public class ProfileResourceIT {
 	// =============================================================
 
 	@Before
-	public void setup() {
+	public void setup() throws URISyntaxException {
 		this.client = session.getOrCreateOwnerClient();
 		
 		this.profileRepoMock = new ProfileRepositoryMock();
@@ -73,18 +74,19 @@ public class ProfileResourceIT {
 		final Iterator<ProfileEntity> expectedIt = profileRepoMock.getAllOwnerProfiles().iterator();
 		final Iterator<ProfileDTO> actualIt = profiles.iterator();
 		while (expectedIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertContentIsEqual(expectedIt.next(), actualIt.next());
+			ProfileDtoOutCompareUtil.assertContentIsEqual(expectedIt.next(), actualIt.next(), client.getUriBuilder());
 		}
 	}
 	
 	@Test
 	public void shouldGetOwnerProfileById() {
-		final ProfileDTO profile = client.getOwnerProfileById(1L);
+		final Long profileId = 1L;
+		final ProfileDTO profile = client.getOwnerProfileById(profileId);
 
 		Assert.assertNotNull(profile);
 
-		final ProfileEntity expected = profileRepoMock.getOwnerProfileById(1L).get();				
-		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile);
+		final ProfileEntity expected = profileRepoMock.getOwnerProfileById(profileId).get();				
+		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile, client.getUriBuilder());
 	}
 
 	@Test
@@ -98,7 +100,8 @@ public class ProfileResourceIT {
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		
-		Assert.assertNotNull(location);
+		final URI expectedLocation = client.getUriBuilder().resolveOwnerProfileURI(actual.getId().get());
+		Assert.assertEquals(expectedLocation, location);
 	}
 
 }

@@ -46,36 +46,12 @@ public class AddressbookDomainService {
 		final Optional<ProfileEntity> result = this.contactRepo.getContactProfileById(profileId);
 		return result;
 	}
-
 	
 	public void addNewContactProfile(ProfileEntity newProfile) {
-		checkArgument(newProfile.isContactProfile(), "newProfile not a contactProfile");		
+		checkArgument(newProfile.isContactProfile(), "newProfile not a contactProfile");
+		
+		// TODO: rethink if ContactProfiles shouldn't be added via ContactRepository.addContactProfile()
 		this.profileRepo.addProfile(newProfile);
 	}
 	
-//	public ContactEntity getContact(Long id) {
-//		
-//		// TODO: profile filtering based on permissions
-//		
-//		final List<ProfileEntity> result = this.profileRepo.getAllProfiles();
-//		return result;
-//	}
-
-
-	
-//	public List<ProfileEntity> getProfiles() {
-//		
-//		// TODO: profile filtering based on permissions
-//		
-//		final List<ProfileEntity> result = this.profileRepo.getAllProfiles();
-//		return result;
-//	}
-//
-//	public void createNewProfile(ProfileEntity newProfile) {
-//		
-//		// TODO: avoid duplicates, assert uniqueID
-//		
-//		this.profileRepo.addProfile(newProfile);
-//	}
-
 }
