@@ -2,8 +2,9 @@ package org.ownprofile.boundary.owner.resources;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.ownprofile.profile.entity.ProfileEntity;
@@ -11,14 +12,13 @@ import org.ownprofile.profile.entity.ProfileRepository;
 
 public class ProfileRepositoryMock implements ProfileRepository {
 	public final IdSource profileIdSource = new IdSource();
-	
-	private final List<ProfileEntity> ownerProfiles = new ArrayList<ProfileEntity>();
-//	private final List<ProfileEntity> profiles = new ArrayList<ProfileEntity>();
+
+	private final Map<Long, ProfileEntity> ownerProfiles = new HashMap<Long, ProfileEntity>();
 
 	public ProfileEntity addedProfile;
 
 	private final Field profileIdField;
-	
+
 	public ProfileRepositoryMock() {
 		try {
 			this.profileIdField = ProfileEntity.class.getDeclaredField("id");
@@ -30,36 +30,37 @@ public class ProfileRepositoryMock implements ProfileRepository {
 
 	@Override
 	public List<ProfileEntity> getAllOwnerProfiles() {
-		return Collections.unmodifiableList(this.ownerProfiles);
+		return new ArrayList<ProfileEntity>(ownerProfiles.values());
 	}
-	
+
 	@Override
 	public Optional<ProfileEntity> getOwnerProfileById(long id) {
-		return Optional.of(ownerProfiles.get(0));
+		return Optional.ofNullable(ownerProfiles.get(id));
 	}
-	
-	// TODO: legacy? still needed?
-//	public List<ProfileEntity> getProfiles() {
-//		return Collections.unmodifiableList(this.profiles);
-//	}
 
 	@Override
 	public void addProfile(ProfileEntity profile) {
-		initializeIdIfNull(profile);
-		
-		this.ownerProfiles.add(profile);
+		final Long id = initializeIdIfNull(profile);
+		if (ownerProfiles.containsKey(id)) {
+			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with id[%d]", id));
+		}
+
+		this.ownerProfiles.put(id, profile);
 		this.addedProfile = profile;
 	}
-	
-	private void initializeIdIfNull(ProfileEntity profile) {
+
+	private Long initializeIdIfNull(ProfileEntity profile) {
 		try {
-			if (this.profileIdField.get(profile) == null) {
-				this.profileIdField.set(profile, this.profileIdSource.nextId());
+			Long id = (Long) profileIdField.get(profile);
+			if (id == null) {
+				id = this.profileIdSource.nextId();
+				this.profileIdField.set(profile, id);
 			}
+			return id;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		
+
 	}
 
 }
