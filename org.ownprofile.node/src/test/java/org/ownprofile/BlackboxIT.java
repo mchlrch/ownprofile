@@ -1,33 +1,49 @@
 package org.ownprofile;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactNewDTO;
-import org.ownprofile.boundary.owner.client.OwnerClient;
+import org.ownprofile.boundary.owner.client.TestOwnerClient;
+import org.ownprofile.setup.GuiceModule;
 
 /**
- * Tests an already running, possibly empty, ownprofile-node from the client-side.
- * - invokes for each resource one operation with persistent side-effect and affirms that side-effect is visible to the client
- * 
+ * Invokes operations with persistent side-effect from the client-side and
+ * affirms that side-effect is visible to the client.
  */
-@Ignore
 public class BlackboxIT {
 
-	// TODO: externalize
-	private static final int port = 9080;
+	private static SystemTestSession session;
+	
+	private TestOwnerClient client;
 
-	private final OwnerClient client;
+	@BeforeClass
+	public static void startJetty() throws Exception {
+		session = new SystemTestSession(SystemTestSession.defaultJpaModule, new GuiceModule());
+		session.server.start();
+	}
 
-	public BlackboxIT() {
-		this.client = new OwnerClient("http", "localhost", port);
+	@AfterClass
+	public static void stopJetty() throws Exception {
+		session.server.stop();
+	}
+
+	// =============================================================
+	
+	@Before
+	public void setup() {
+		this.client = session.getOrCreateOwnerClient();
 	}
 
 	@Test
@@ -35,40 +51,45 @@ public class BlackboxIT {
 		final List<ContactDTO> prevContacts = client.getContacts();
 
 		final ContactNewDTO newContact = new ContactNewDTO("homer");
-		client.addNewContact(newContact);
+		final URI newContactLocation = client.addNewContact(newContact);
 
-		// TODO: retrieve ID upon creation & also fetch Contact by ID
+		// fetch Contact by ID
+		final ContactDTO createdContact = client.doGet(ContactDTO.class, newContactLocation);
+		assertContentIsEqual(newContact, createdContact);
+
+		// fetch all Contacts
 		final List<ContactDTO> createdContacts = client.getContacts();
 		createdContacts.removeAll(prevContacts);
 
 		Assert.assertEquals(1, createdContacts.size());
-		final ContactDTO createdContact = createdContacts.get(0);
-
-		Assert.assertEquals(newContact.petname, createdContact.header.petname);
+		assertContentIsEqual(newContact, createdContacts.get(0));
 	}
 
 	// TODO: test proper exception handling
 	// @Test(expected=SomeExceptionType)
 	// public void connectShouldFail() {
 	// }
-	
+
 	@Test
 	public void shouldCreateAndGetOwnerProfile() {
 		final List<ProfileDTO> prevProfiles = client.getOwnerProfiles();
 
 		final ProfileNewDTO newProfile = this.createProfileOfHomerSimpson();
-		client.addNewOwnerProfile(newProfile);
+		final URI newProfileLocation = client.addNewOwnerProfile(newProfile);
 
-		// TODO: retrieve ID upon creation & also fetch Profile by ID
+		// fetch Profile by ID
+		final ProfileDTO createdProfile = client.doGet(ProfileDTO.class, newProfileLocation);
+		assertContentIsEqual(newProfile, createdProfile);
+
+		// fetch all Profiles
 		final List<ProfileDTO> createdProfiles = client.getOwnerProfiles();
 		createdProfiles.removeAll(prevProfiles);
 
 		Assert.assertEquals(1, createdProfiles.size());
-		final ProfileDTO createdProfile = createdProfiles.get(0);
-
-		Assert.assertEquals(newProfile.profileName, createdProfile.header.profileName);
-		Assert.assertEquals(newProfile.body, createdProfile.body);
+		assertContentIsEqual(newProfile, createdProfiles.get(0));
 	}
+
+	// ---------------------------------------------------
 
 	private ProfileNewDTO createProfileOfHomerSimpson() {
 		final Map<String, Object> body = new HashMap<String, Object>();
@@ -86,5 +107,20 @@ public class BlackboxIT {
 		return result;
 	}
 
+	private static void assertContentIsEqual(ContactNewDTO expected, ContactDTO actual) {
+		Assert.assertNotNull(expected);
+		Assert.assertNotNull(actual);
+
+		// TODO: use ContactDtoOutCompareUtil ... or similar
+		Assert.assertEquals(expected.petname, actual.header.petname);
+	}
+
+	private static void assertContentIsEqual(ProfileNewDTO expected, ProfileDTO actual) {
+		Assert.assertNotNull(expected);
+		Assert.assertNotNull(actual);
+
+		Assert.assertEquals(expected.profileName, actual.header.profileName);
+		Assert.assertEquals(expected.body, actual.body);
+	}
 
 }
