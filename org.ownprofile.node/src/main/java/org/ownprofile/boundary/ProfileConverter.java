@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
+import org.ownprofile.boundary.peer.PeerUriBuilder;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,27 +24,26 @@ public class ProfileConverter {
 	public ProfileConverter(ObjectMapper jsonMapper) {
 		this.jsonMapper = jsonMapper;
 	}
-
-	// TODO: remove this method, one OwnerUriBuilder is established
-	public ProfileHeaderDTO convertToHeaderView(ProfileEntity in, UriBuilderCallback uriBuilderCallback) {
-		final URI href = uriBuilderCallback.buildProfileUri(in);
-		final ProfileHeaderDTO out = new ProfileHeaderDTO(in.getId().get(), href, in.getProfileName());
-		return out;
-	}
 	
 	public ProfileHeaderDTO convertToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final URI href = uriBuilder.resolveOwnerProfileURI(in.getId().get());
-		final ProfileHeaderDTO out = new ProfileHeaderDTO(in.getId().get(), href, in.getProfileName());
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createOwnerProfile(in.getId().get(), in.getHandle().get(), href, in.getProfileName());
 		return out;
 	}
 	
-	public ProfileDTO convertToView(ProfileEntity in, UriBuilderCallback uriBuilder) {
+	public ProfileHeaderDTO convertToPeerHeaderView(ProfileEntity in, PeerUriBuilder uriBuilder) {
+		final URI href = uriBuilder.resolveProfileURI(in.getHandle().get());
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createPeerProfile(in.getHandle().get(), href, in.getProfileName());
+		return out;
+	}
+		
+	public ProfileDTO convertToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilder);
 		return convertToView(in, header);
 	}
 	
-	public ProfileDTO convertToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
-		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilder);
+	public ProfileDTO convertToPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertToPeerHeaderView(in, uriBuilder);
 		return convertToView(in, header);
 	}
 	
@@ -63,14 +64,14 @@ public class ProfileConverter {
 	public ProfileEntity createEntityForOwnerProfile(ProfileNewDTO in) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
 		final ProfileSource src = ProfileSource.createLocalSource();
-		final ProfileEntity out = new ProfileEntity(src, in.profileName, body);
+		final ProfileEntity out = ProfileEntity.createOwnProfile(src, in.profileName, body);
 		return out;
 	}
 	
 	// TODO: make sure, this method ist ONLY used for creating new profiles !!!
-	public ProfileEntity createEntityForContactProfile(ContactEntity contact, ProfileNewDTO in, ProfileSource src) {
+	public ProfileEntity createEntityForContactProfile(ContactEntity contact, ProfileNewDTO in, ProfileHandle handle, ProfileSource src) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
-		final ProfileEntity out = new ProfileEntity(contact, src, in.profileName, body);
+		final ProfileEntity out = ProfileEntity.createContactProfile(contact, handle, src, in.profileName, body);
 		return out;
 	}
 	
@@ -85,9 +86,4 @@ public class ProfileConverter {
 		}		
 	}
 	
-	// ------------------------------------------------
-	public static interface UriBuilderCallback {
-		public URI buildProfileUri(ProfileEntity profile);
-	}
-
 }

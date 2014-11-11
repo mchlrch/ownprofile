@@ -24,7 +24,11 @@ import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
+import org.ownprofile.profile.entity.ProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
+import org.ownprofile.profile.entity.RepoProxies;
+import org.ownprofile.profile.entity.TestProfileEntity;
 
 // each testmethod invokes at most one method on the resource
 public class AddressbookResourceIT {
@@ -77,7 +81,7 @@ public class AddressbookResourceIT {
 		final TestContactEntity result = new TestContactEntity(this.contactRepoMock.contactIdSource.nextId(), "kottan");
 		
 		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"Alfred\",\"lastName\":\"Kottan\",\"address\":{\"city\":\"Wien\"}}");
-		final TestProfileEntity profile = new TestProfileEntity(this.profileRepoMock.profileIdSource.nextId(), result, ProfileSource.createLocalSource(), "privat", body);
+		TestProfileEntity.createContactProfile(this.profileRepoMock.profileIdSource.nextId(), result, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "privat", body);
 		
 		return result;
 	}
@@ -132,7 +136,7 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(profile);
 		
 		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
-		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile, client.getUriBuilder());
+		ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
 	}
 	
 	@Test

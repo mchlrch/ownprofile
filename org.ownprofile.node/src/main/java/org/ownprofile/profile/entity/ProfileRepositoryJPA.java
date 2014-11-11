@@ -17,14 +17,25 @@ public class ProfileRepositoryJPA implements ProfileRepository {
 	@Transactional
 	public List<ProfileEntity> getAllOwnerProfiles() {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL");
-		final List queryResult = q.getResultList();
+		final List<?> queryResult = q.getResultList();
 		return (List<ProfileEntity>) queryResult;
 	}
 	
 	@Transactional
 	public Optional<ProfileEntity> getOwnerProfileById(long id) {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL AND p.id = " + id);
-		final List queryResult = q.getResultList();
+		return extractSingleResult(q);
+	}
+	
+	
+	@Transactional
+	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
+		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL AND p.handle = " + handle);
+		return extractSingleResult(q);
+	}
+	
+	private Optional<ProfileEntity> extractSingleResult(Query q) {
+		final List<?> queryResult = q.getResultList();
 		if (queryResult.isEmpty()) {
 			return Optional.empty();
 		} else if (queryResult.size() == 1) {

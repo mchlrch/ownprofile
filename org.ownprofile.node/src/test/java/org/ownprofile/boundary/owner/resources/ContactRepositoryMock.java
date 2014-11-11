@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepository;
+import org.ownprofile.profile.entity.IdSource;
 import org.ownprofile.profile.entity.ProfileEntity;
 
 public class ContactRepositoryMock implements ContactRepository {

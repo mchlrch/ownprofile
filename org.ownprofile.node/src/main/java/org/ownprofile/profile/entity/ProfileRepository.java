@@ -9,6 +9,8 @@ public interface ProfileRepository {
 
 	public Optional<ProfileEntity> getOwnerProfileById(long id);
 
+	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle);
+
 	public void addProfile(ProfileEntity profile);
 
 }

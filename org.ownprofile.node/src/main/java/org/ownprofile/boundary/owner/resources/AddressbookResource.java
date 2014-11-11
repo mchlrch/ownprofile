@@ -2,7 +2,6 @@ package org.ownprofile.boundary.owner.resources;
 
 import static org.ownprofile.boundary.BoundaryConstants.CONTACT_ID;
 import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
-import static org.ownprofile.boundary.BoundaryConstants.RESOURCEPATH_OWNER_ADDRESSBOOK;
 
 import java.net.URI;
 import java.util.List;
@@ -31,9 +30,10 @@ import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
 
-@Path(RESOURCEPATH_OWNER_ADDRESSBOOK)
+@Path("/owner/addressbook")
 public class AddressbookResource {
 
 	// TODO: sub resource (locator) for addressbook-bound profiles?
@@ -115,8 +115,9 @@ public class AddressbookResource {
 		
 		// TODO: handle remote source
 		final ProfileSource profileSource = ProfileSource.createLocalSource();
+		final ProfileHandle handle = ProfileHandle.createRandomHandle();
 		
-		final ProfileEntity newContactProfile = this.profileConverter.createEntityForContactProfile(contact, profile, profileSource);
+		final ProfileEntity newContactProfile = this.profileConverter.createEntityForContactProfile(contact, profile, handle, profileSource);
 		this.addressbookService.addNewContactProfile(newContactProfile);
 		
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);

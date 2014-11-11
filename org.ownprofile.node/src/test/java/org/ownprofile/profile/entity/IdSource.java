@@ -1,4 +1,4 @@
-package org.ownprofile.boundary.owner.resources;
+package org.ownprofile.profile.entity;
 
 public class IdSource {
 	

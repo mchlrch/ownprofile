@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileRepository;
 
 public class ProfileDomainService {
@@ -29,6 +30,15 @@ public class ProfileDomainService {
 		
 		final Optional<ProfileEntity> result = this.profileRepo.getOwnerProfileById(id);
 		return result;
+	}
+	
+	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
+		
+		// TODO check permissions
+		
+		final Optional<ProfileEntity> result = this.profileRepo.getOwnerProfileByHandle(handle);
+		return result;
+		
 	}
 
 	public void addNewOwnerProfile(ProfileEntity newProfile) {

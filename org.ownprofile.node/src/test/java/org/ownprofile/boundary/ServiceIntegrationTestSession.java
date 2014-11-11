@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.eclipse.jetty.server.Server;
 import org.ownprofile.JettyLauncher;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
-import org.ownprofile.boundary.peer.client.PeerClient;
+import org.ownprofile.boundary.peer.client.TestPeerClient;
 import org.ownprofile.setup.GuiceSetup;
 
 import com.google.inject.Injector;
@@ -21,7 +21,7 @@ public class ServiceIntegrationTestSession {
 	public final IntegrationTestConfig testConfig;
 
 	private TestOwnerClient ownerClient;
-	private PeerClient peerClient;
+	private TestPeerClient peerClient;
 
 	public ServiceIntegrationTestSession(Module... modules) {
 		this(new IntegrationTestConfig(DEFAULT_SCHEME, DEFAULT_HOST, DEFAULT_PORT), modules);
@@ -47,9 +47,11 @@ public class ServiceIntegrationTestSession {
 		return this.ownerClient;
 	}
 
-	public PeerClient getOrCreatePeerClient() {
+	public TestPeerClient getOrCreatePeerClient() {
 		if (this.peerClient == null) {
-			this.peerClient = new PeerClient(this.testConfig.host,
+			this.peerClient = new TestPeerClient(
+					this.testConfig.scheme,
+					this.testConfig.host,
 					this.testConfig.port);
 		}
 		return this.peerClient;

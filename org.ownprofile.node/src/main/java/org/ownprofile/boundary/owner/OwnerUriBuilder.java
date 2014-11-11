@@ -1,8 +1,7 @@
 package org.ownprofile.boundary.owner;
 
-import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 import static org.ownprofile.boundary.BoundaryConstants.CONTACT_ID;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,13 +9,12 @@ import java.net.URISyntaxException;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.ownprofile.boundary.AbstractUriBuilder;
 import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.owner.resources.AddressbookResource;
-import org.ownprofile.boundary.owner.resources.ProfileResource;
+import org.ownprofile.boundary.owner.resources.OwnerApiProfileResource;
 
-public class OwnerUriBuilder {
-	
-	private final UriBuilder baseUriBuilder;
+public class OwnerUriBuilder extends AbstractUriBuilder {
 	
 	public static OwnerUriBuilder fromUriInfo(UriInfo uriInfo) {
 		final URI baseUri = uriInfo.getBaseUri();
@@ -37,9 +35,10 @@ public class OwnerUriBuilder {
 	}
 	
 	private OwnerUriBuilder(URI baseUri) {
-		checkNotNull(baseUri);
-		this.baseUriBuilder = UriBuilder.fromUri(baseUri);
+		super(baseUri);
 	}
+
+	// --------------------------------------------
 	
 	public URI getContactURI() {
 		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "getContacts");
@@ -52,12 +51,12 @@ public class OwnerUriBuilder {
 	}
 
 	public URI resolveOwnerProfileURI(Long profileId) {
-		final UriBuilder builder = createUriBuilder(ProfileResource.class, "getOwnerProfileById"); 
+		final UriBuilder builder = createUriBuilder(OwnerApiProfileResource.class, "getOwnerProfileById"); 
 		return builder.resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
 	public URI getOwnerProfileURI() {
-		final UriBuilder builder = createUriBuilder(ProfileResource.class); 
+		final UriBuilder builder = createUriBuilder(OwnerApiProfileResource.class); 
 		return builder.build();
 	}
 	
@@ -69,20 +68,6 @@ public class OwnerUriBuilder {
 	public URI resolveContactProfileURI(Long contactId) {
 		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "addNewContactProfile");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
-	}
-	
-
-	// ----------------------------------------------
-	private UriBuilder createUriBuilder(Class<?> resource) {
-		final UriBuilder builder = this.baseUriBuilder.clone();
-		builder.path(resource);
-		return builder;
-	}
-
-	private UriBuilder createUriBuilder(Class<?> resource, String method) {
-		final UriBuilder builder = createUriBuilder(resource);
-		builder.path(resource, method);
-		return builder;
 	}
 	
 }

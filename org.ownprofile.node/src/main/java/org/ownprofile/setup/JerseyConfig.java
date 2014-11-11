@@ -24,7 +24,7 @@ public class JerseyConfig extends ResourceConfig {
 		
 		packages(true,
 				org.ownprofile.boundary.owner.resources.AddressbookResource.class.getPackage().getName(),
-				org.ownprofile.boundary.peer.resources.ProfileResource.class.getPackage().getName());
+				org.ownprofile.boundary.peer.resources.PeerApiProfileResource.class.getPackage().getName());
 		
 		// Instantiate Guice Bridge
 		GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);

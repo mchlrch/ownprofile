@@ -5,9 +5,10 @@ import org.junit.Test;
 import org.ownprofile.boundary.JsonTestUtil;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.owner.resources.TestContactEntity;
-import org.ownprofile.boundary.owner.resources.TestProfileEntity;
 import org.ownprofile.profile.entity.ContactEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
+import org.ownprofile.profile.entity.TestProfileEntity;
 
 public class ContactConverterTest {
 
@@ -34,7 +35,7 @@ public class ContactConverterTest {
 	@Test
 	public void shouldConvertEntity2Dto() throws Exception {
 		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
-		new TestProfileEntity(27L, entity, ProfileSource.createLocalSource(), "test2");
+		TestProfileEntity.createContactProfile(27L, entity, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "test2");
 
 		final ContactDTO target = this.converter.convertToView(entity, this.uriBuilder);
 		ContactDtoOutCompareUtil.assertContentIsEqual(entity, target, uriBuilder);
@@ -43,7 +44,7 @@ public class ContactConverterTest {
 	@Test
 	public void shouldConvertEntity2AggregateDto() throws Exception {
 		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
-		new TestProfileEntity(27L, entity, ProfileSource.createLocalSource(), "test2");
+		TestProfileEntity.createContactProfile(27L, entity, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "test2");
 
 		final ContactAggregateDTO target = this.converter.convertToAggregateView(entity, this.uriBuilder);
 		ContactDtoOutCompareUtil.assertContentIsEqual(entity, target, uriBuilder);

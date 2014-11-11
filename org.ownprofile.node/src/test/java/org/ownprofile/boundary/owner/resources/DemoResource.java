@@ -14,14 +14,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.DemoProfileFactory;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
-@Path(BoundaryConstants.RESOURCEPATH_DEMO)
+@Path("/demo")
 public class DemoResource {
 
 	@Inject
@@ -45,7 +45,8 @@ public class DemoResource {
 			this.addNewOwnerProfile(p);
 		}
 
-		URI uri = uriInfo.getBaseUriBuilder().path(BoundaryConstants.RESOURCEPATH_OWNER_PROFILES).build();
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		URI uri = uriBuilder.getOwnerProfileURI();
 		return Response.seeOther(uri).build();
 	}
 

@@ -20,8 +20,8 @@ public class ProfileEntity {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	protected Long id;
 
-//	@Embedded
-//	private ProfileId id;
+	@Embedded
+	private ProfileHandle handle;
 
 	@ManyToOne
 	private ContactEntity contact; 
@@ -34,21 +34,35 @@ public class ProfileEntity {
 	@Embedded
 	private ProfileBody body;
 
-	public ProfileEntity(ContactEntity contact, ProfileSource source, String profileName, ProfileBody body) {
-		this(source, profileName, body);
+	public static ProfileEntity createContactProfile(ContactEntity contact, ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
+		final ProfileEntity result = new ProfileEntity(contact, handle, source, profileName, body);
+		return result;
+	}
+	
+	public static ProfileEntity createOwnProfile(ProfileSource source, String profileName, ProfileBody body) {
+		final ProfileEntity result = new ProfileEntity(source, profileName, body);
+		return result;
+	}
+	
+	protected ProfileEntity(ContactEntity contact, ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
+		this(handle, source, profileName, body);
 		checkNotNull(contact, "contact is null");
 
+		this.handle = ProfileHandle.createRandomHandle();
 		this.contact = contact;
 		contact.addProfile0(this);
 	}
 	
-	public ProfileEntity(ProfileSource source, String profileName, ProfileBody body) {
-		checkNotNull(source, "source is null");
-		checkNotNull(body, "body is null");
+	protected ProfileEntity(ProfileSource source, String profileName, ProfileBody body) {
+		this(ProfileHandle.createRandomHandle(), source, profileName, body);
+	}
+	
+	protected ProfileEntity(ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
+		this.handle = checkNotNull(handle, "handle is null");
+		this.source = checkNotNull(source, "source is null");
+		this.body = checkNotNull(body, "body is null");
 
-		this.source = source;
 		this.profileName = profileName;
-		this.body = body;
 	}
 	
 	protected ProfileEntity() {
@@ -56,6 +70,11 @@ public class ProfileEntity {
 	
 	public Optional<Long> getId() {
 		return Optional.ofNullable(this.id);
+	}
+	
+	// TODO: only optional because non-remote contact-profiles (maybe) don't need a handle ?
+	public Optional<ProfileHandle> getHandle() {
+		return Optional.ofNullable(this.handle);
 	}
 	
 	public Optional<ContactEntity> getContact() {

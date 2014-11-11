@@ -1,4 +1,4 @@
-package org.ownprofile.boundary.owner.resources;
+package org.ownprofile.profile.entity;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -7,14 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ownprofile.profile.entity.ProfileEntity;
-import org.ownprofile.profile.entity.ProfileRepository;
-
 public class ProfileRepositoryMock implements ProfileRepository {
 	public final IdSource profileIdSource = new IdSource();
 
 	private final Map<Long, ProfileEntity> ownerProfiles = new HashMap<Long, ProfileEntity>();
-
+	private final Map<ProfileHandle, ProfileEntity> ownerProfilesByHandle = new HashMap<ProfileHandle, ProfileEntity>();
+	
 	public ProfileEntity addedProfile;
 
 	private final Field profileIdField;
@@ -37,6 +35,11 @@ public class ProfileRepositoryMock implements ProfileRepository {
 	public Optional<ProfileEntity> getOwnerProfileById(long id) {
 		return Optional.ofNullable(ownerProfiles.get(id));
 	}
+	
+	@Override
+	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
+		return Optional.ofNullable(ownerProfilesByHandle.get(handle));
+	}
 
 	@Override
 	public void addProfile(ProfileEntity profile) {
@@ -44,8 +47,14 @@ public class ProfileRepositoryMock implements ProfileRepository {
 		if (ownerProfiles.containsKey(id)) {
 			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with id[%d]", id));
 		}
+		
+		final ProfileHandle handle = profile.getHandle().get();
+		if (ownerProfilesByHandle.containsKey(handle)) {
+			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with handle[%s]", handle));
+		}
 
 		this.ownerProfiles.put(id, profile);
+		this.ownerProfilesByHandle.put(handle, profile);
 		this.addedProfile = profile;
 	}
 

@@ -19,10 +19,13 @@ import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
+import org.ownprofile.profile.entity.RepoProxies;
+import org.ownprofile.profile.entity.TestProfileEntity;
 
 // each testmethod invokes at most one method on the resource
-public class ProfileResourceIT {
+public class OwnerApiProfileResourceIT {
 
 	private static final RepoProxies repoProxies = new RepoProxies();
 	private static ServiceIntegrationTestSession session;
@@ -59,7 +62,7 @@ public class ProfileResourceIT {
 	}
 	
 	private ProfileEntity createOwnerProfile() {
-		return new TestProfileEntity(this.profileRepoMock.profileIdSource.nextId(), ProfileSource.createLocalSource(), "private");
+		return TestProfileEntity.createOwnProfile(this.profileRepoMock.profileIdSource.nextId(), ProfileSource.createLocalSource(), "private");
 		// new TestProfileEntity(92L, ProfileSource.createRemoteSource("http://localhost"), "professional");
 	}
 
@@ -74,19 +77,19 @@ public class ProfileResourceIT {
 		final Iterator<ProfileEntity> expectedIt = profileRepoMock.getAllOwnerProfiles().iterator();
 		final Iterator<ProfileDTO> actualIt = profiles.iterator();
 		while (expectedIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertContentIsEqual(expectedIt.next(), actualIt.next(), client.getUriBuilder());
+			ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expectedIt.next(), actualIt.next(), client.getUriBuilder());
 		}
 	}
 	
 	@Test
 	public void shouldGetOwnerProfileById() {
-		final Long profileId = 1L;
+		final Long profileId = profileRepoMock.addedProfile.getId().get();
 		final ProfileDTO profile = client.getOwnerProfileById(profileId);
 
 		Assert.assertNotNull(profile);
 
 		final ProfileEntity expected = profileRepoMock.getOwnerProfileById(profileId).get();				
-		ProfileDtoOutCompareUtil.assertContentIsEqual(expected, profile, client.getUriBuilder());
+		ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
 	}
 
 	@Test

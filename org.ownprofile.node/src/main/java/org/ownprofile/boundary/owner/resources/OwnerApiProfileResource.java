@@ -18,7 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
@@ -26,8 +25,8 @@ import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
-@Path(BoundaryConstants.RESOURCEPATH_OWNER_PROFILES)
-public class ProfileResource {
+@Path("/owner/profiles")
+public class OwnerApiProfileResource {
 
 	@Inject
 	private ProfileDomainService profileService;

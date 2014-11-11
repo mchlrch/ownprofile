@@ -1,11 +1,7 @@
-package org.ownprofile.boundary.owner.resources;
+package org.ownprofile.profile.entity;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.ownprofile.profile.entity.ContactEntity;
-import org.ownprofile.profile.entity.ContactRepository;
-import org.ownprofile.profile.entity.ProfileEntity;
 
 public class ContactRepositoryProxy implements ContactRepository {
 

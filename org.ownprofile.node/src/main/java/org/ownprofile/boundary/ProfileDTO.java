@@ -1,9 +1,12 @@
 package org.ownprofile.boundary;
 
 import static org.ownprofile.boundary.ProfileDTO.P_BODY;
+import static org.ownprofile.boundary.ProfileHeaderDTO.P_HANDLE;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_HREF;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_ID;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_PROFILENAME;
+import static org.ownprofile.boundary.ProfileHeaderDTO.P_SOURCE;
+import static org.ownprofile.boundary.ProfileHeaderDTO.P_TYPE;
 
 import java.util.Collections;
 import java.util.Map;
@@ -12,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-@JsonPropertyOrder({ P_ID, P_HREF, P_PROFILENAME, P_BODY })
+@JsonPropertyOrder({ P_TYPE, P_SOURCE, P_ID, P_HANDLE, P_HREF, P_PROFILENAME, P_BODY })
 public class ProfileDTO {
 
 	public static final String P_BODY = "body";

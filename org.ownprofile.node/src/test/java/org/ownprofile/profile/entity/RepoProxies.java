@@ -1,7 +1,5 @@
-package org.ownprofile.boundary.owner.resources;
+package org.ownprofile.profile.entity;
 
-import org.ownprofile.profile.entity.ContactRepository;
-import org.ownprofile.profile.entity.ProfileRepository;
 import org.ownprofile.setup.GuiceModule;
 
 /**
