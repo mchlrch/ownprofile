@@ -9,6 +9,7 @@ import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.boundary.peer.PeerUriBuilder;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.testutil.JsonTestUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

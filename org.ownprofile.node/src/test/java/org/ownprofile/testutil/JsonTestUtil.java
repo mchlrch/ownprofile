@@ -1,4 +1,4 @@
-package org.ownprofile.boundary;
+package org.ownprofile.testutil;
 
 import org.junit.Assert;
 
@@ -12,7 +12,10 @@ public class JsonTestUtil {
 		final T dto = mapper.readValue(expectedJSON, dtoClass);
 		final String actualJSON = mapper.writeValueAsString(dto);
 		
-		Assert.assertEquals(expectedJSON, actualJSON);
+		final String expectedJsonOnOneLine = expectedJSON
+				.replace("\n", "").replace("\t", "")
+				.replace("\": ", "\":");
+		Assert.assertEquals(expectedJsonOnOneLine, actualJSON);
 	}
 	
 }

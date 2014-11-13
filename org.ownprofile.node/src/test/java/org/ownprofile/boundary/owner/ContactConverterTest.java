@@ -2,13 +2,13 @@ package org.ownprofile.boundary.owner;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ownprofile.boundary.JsonTestUtil;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.owner.resources.TestContactEntity;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
 import org.ownprofile.profile.entity.TestProfileEntity;
+import org.ownprofile.testutil.JsonTestUtil;
 
 public class ContactConverterTest {
 

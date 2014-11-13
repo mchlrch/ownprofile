@@ -10,6 +10,7 @@ import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileSource;
 import org.ownprofile.profile.entity.TestProfileEntity;
+import org.ownprofile.testutil.JsonTestUtil;
 
 public class ProfileConverterTest {
 
