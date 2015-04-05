@@ -1,0 +1,3 @@
+A good REST-ful application should be fully navigable to anyone if they start at the / URI
+
+.. versus simply redirecting from webapi root -> /webapi/owner/addressbook/contact

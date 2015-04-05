@@ -1,0 +1,4 @@
+sanitize profile.body against attacks
+
+- profile.body must be valid json (injection)
+- profile.body must be of reasonable size (DoS)

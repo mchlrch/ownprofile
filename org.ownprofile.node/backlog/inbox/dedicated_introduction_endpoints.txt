@@ -1,0 +1,2 @@
+allow peer to introduce thirdparty to myself
+introduction over (disposable, one-time?) endpoint, to avoid disclosure of my real endpoint (sort of DMZ)

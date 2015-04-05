@@ -1,0 +1,2 @@
+assert that maven build runs thru
+- use dedicated port for integration tests (!= standard port of demolauncher)

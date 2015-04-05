@@ -1,0 +1,2 @@
+edit and sign profile updates on airgapped machine
+node only accepts signed profile updates form its owner

@@ -1,0 +1,25 @@
+1) Lenny tells Carl Endpoint-of-Lenny, one DurableConnectToken-of-Lenny and FingerprintOfConnectKeyCertificate-of-Lenny
+-- DurableConnectToken statt OneTime, damit QR-Codes o.ä. auf visitenkarten gedruckt werden könnten ..
+-- DurableConnectToken kann auch weitergereicht werden (vermittlung), ist aber nicht öffentlich für alle einsehbar (spamschutz)
+
+2+3) Carl creates ConnectRequest(DurableConnectToken-of-Lenny, Endpoint-of-Carl, OneTimeConnectToken-of-Carl), signs it with ConnectKey-of-Carl and sends it to Endpoint-of-Lenny
+---- 2.1) if Carl already has Lenny as a contact, he might want to choose that Contact or create a new one upon creating the ConnectRequest
+
+4+5) fbx-of-lenny verifies DurableConnectToken-of-Lenny, then retrieves designated Connect-Profile-of-Carl -- how about adding it to a (new/existing) contact right then ?!
+---- fbx-of-lenny asserts signature on Carls ConnectRequest with ConnectKeyCertificate-of-Carl from the Connect-Profile-of-Carl  
+---- at this point, Lenny has Connect-Profile-of-Carl in state 'remote-fetched', Connect-Profile-of-Carl contains his full name, profile picture and ConnectKeyCertificate
+---- Lenny knows, that originator of the ConnectRequest also has control of the Endpoint, declared in the ConnectRequest 
+---- Lenny spells the endpoint-address (or session-scoped keyword/PIN chosen by Carl) back to Carl (ähnlich Handy-# Austausch)
+
+
+AddressbookResource.(get/add)RemoteProfile
+-----------
+- über peer-client bezogene profile lokal abspeichern
+-- ProfileSource mit URI gemäss Response befüllen (href/link-rel)
+-- statemachine für profile: remote-fetched -> tracking/managed
+
+----
+beispiel mittels QR-Codes:
+- 1x onion-adr + 1x master-fingerprint
+
+

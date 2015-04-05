@@ -1,0 +1,13 @@
+pros/cons of using relative VS. absolute URLs for links in POST responses
+
+links have context, durable IDs have not
+- javax.ws.rs.core.Link ?
+
+for links: prefer absolute URLs over absolute paths
+- http://stackoverflow.com/questions/2239405/hateoas-absolute-or-relative-urls
+
+maybe use peer-specific 'personal URLs' on peer-api: http://foobar.com/peer/[peer-id]/profiles
+- http://blog.2partsmagic.com/restful-uri-design/
+
+see also: uri-template
+- http://tools.ietf.org/html/rfc6570

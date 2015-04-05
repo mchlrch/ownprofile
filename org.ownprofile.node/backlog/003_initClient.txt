@@ -1,0 +1,7 @@
+replace DemoResource with InitClient
+
+populate node from the outside
+build data structures in java code
+
+curlify: dump JSON structs with endpoints to allow for population directly from the shell
+-> getting-started documentation 

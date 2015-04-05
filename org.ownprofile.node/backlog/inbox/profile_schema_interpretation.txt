@@ -1,0 +1,4 @@
+runtime interpretation of profile fragment schemas
+-> node needs to know the metamodel of the schemas
+ 
+does JSON-LD fit in here?

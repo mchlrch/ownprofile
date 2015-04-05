@@ -1,0 +1,6 @@
+protocol-free boundary with TX demarcation
+
+transport agnostic client-side API 
+- only setup is REST specific
+
+integration-tests: dynamically proxy OwnerClient and assert that each method got invoked exactly once after all testcases have run

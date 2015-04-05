@@ -1,0 +1,4 @@
+increase cost of exploit by serving the same profile over redundant nodes running on different SW and HW stacks 
+peers retrieve both profiles and compare them for equality
+
+-> separate the profile-upload from profile-activation to enable synchronized activation on both nodes

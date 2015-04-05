@@ -1,0 +1,31 @@
+001 read-only html ui for all data
+
+==============================================================================
+002 implement peering protocol
+003 replace DemoResource with InitClient
+004 request-scoped UriBuilder
+005 assert maven build
+006 document core concepts (glossary)
+007 profile handle cleanup
+008 assert absolute URLs in location/link-rel
+009 webapi root
+010 cleanup port/persitence-unit handling in integration/system-tests
+011 proper java interfaces for boundary services (including api-version)
+012 shared API client/server
+013 cleanup isolation/separation of persistence and handling of (Contact|Owner)Profiles
+014 used named/parametrized JPA queries
+015
+016
+017
+018
+019
+020
+021
+022
+023
+024
+025
+026
+027
+028
+029

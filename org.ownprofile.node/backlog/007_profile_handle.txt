@@ -1,0 +1,22 @@
+profileEntity.handle ist zurzeit optional
+- optional ist nur nötig, falls non-remote contact-profiles keinen handle haben
+--> besser immer handle voraussetzen, dann könnten potentiell alle profiles geshared werden (e.g. rendezvous-nodes) 
+
+profileHandle as a durable identifier for a profile
+- outlives endpoint migration and protocol migration (is not a URL)
+- not globally unique (is not a URN)
+-- needs more context info to be unique (source-node) 
+- maybe even peer specific (see below)
+- enable endpoint disposability and protocol evolution
+- serving the same information over different endpoints
+
+ist ProfileHandle im richtigen package? .. wo wird es ueberall referenziert
+
+im peer-api ist sourceHandle(~=sourceId) enthalten, dieser ist nur relativ innerhalb der quelle gültig, nicht universale ID!
+-> contactProfile.id (local) + contactProfile.sourceHandle 
+-> für contactProfile.sourceHandle URL-shortener-style strings benutzen d.h. eine mapping-table führen und handle peer-spezifisch machen!!
+--> über zeit, kann bestehender handle auf neues strohmann-profil, oder gefrorener stand umgebogen werden
+--> erlaubt non-leaky profile refactoring (eg. split/merge)
+--> kein rückschluss darüber, ob ich nur ein zweitklassiges profil serviert bekomme!
+
+generell immer ValueObjects für IDs/Handles benutzen
