@@ -30,7 +30,7 @@ public class BlackboxIT {
 
 	@BeforeClass
 	public static void startJetty() throws Exception {
-		session = new SystemTestSession(SystemTestSession.defaultJpaModule, new GuiceModule());
+		session = new SystemTestSession(SystemTestSession.createDefaultJpaModule(), new GuiceModule());
 		session.server.start();
 	}
 

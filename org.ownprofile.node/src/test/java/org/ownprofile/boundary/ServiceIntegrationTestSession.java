@@ -15,7 +15,7 @@ public class ServiceIntegrationTestSession {
 
 	public static final String DEFAULT_SCHEME = "http";
 	public static final String DEFAULT_HOST = "localhost";
-	public static final int DEFAULT_PORT = JettyLauncher.DEFAULT_PORT;
+	public static final int DEFAULT_PORT = 9980;
 
 	public final Server server;
 	public final IntegrationTestConfig testConfig;

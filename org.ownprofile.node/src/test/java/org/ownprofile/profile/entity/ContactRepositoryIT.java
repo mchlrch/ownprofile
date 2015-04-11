@@ -23,7 +23,7 @@ public class ContactRepositoryIT {
 
 	@BeforeClass
 	public static void before() {
-		injector = Guice.createInjector(SystemTestSession.defaultJpaModule, new GuiceModule() {
+		injector = Guice.createInjector(SystemTestSession.createDefaultJpaModule(), new GuiceModule() {
 			@Override
 			protected void configure() {
 				bind(ContactRepositoryJPA.class);

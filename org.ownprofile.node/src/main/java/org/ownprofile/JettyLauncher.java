@@ -26,7 +26,7 @@ public class JettyLauncher {
 
 	public static void main(String[] args) throws Exception {
 		final int port = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_PORT;
-		final String persistenceUnit = "ownProfilePU_" + port;
+		final String persistenceUnit = "ownProfilePU";
 		
 		final Injector guiceInjector = GuiceSetup.createInjectorAndSetAsSingleton(new JpaPersistModule(persistenceUnit), new GuiceModule());		
 		
