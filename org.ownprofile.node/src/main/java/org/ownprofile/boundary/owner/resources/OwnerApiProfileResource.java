@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
-import org.ownprofile.boundary.owner.OwnerUriBuilder;
+import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
@@ -36,15 +36,21 @@ public class OwnerApiProfileResource {
 	
 	@Inject
 	private OwnerApiProfileTemplate template;
+	
+	private final UriBuilders uriBuilders;
+	
+	@Inject
+	public OwnerApiProfileResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
+		this.uriBuilders = uriBuilders.init(uriInfo);
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ProfileDTO> getOwnerProfiles(@Context final UriInfo uriInfo) {
+	public List<ProfileDTO> getOwnerProfiles() {
 		final List<ProfileEntity> profiles = this.profileService.getOwnerProfiles();
 
-		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);		
 		final List<ProfileDTO> result = profiles.stream()
-				.map(p -> converter.convertOwnerProfileToView(p, uriBuilder))
+				.map(p -> converter.convertOwnerProfileToView(p, uriBuilders.owner()))
 				.collect(Collectors.toList());
 		
 		return result;
@@ -52,22 +58,20 @@ public class OwnerApiProfileResource {
 	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public String getOwnerProfilesAsHtml(@Context final UriInfo uriInfo) {
-		final List<ProfileDTO> ownerProfiles = getOwnerProfiles(uriInfo);
-		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		return template.ownerProfilesOverviewPage(ownerProfiles, uriBuilder).toString();
+	public String getOwnerProfilesAsHtml() {
+		final List<ProfileDTO> ownerProfiles = getOwnerProfiles();
+		return template.ownerProfilesOverviewPage(ownerProfiles).toString();
 	}
 	
 	@GET
 	@Path("/{" + PROFILE_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO getOwnerProfileById(@PathParam(PROFILE_ID) long id, @Context final UriInfo uriInfo) {
+	public ProfileDTO getOwnerProfileById(@PathParam(PROFILE_ID) long id) {
 		
 		// TODO: handle unknown ID gracefully
 		final ProfileEntity profile = this.profileService.getOwnerProfileById(id).get();
 
-		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		final ProfileDTO result = converter.convertOwnerProfileToView(profile, uriBuilder); 
+		final ProfileDTO result = converter.convertOwnerProfileToView(profile, uriBuilders.owner()); 
 
 		return result;
 	}
@@ -75,20 +79,18 @@ public class OwnerApiProfileResource {
 	@GET
 	@Path("/{" + PROFILE_ID + "}")
 	@Produces(MediaType.TEXT_HTML)
-	public String getOwnerProfileByIdAsHtml(@PathParam(PROFILE_ID) long id, @Context final UriInfo uriInfo) {
-		final ProfileDTO profile = getOwnerProfileById(id, uriInfo);
-		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		return template.ownerProfilePage(profile, uriBuilder).toString();
+	public String getOwnerProfileByIdAsHtml(@PathParam(PROFILE_ID) long id) {
+		final ProfileDTO profile = getOwnerProfileById(id);
+		return template.ownerProfilePage(profile).toString();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addNewOwnerProfile(ProfileNewDTO profile, @Context final UriInfo uriInfo) {
+	public Response addNewOwnerProfile(ProfileNewDTO profile) {
 		final ProfileEntity newProfile = this.converter.createEntityForOwnerProfile(profile);
 		this.profileService.addNewOwnerProfile(newProfile);
 		
-		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		final URI location = uriBuilder.resolveOwnerProfileURI(newProfile.getId().get());
+		final URI location = uriBuilders.owner().resolveOwnerProfileURI(newProfile.getId().get());
 		return Response.created(location).build();
 	}
 		

@@ -3,7 +3,6 @@
 ==============================================================================
 002 implement peering protocol
 003 replace DemoResource with InitClient
-004 request-scoped UriBuilder
 005 assert maven build
 006 document core concepts (glossary)
 007 profile handle cleanup

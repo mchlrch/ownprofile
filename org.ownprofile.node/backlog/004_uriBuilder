@@ -1,5 +1,0 @@
-Resource classes are always request scoped, therefore ...
-- have uriInfo injected into resource-constructor
-- have UriBuilderHolder injected from Guice side into resource-constructor, set builder inside constructor
-- have UriBuilderHolder injected into templates, to use builder in templates 
-OwnerUriBuilder.fromUriInfo(uriInfo);

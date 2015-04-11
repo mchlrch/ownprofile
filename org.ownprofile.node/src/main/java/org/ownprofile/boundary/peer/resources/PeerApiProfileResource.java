@@ -16,7 +16,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.peer.PeerUriBuilder;
+import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
@@ -30,14 +30,20 @@ public class PeerApiProfileResource {
 	@Inject
 	private ProfileConverter converter;
 
+	private final UriBuilders uriBuilders;
+	
+	@Inject
+	public PeerApiProfileResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
+		this.uriBuilders = uriBuilders.init(uriInfo);
+	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ProfileDTO> getProfiles(@Context final UriInfo uriInfo) {
+	public List<ProfileDTO> getProfiles() {
 		final List<ProfileEntity> profiles = this.profileService.getOwnerProfiles();
 		
-		final PeerUriBuilder uriBuilder = PeerUriBuilder.fromUriInfo(uriInfo);
 		final List<ProfileDTO> result = profiles.stream()
-				.map(p -> converter.convertOwnerProfileToPeerView(p, uriBuilder))
+				.map(p -> converter.convertOwnerProfileToPeerView(p, uriBuilders.peer()))
 				.collect(Collectors.toList());
 		
 		return result;
@@ -46,14 +52,13 @@ public class PeerApiProfileResource {
 	@GET
 	@Path("/{" + PROFILE_HANDLE + "}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO getProfileById(@PathParam(PROFILE_HANDLE) String handleValue, @Context final UriInfo uriInfo) {
+	public ProfileDTO getProfileById(@PathParam(PROFILE_HANDLE) String handleValue) {
 		
 		// TODO: handle unknown handles gracefully
 		final ProfileHandle handle = ProfileHandle.fromString(handleValue);
 		final ProfileEntity profile = this.profileService.getOwnerProfileByHandle(handle).get();
 
-		final PeerUriBuilder uriBuilder = PeerUriBuilder.fromUriInfo(uriInfo);
-		final ProfileDTO result = converter.convertOwnerProfileToPeerView(profile, uriBuilder); 
+		final ProfileDTO result = converter.convertOwnerProfileToPeerView(profile, uriBuilders.peer()); 
 
 		return result;
 	}

@@ -1,14 +1,17 @@
 package org.ownprofile.boundary.common
 
-import org.ownprofile.boundary.owner.OwnerUriBuilder
+import javax.inject.Inject
+import org.ownprofile.boundary.UriBuilders
 
 class PageHeaderExt {
 
-	extension HtmlExt htmlExt = new HtmlExt
+	@Inject	extension HtmlExt htmlExt
+	
+	@Inject	UriBuilders uriBuilders
 
-	def String pageHeader(OwnerUriBuilder uriBuilder) '''
+	def String pageHeader() '''
 		«FOR section : Section.values SEPARATOR "|"»
-			«section.getLocation(uriBuilder).link(section.title)»
+			«section.getLocation(uriBuilders.owner).link(section.title)»
 		«ENDFOR»
 	'''
 
