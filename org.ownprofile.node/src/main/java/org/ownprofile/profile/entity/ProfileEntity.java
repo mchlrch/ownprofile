@@ -48,7 +48,6 @@ public class ProfileEntity {
 		this(handle, source, profileName, body);
 		checkNotNull(contact, "contact is null");
 
-		this.handle = ProfileHandle.createRandomHandle();
 		this.contact = contact;
 		contact.addProfile0(this);
 	}

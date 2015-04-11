@@ -77,7 +77,7 @@ public class OwnerApiProfileResourceIT {
 		final Iterator<ProfileEntity> expectedIt = profileRepoMock.getAllOwnerProfiles().iterator();
 		final Iterator<ProfileDTO> actualIt = profiles.iterator();
 		while (expectedIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expectedIt.next(), actualIt.next(), client.getUriBuilder());
+			ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqualOnOwnerAPI(expectedIt.next(), actualIt.next(), client.getUriBuilder());
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class OwnerApiProfileResourceIT {
 		Assert.assertNotNull(profile);
 
 		final ProfileEntity expected = profileRepoMock.getOwnerProfileById(profileId).get();				
-		ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
+		ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
 	}
 
 	@Test

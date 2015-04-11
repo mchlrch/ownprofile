@@ -16,6 +16,7 @@
 
 		<jackson-jaxrs.version>2.4.2</jackson-jaxrs.version>
 		<guava.version>18.0</guava.version>
+		<xtend.version>2.6.0</xtend.version>
 	</properties>
 
 	<dependencyManagement>
@@ -53,6 +54,12 @@
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
 			</dependency>
+			
+			<dependency>
+			    <groupId>org.eclipse.xtend</groupId>
+			    <artifactId>org.eclipse.xtend.lib</artifactId>
+			    <version>${xtend.version}</version>
+		    </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -82,6 +89,11 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.eclipse.xtend</groupId>
+		    <artifactId>org.eclipse.xtend.lib</artifactId>
+	    </dependency>
 
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
@@ -116,17 +128,22 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+<!-- 					<inherited>true</inherited> -->
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<inherited>true</inherited>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -156,6 +173,25 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+				<version>${xtend.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
+							<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+	
 		</plugins>
 	</build>
 

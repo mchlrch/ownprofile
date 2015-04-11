@@ -136,7 +136,7 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(profile);
 		
 		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
-		ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
+		ProfileDtoOutCompareUtil.assertContactProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
 	}
 	
 	@Test
@@ -153,7 +153,7 @@ public class AddressbookResourceIT {
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		
-		final URI expectedLocation = client.getUriBuilder().resolveContactProfileURI(actual.getId().get());
+		final URI expectedLocation = client.getUriBuilder().resolveContactProfileURI(contactId, actual.getId().get());
 		Assert.assertEquals(expectedLocation, location);
 	}
 	

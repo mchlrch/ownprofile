@@ -1,4 +1,4 @@
-001 read-only html ui for all data
+
 
 ==============================================================================
 002 implement peering protocol

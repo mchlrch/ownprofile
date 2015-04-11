@@ -1,6 +1,7 @@
 package org.ownprofile.boundary;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.ownprofile.boundary.ProfileHeaderDTO.P_CONTAINER;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_HANDLE;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_HREF;
 import static org.ownprofile.boundary.ProfileHeaderDTO.P_ID;
@@ -10,15 +11,18 @@ import static org.ownprofile.boundary.ProfileHeaderDTO.P_TYPE;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
 import org.ownprofile.profile.entity.ProfileHandle;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({P_TYPE, P_SOURCE, P_ID, P_HANDLE, P_HREF, P_PROFILENAME})
+@JsonPropertyOrder({P_TYPE, P_SOURCE, P_ID, P_HANDLE, P_HREF, P_PROFILENAME, P_CONTAINER})
 @JsonInclude(Include.NON_NULL) 
 public class ProfileHeaderDTO {
 
@@ -29,6 +33,8 @@ public class ProfileHeaderDTO {
 	
 	public static final String P_HREF = "href";
 	public static final String P_PROFILENAME = "profileName";
+	
+	public static final String P_CONTAINER = "container";
 
 	@JsonProperty(P_TYPE)
 	public final String type;
@@ -44,6 +50,9 @@ public class ProfileHeaderDTO {
 	@JsonProperty(P_PROFILENAME)
 	public final String profileName;
 	
+	@JsonProperty(P_CONTAINER)
+	public final ContactHeaderDTO container;
+	
 	public static ProfileHeaderDTO createOwnerProfile(Long id, ProfileHandle handle, URI href, String profileName) {
 		return new ProfileHeaderDTO(
 				ProfileType.Owner,
@@ -51,17 +60,30 @@ public class ProfileHeaderDTO {
 				checkNotNull(id),
 				checkNotNull(handle.asString()),
 				checkNotNull(href),
-				profileName);
+				profileName,
+				null);
 	}
 	
-	public static ProfileHeaderDTO createPeerProfile(ProfileHandle handle, URI href, String profileName) {
+	public static ProfileHeaderDTO createOwnerProfilePeerView(ProfileHandle handle, URI href, String profileName) {
 		return new ProfileHeaderDTO(
 				ProfileType.Peer,
 				ProfileSource.Remote,
 				null,
 				checkNotNull(handle.asString()),
 				checkNotNull(href),
-				profileName);
+				profileName,
+				null);
+	}
+	
+	public static ProfileHeaderDTO createContactProfile(ProfileSource source, ProfileHandle handle, URI href, String profileName, ContactHeaderDTO container) {
+		return new ProfileHeaderDTO(
+				ProfileType.Peer,
+				source,
+				null,
+				checkNotNull(handle.asString()),
+				checkNotNull(href),
+				profileName,
+				checkNotNull(container));
 	}
 
 	public ProfileHeaderDTO(
@@ -70,7 +92,8 @@ public class ProfileHeaderDTO {
 			@JsonProperty(P_ID) Long id,
 			@JsonProperty(P_HANDLE) String handle,
 			@JsonProperty(P_HREF) URI href,
-			@JsonProperty(P_PROFILENAME) String profileName) {		
+			@JsonProperty(P_PROFILENAME) String profileName,
+			@JsonProperty(P_CONTAINER) ContactHeaderDTO container) {		
 		this.type = ProfileType.valueOf(typeName).name();       // TODO: really an enum? really fixed semantics?
 		this.source = ProfileSource.valueOf(sourceName).name(); // TODO: really an enum? really fixed semantics?
 		
@@ -79,10 +102,12 @@ public class ProfileHeaderDTO {
 				
 		this.href = href;
 		this.profileName = profileName;
+		
+		this.container = container;
 	}
 	
 	
-	private ProfileHeaderDTO(ProfileType type, ProfileSource source, Long id, String handle, URI href, String profileName) {		
+	private ProfileHeaderDTO(ProfileType type, ProfileSource source, Long id, String handle, URI href, String profileName, ContactHeaderDTO container) {		
 		this.type = type.name();
 		this.source = source.name();
 		this.id = id;
@@ -90,6 +115,8 @@ public class ProfileHeaderDTO {
 		
 		this.href = href;
 		this.profileName = profileName;
+		
+		this.container = container;
 	}
 	
 	public ProfileType getType() {
@@ -99,6 +126,15 @@ public class ProfileHeaderDTO {
 	public ProfileSource getSource() {
 		return ProfileSource.valueOf(source);
 	}
+	
+	/**
+	 * only set, if this is a contactProfile and if this DTO is not already structurally contained in a container
+	 */
+	@JsonIgnore
+	public Optional<ContactHeaderDTO> getContainer() {
+		return Optional.ofNullable(container);
+	}
+	
 
 	@Override
 	public boolean equals(Object other) {
@@ -118,8 +154,9 @@ public class ProfileHeaderDTO {
 		final boolean idEq = Objects.equals(this.id, that.id);
 		final boolean handleEq = Objects.equals(this.handle, that.handle);
 		final boolean hrefEq = Objects.equals(this.href, that.href);
+		final boolean containerEq = Objects.equals(this.container, that.container);
 
-		return idEq && handleEq && hrefEq;
+		return idEq && handleEq && hrefEq && containerEq;
 	}
 	
 	public boolean canEqual(Object other) {
@@ -140,6 +177,10 @@ public class ProfileHeaderDTO {
 		
 		if (href != null) {
 			hash = 31*hash + href.hashCode();
+		}
+		
+		if (container != null) {
+			hash = 31*hash + container.hashCode();
 		}
 		
 		return hash;

@@ -33,6 +33,10 @@ public class GuiceModule extends AbstractModule {
 		bind(ContactConverter.class);
 		bind(ProfileConverter.class);
 		bind(com.fasterxml.jackson.databind.ObjectMapper.class);
+		
+		
+		bind(org.ownprofile.boundary.owner.resources.AddressbookTemplate.class);
+		bind(org.ownprofile.boundary.owner.resources.OwnerApiProfileTemplate.class);
 
 		// TODO: http://code.google.com/p/google-guice/wiki/JPA -> comment about
 		// bindIntercepter() to autoclear jpa session

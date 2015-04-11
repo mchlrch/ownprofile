@@ -33,6 +33,9 @@ public class OwnerApiProfileResource {
 
 	@Inject
 	private ProfileConverter converter;
+	
+	@Inject
+	private OwnerApiProfileTemplate template;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -41,10 +44,18 @@ public class OwnerApiProfileResource {
 
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);		
 		final List<ProfileDTO> result = profiles.stream()
-				.map(p -> converter.convertToView(p, uriBuilder))
+				.map(p -> converter.convertOwnerProfileToView(p, uriBuilder))
 				.collect(Collectors.toList());
 		
 		return result;
+	}
+	
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String getOwnerProfilesAsHtml(@Context final UriInfo uriInfo) {
+		final List<ProfileDTO> ownerProfiles = getOwnerProfiles(uriInfo);
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		return template.ownerProfilesOverviewPage(ownerProfiles, uriBuilder).toString();
 	}
 	
 	@GET
@@ -56,9 +67,18 @@ public class OwnerApiProfileResource {
 		final ProfileEntity profile = this.profileService.getOwnerProfileById(id).get();
 
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		final ProfileDTO result = converter.convertToView(profile, uriBuilder); 
+		final ProfileDTO result = converter.convertOwnerProfileToView(profile, uriBuilder); 
 
 		return result;
+	}
+	
+	@GET
+	@Path("/{" + PROFILE_ID + "}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getOwnerProfileByIdAsHtml(@PathParam(PROFILE_ID) long id, @Context final UriInfo uriInfo) {
+		final ProfileDTO profile = getOwnerProfileById(id, uriInfo);
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		return template.ownerProfilePage(profile, uriBuilder).toString();
 	}
 
 	@POST

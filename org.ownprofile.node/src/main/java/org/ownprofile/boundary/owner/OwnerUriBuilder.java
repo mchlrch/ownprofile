@@ -65,7 +65,7 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.resolveTemplate(CONTACT_ID, contactId).resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
-	public URI resolveContactProfileURI(Long contactId) {
+	public URI resolveAddNewContactProfileURI(Long contactId) {
 		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "addNewContactProfile");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}

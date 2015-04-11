@@ -21,7 +21,7 @@ public class ContactDtoOutCompareUtil {
 		final Iterator<ProfileEntity> expectedProfileIt = expected.getProfiles().iterator();
 		final Iterator<ProfileHeaderDTO> actualProfileIt = actual.getProfiles().iterator();
 		while (expectedProfileIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertContentIsEqual(expectedProfileIt.next(), actualProfileIt.next(), uriBuilder);
+			ProfileDtoOutCompareUtil.assertContactProfileContentIsEqual(expectedProfileIt.next(), actualProfileIt.next(), uriBuilder);
 		}
 	}
 	
@@ -34,7 +34,7 @@ public class ContactDtoOutCompareUtil {
 		final Iterator<ProfileEntity> expectedProfileIt = expected.getProfiles().iterator();
 		final Iterator<ProfileDTO> actualProfileIt = actual.getProfiles().iterator();
 		while (expectedProfileIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertContentIsEqualOnOwnerAPI(expectedProfileIt.next(), actualProfileIt.next(), uriBuilder);
+			ProfileDtoOutCompareUtil.assertContactProfileContentIsEqualOnOwnerAPI(expectedProfileIt.next(), actualProfileIt.next(), uriBuilder);
 		}
 	}
 	

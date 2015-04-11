@@ -17,9 +17,17 @@ import javax.ws.rs.core.UriInfo;
 import org.ownprofile.boundary.DemoProfileFactory;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.owner.ContactConverter;
+import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
+import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.control.ProfileDomainService;
+import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.profile.entity.ProfileHandle;
+import org.ownprofile.profile.entity.ProfileSource;
+
+import com.google.common.collect.Multimap;
 
 @Path("/demo")
 public class DemoResource {
@@ -31,17 +39,23 @@ public class DemoResource {
 	private ProfileDomainService profileService;
 
 	@Inject
-	private ProfileConverter converter;
+	private AddressbookDomainService addressbookService;
+
+	@Inject
+	private ProfileConverter profileConverter;
+
+	@Inject
+	private ContactConverter contactConverter;
 
 	private void addNewOwnerProfile(ProfileNewDTO profile) {
-		final ProfileEntity newProfile = this.converter.createEntityForOwnerProfile(profile);
+		final ProfileEntity newProfile = this.profileConverter.createEntityForOwnerProfile(profile);
 		this.profileService.addNewOwnerProfile(newProfile);
 	}
 
 	@POST
-	@Path("init-ownerprofiles")
+	@Path("/init-ownerprofiles")
 	public Response initDemoProfiles(@Context UriInfo uriInfo) {
-		for (ProfileNewDTO p : this.demoProfileFactory.createDemoProfiles()) {
+		for (ProfileNewDTO p : this.demoProfileFactory.createOwnerProfiles()) {
 			this.addNewOwnerProfile(p);
 		}
 
@@ -49,6 +63,30 @@ public class DemoResource {
 		URI uri = uriBuilder.getOwnerProfileURI();
 		return Response.seeOther(uri).build();
 	}
+	
+	@POST
+	@Path("/init-addressbook")
+	public Response initAddressbook(@Context UriInfo uriInfo) {
+		final Multimap<ContactNewDTO, ProfileNewDTO> contactProfiles = this.demoProfileFactory.createContactProfiles(); 
+		
+		for (ContactNewDTO contact : contactProfiles.keySet()) {
+			final ContactEntity newContact = this.contactConverter.createEntity(contact);		
+			this.addressbookService.addNewContact(newContact);
+			
+			for (ProfileNewDTO p : contactProfiles.get(contact)) {
+				final ProfileSource profileSource = ProfileSource.createLocalSource();
+				final ProfileHandle handle = ProfileHandle.createRandomHandle();
+				
+				final ProfileEntity newContactProfile = this.profileConverter.createEntityForContactProfile(newContact, p, handle, profileSource);
+				this.addressbookService.addNewContactProfile(newContactProfile);
+			}
+		}
+
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		URI uri = uriBuilder.getContactURI();
+		return Response.seeOther(uri).build();
+	}
+
 
 	@GET
 	@Path("/test")

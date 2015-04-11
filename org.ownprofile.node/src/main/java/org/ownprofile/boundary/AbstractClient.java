@@ -7,6 +7,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 //TODO: http://cxf.apache.org/docs/jax-rs-client-api.html
@@ -22,19 +23,19 @@ public abstract class AbstractClient {
 	
 	protected <T> T doGet(Class<T> responseType, URI uri) {
 		final WebTarget webTarget = this.client.target(uri);
-		final T result = webTarget.request().get(responseType);
+		final T result = webTarget.request(MediaType.APPLICATION_JSON).get(responseType);
 		return result;
 	}
 	
 	protected <T> T doGet(GenericType<T> responseType, URI uri) {
 		final WebTarget webTarget = this.client.target(uri);		
-		final T result = webTarget.request().get(responseType);		
+		final T result = webTarget.request(MediaType.APPLICATION_JSON).get(responseType);		
 		return result;		
 	}
 
 	protected URI doPost(Object obj, URI uri) {
 		final WebTarget webTarget = this.client.target(uri);
-		final Response response = webTarget.request().post(Entity.json(obj));
+		final Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.json(obj));
 		return response.getLocation();
 	}
 

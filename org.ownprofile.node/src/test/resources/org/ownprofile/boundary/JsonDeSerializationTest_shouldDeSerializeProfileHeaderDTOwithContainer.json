@@ -1,0 +1,14 @@
+{
+	"type": "Owner",
+	"source": "Local",
+	"id": 0,
+	"handle": "abcdefghijkl0987654321",
+	"href": "http://localhost:9080/webapi/owner/addressbook/contact/0/profile/0",
+	"profileName": "privat",
+	"container": 
+	{
+		"id": 0,
+		"href": "http://localhost:9080/webapi/owner/addressbook/contact/0",
+		"petname": "kottan"
+	}
+}

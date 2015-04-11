@@ -10,6 +10,8 @@ profileHandle as a durable identifier for a profile
 - enable endpoint disposability and protocol evolution
 - serving the same information over different endpoints
 
+profileHandle as GET param -> URL-encoded
+
 ist ProfileHandle im richtigen package? .. wo wird es ueberall referenziert
 
 im peer-api ist sourceHandle(~=sourceId) enthalten, dieser ist nur relativ innerhalb der quelle gültig, nicht universale ID!

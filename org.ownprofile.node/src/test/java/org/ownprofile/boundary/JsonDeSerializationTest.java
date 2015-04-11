@@ -12,6 +12,12 @@ public class JsonDeSerializationTest {
 		final String expected = readJsonForThisMethod();
 		assertDeSerializationRoundtrip(ProfileHeaderDTO.class, expected);
 	}
+	
+	@Test
+	public void shouldDeSerializeProfileHeaderDTOwithContainer() throws Exception {
+		final String expected = readJsonForThisMethod();
+		assertDeSerializationRoundtrip(ProfileHeaderDTO.class, expected);
+	}
 
 	@Test
 	public void shouldDeSerializeProfileNewDTO() throws Exception {

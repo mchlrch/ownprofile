@@ -47,6 +47,9 @@ public class AddressbookResource {
 	@Inject
 	private ProfileConverter profileConverter;
 	
+	@Inject
+	private AddressbookTemplate template;
+	
 	@GET
 	@Path("/contact")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -62,6 +65,15 @@ public class AddressbookResource {
 	}
 	
 	@GET
+	@Path("/contact")
+	@Produces(MediaType.TEXT_HTML)
+	public String getContactsAsHtml(@Context final UriInfo uriInfo) {
+		final List<ContactDTO> contacts = getContacts(uriInfo);
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		return template.addressbookOverviewPage(contacts, uriBuilder).toString();
+	}
+	
+	@GET
 	@Path("/contact/{" + CONTACT_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContactAggregateDTO getContactById(@PathParam(CONTACT_ID) long id, @Context final UriInfo uriInfo) {
@@ -73,6 +85,15 @@ public class AddressbookResource {
 		final ContactAggregateDTO result = contactConverter.convertToAggregateView(contact, uriBuilder); 
 
 		return result;
+	}
+	
+	@GET
+	@Path("/contact/{" + CONTACT_ID + "}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getContactByIdAsHtml(@PathParam(CONTACT_ID) long id, @Context final UriInfo uriInfo) {
+		final ContactAggregateDTO contact = getContactById(id, uriInfo);
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		return template.addressbookContactPage(contact, uriBuilder).toString();
 	}
 	
 	@POST
@@ -98,10 +119,19 @@ public class AddressbookResource {
 		final ProfileEntity contact = this.addressbookService.getContactProfileById(profileId).get();
 
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		final ProfileDTO result = profileConverter.convertToView(contact, uriBuilder); 
+		final ProfileDTO result = profileConverter.convertContactProfileToView(contact, uriBuilder); 
 
 		// TODO: return Profile with header-link to contact -> how do we test this on client-side?
 		return result;
+	}
+	
+	@GET
+	@Path("/contact/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getContactProfileByIdAsHtml(@PathParam(PROFILE_ID) long profileId, @Context final UriInfo uriInfo) {
+		final ProfileDTO profile = getContactProfileById(profileId, uriInfo);
+		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
+		return template.addressbookContactProfilePage(profile, uriBuilder).toString();
 	}
 	
 	@POST
@@ -121,7 +151,7 @@ public class AddressbookResource {
 		this.addressbookService.addNewContactProfile(newContactProfile);
 		
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		final URI location = uriBuilder.resolveContactProfileURI(newContactProfile.getId().get());		
+		final URI location = uriBuilder.resolveContactProfileURI(contact.getId().get(), newContactProfile.getId().get());		
 		return Response.created(location).build();
 	}
 	

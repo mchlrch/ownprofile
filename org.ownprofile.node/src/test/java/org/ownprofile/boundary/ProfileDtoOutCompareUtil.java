@@ -15,8 +15,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ProfileDtoOutCompareUtil {
 
-	public static void assertContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
+	public static void assertOwnerProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
 		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveOwnerProfileURI(profile.getId().get()));
+	}
+	
+	public static void assertContactProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
+		assertContentIsEqual(expected, actual, (profile) -> {
+			final long contactId = profile.getContact().get().getId().get();
+			final long profileId = profile.getId().get();			
+			return uriBuilder.resolveContactProfileURI(contactId, profileId);
+		});
 	}
 	
 	public static void assertContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, Function<ProfileEntity, URI> uriResolver) {
@@ -41,8 +49,16 @@ public class ProfileDtoOutCompareUtil {
 		// TODO: String sourceLocation
 	}
 	
-	public static void assertContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
+	public static void assertOwnerProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
 		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveOwnerProfileURI(profile.getId().get()));
+	}
+	
+	public static void assertContactProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
+		assertContentIsEqual(expected, actual, (profile) -> {
+			final long contactId = profile.getContact().get().getId().get();
+			final long profileId = profile.getId().get();			
+			return uriBuilder.resolveContactProfileURI(contactId, profileId);
+		});
 	}
 
 	public static void assertContentIsEqualOnPeerAPI(ProfileEntity expected, ProfileDTO actual, PeerUriBuilder uriBuilder) {

@@ -12,9 +12,15 @@ import org.ownprofile.testutil.JsonTestUtil;
 
 public class ContactConverterTest {
 
-	private final ContactConverter converter = new ContactConverter(new ProfileConverter(JsonTestUtil.mapper));
+	private final ContactConverter converter;
 	private final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromDummyBase();
 
+	public ContactConverterTest() {
+		final ContactHeaderConverter headerConverter = new ContactHeaderConverter();
+		final ProfileConverter profileConverter = new ProfileConverter(headerConverter, JsonTestUtil.mapper);
+		this.converter = new ContactConverter(headerConverter, profileConverter);
+	}
+	
 	@Test
 	public void shouldCreateEntityFromDto() throws Exception {
 		final ContactNewDTO dto = new ContactNewDTO("kottan");
@@ -23,13 +29,6 @@ public class ContactConverterTest {
 		
 		Assert.assertNotNull(target);
 		Assert.assertEquals(dto.petname, target.getPetname());
-	}
-
-	@Test
-	public void shouldConvertEntity2HeaderDto() throws Exception {
-		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
-		final ContactHeaderDTO target = this.converter.convertToHeaderView(entity, this.uriBuilder);
-		ContactDtoOutCompareUtil.assertContentIsEqual(entity, target, uriBuilder);
 	}
 	
 	@Test

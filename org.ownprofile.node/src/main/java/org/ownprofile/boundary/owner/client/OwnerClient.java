@@ -49,7 +49,7 @@ public class OwnerClient extends AbstractClient {
 	}
 
 	public URI addNewContactProfile(long contactId, ProfileNewDTO newProfile) {
-		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(contactId);
+		final URI uri = this.ownerUriBuilder.resolveAddNewContactProfileURI(contactId);
 		return doPost(newProfile, uri);
 	}
 	

@@ -37,7 +37,7 @@ public class PeerApiProfileResource {
 		
 		final PeerUriBuilder uriBuilder = PeerUriBuilder.fromUriInfo(uriInfo);
 		final List<ProfileDTO> result = profiles.stream()
-				.map(p -> converter.convertToPeerView(p, uriBuilder))
+				.map(p -> converter.convertOwnerProfileToPeerView(p, uriBuilder))
 				.collect(Collectors.toList());
 		
 		return result;
@@ -53,7 +53,7 @@ public class PeerApiProfileResource {
 		final ProfileEntity profile = this.profileService.getOwnerProfileByHandle(handle).get();
 
 		final PeerUriBuilder uriBuilder = PeerUriBuilder.fromUriInfo(uriInfo);
-		final ProfileDTO result = converter.convertToPeerView(profile, uriBuilder); 
+		final ProfileDTO result = converter.convertOwnerProfileToPeerView(profile, uriBuilder); 
 
 		return result;
 	}

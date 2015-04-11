@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
+import org.ownprofile.boundary.owner.ContactHeaderConverter;
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.boundary.peer.PeerUriBuilder;
 import org.ownprofile.profile.entity.ContactEntity;
@@ -19,31 +21,47 @@ import com.google.inject.Inject;
 public class ProfileConverter {
 
 	private final ObjectMapper jsonMapper;
-
+	private final ContactHeaderConverter contactHeaderConverter;	
+	
 	@Inject
-	public ProfileConverter(ObjectMapper jsonMapper) {
+	public ProfileConverter(ContactHeaderConverter contactHeaderConverter, ObjectMapper jsonMapper) {
+		this.contactHeaderConverter = contactHeaderConverter;
 		this.jsonMapper = jsonMapper;
 	}
 	
-	public ProfileHeaderDTO convertToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+	public ProfileHeaderDTO convertOwnerProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final URI href = uriBuilder.resolveOwnerProfileURI(in.getId().get());
 		final ProfileHeaderDTO out = ProfileHeaderDTO.createOwnerProfile(in.getId().get(), in.getHandle().get(), href, in.getProfileName());
 		return out;
 	}
 	
-	public ProfileHeaderDTO convertToPeerHeaderView(ProfileEntity in, PeerUriBuilder uriBuilder) {
+	public ProfileHeaderDTO convertContactProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final ContactEntity contact = in.getContact().get();
+		final URI href = uriBuilder.resolveContactProfileURI(contact.getId().get(), in.getId().get());
+		final ContactHeaderDTO container = contactHeaderConverter.convertToHeaderView(contact, uriBuilder);
+		final org.ownprofile.boundary.ProfileSource source = in.getSource().isRemote() ? org.ownprofile.boundary.ProfileSource.Remote : org.ownprofile.boundary.ProfileSource.Local;
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createContactProfile(source, in.getHandle().get(), href, in.getProfileName(), container);
+		return out;
+	}
+	
+	public ProfileHeaderDTO convertOwnerProfileToHeaderPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
 		final URI href = uriBuilder.resolveProfileURI(in.getHandle().get());
-		final ProfileHeaderDTO out = ProfileHeaderDTO.createPeerProfile(in.getHandle().get(), href, in.getProfileName());
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createOwnerProfilePeerView(in.getHandle().get(), href, in.getProfileName());
 		return out;
 	}
 		
-	public ProfileDTO convertToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
-		final ProfileHeaderDTO header = convertToHeaderView(in, uriBuilder);
+	public ProfileDTO convertOwnerProfileToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertOwnerProfileToHeaderView(in, uriBuilder);
 		return convertToView(in, header);
 	}
 	
-	public ProfileDTO convertToPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
-		final ProfileHeaderDTO header = convertToPeerHeaderView(in, uriBuilder);
+	public ProfileDTO convertContactProfileToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertContactProfileToHeaderView(in, uriBuilder);
+		return convertToView(in, header);
+	}
+	
+	public ProfileDTO convertOwnerProfileToPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertOwnerProfileToHeaderPeerView(in, uriBuilder);
 		return convertToView(in, header);
 	}
 	
