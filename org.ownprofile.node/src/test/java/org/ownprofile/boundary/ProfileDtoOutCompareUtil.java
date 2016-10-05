@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import org.junit.Assert;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
-import org.ownprofile.boundary.peer.PeerUriBuilder;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.testutil.JsonTestUtil;
@@ -61,10 +60,6 @@ public class ProfileDtoOutCompareUtil {
 		});
 	}
 
-	public static void assertContentIsEqualOnPeerAPI(ProfileEntity expected, ProfileDTO actual, PeerUriBuilder uriBuilder) {
-		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveProfileURI(profile.getHandle().get()));		
-	}
-	
 	private static void assertContentIsEqual(ProfileEntity expected, ProfileDTO actual, Function<ProfileEntity, URI> uriResolver) {
 		Assert.assertNotNull(expected);
 		Assert.assertNotNull(actual);

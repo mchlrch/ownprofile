@@ -7,7 +7,6 @@ import java.util.Map;
 import org.ownprofile.boundary.owner.ContactHeaderConverter;
 import org.ownprofile.boundary.owner.ContactHeaderDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
-import org.ownprofile.boundary.peer.PeerUriBuilder;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
@@ -43,13 +42,7 @@ public class ProfileConverter {
 		final ProfileHeaderDTO out = ProfileHeaderDTO.createContactProfile(source, in.getHandle().get(), href, in.getProfileName(), container);
 		return out;
 	}
-	
-	public ProfileHeaderDTO convertOwnerProfileToHeaderPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
-		final URI href = uriBuilder.resolveProfileURI(in.getHandle().get());
-		final ProfileHeaderDTO out = ProfileHeaderDTO.createOwnerProfilePeerView(in.getHandle().get(), href, in.getProfileName());
-		return out;
-	}
-		
+			
 	public ProfileDTO convertOwnerProfileToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final ProfileHeaderDTO header = convertOwnerProfileToHeaderView(in, uriBuilder);
 		return convertToView(in, header);
@@ -59,12 +52,7 @@ public class ProfileConverter {
 		final ProfileHeaderDTO header = convertContactProfileToHeaderView(in, uriBuilder);
 		return convertToView(in, header);
 	}
-	
-	public ProfileDTO convertOwnerProfileToPeerView(ProfileEntity in, PeerUriBuilder uriBuilder) {
-		final ProfileHeaderDTO header = convertOwnerProfileToHeaderPeerView(in, uriBuilder);
-		return convertToView(in, header);
-	}
-	
+		
 	private ProfileDTO convertToView(ProfileEntity in, ProfileHeaderDTO header) {
 		Map<String, Object> body = Collections.emptyMap();
 		try {

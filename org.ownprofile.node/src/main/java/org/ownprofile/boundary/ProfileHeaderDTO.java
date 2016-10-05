@@ -64,17 +64,6 @@ public class ProfileHeaderDTO {
 				null);
 	}
 	
-	public static ProfileHeaderDTO createOwnerProfilePeerView(ProfileHandle handle, URI href, String profileName) {
-		return new ProfileHeaderDTO(
-				ProfileType.Peer,
-				ProfileSource.Remote,
-				null,
-				checkNotNull(handle.asString()),
-				checkNotNull(href),
-				profileName,
-				null);
-	}
-	
 	public static ProfileHeaderDTO createContactProfile(ProfileSource source, ProfileHandle handle, URI href, String profileName, ContactHeaderDTO container) {
 		return new ProfileHeaderDTO(
 				ProfileType.Peer,
