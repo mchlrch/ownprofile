@@ -25,7 +25,7 @@ import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
-@Path("/owner/profiles")
+@Path("/ownprofiles")
 public class OwnerApiProfileResource {
 
 	@Inject

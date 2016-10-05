@@ -27,7 +27,7 @@ public class OwnerClient extends AbstractClient {
 	}
 	
 	public List<ContactDTO> getContacts() {
-		final URI uri = this.ownerUriBuilder.getContactURI();
+		final URI uri = this.ownerUriBuilder.getContactsURI();
 		return doGet(new GenericType<List<ContactDTO>>() {}, uri);
 	}
 	
@@ -37,7 +37,7 @@ public class OwnerClient extends AbstractClient {
 	}
 	
 	public URI addNewContact(ContactNewDTO contact) {
-		final URI uri = this.ownerUriBuilder.getContactURI();
+		final URI uri = this.ownerUriBuilder.getContactsURI();
 		return doPost(contact, uri);
 	}
 

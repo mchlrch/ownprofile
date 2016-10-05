@@ -83,7 +83,7 @@ public class DemoResource {
 		}
 
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		URI uri = uriBuilder.getContactURI();
+		URI uri = uriBuilder.getContactsURI();
 		return Response.seeOther(uri).build();
 	}
 

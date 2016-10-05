@@ -33,7 +33,7 @@ import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
 
-@Path("/owner/addressbook")
+@Path("/contacts")
 public class AddressbookResource {
 
 	// TODO: sub resource (locator) for addressbook-bound profiles?
@@ -58,7 +58,6 @@ public class AddressbookResource {
 	}
 	
 	@GET
-	@Path("/contact")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ContactDTO> getContacts() {
 		final List<ContactEntity> contacts = this.addressbookService.getContacts();
@@ -71,7 +70,6 @@ public class AddressbookResource {
 	}
 	
 	@GET
-	@Path("/contact")
 	@Produces(MediaType.TEXT_HTML)
 	public String getContactsAsHtml() {
 		final List<ContactDTO> contacts = getContacts();
@@ -79,7 +77,7 @@ public class AddressbookResource {
 	}
 	
 	@GET
-	@Path("/contact/{" + CONTACT_ID + "}")
+	@Path("/{" + CONTACT_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContactAggregateDTO getContactById(@PathParam(CONTACT_ID) long id) {
 		
@@ -92,7 +90,7 @@ public class AddressbookResource {
 	}
 	
 	@GET
-	@Path("/contact/{" + CONTACT_ID + "}")
+	@Path("/{" + CONTACT_ID + "}")
 	@Produces(MediaType.TEXT_HTML)
 	public String getContactByIdAsHtml(@PathParam(CONTACT_ID) long id) {
 		final ContactAggregateDTO contact = getContactById(id);
@@ -100,7 +98,6 @@ public class AddressbookResource {
 	}
 	
 	@POST
-	@Path("/contact")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addNewContact(ContactNewDTO contact) {
 		// TODO: input-validation
@@ -113,7 +110,7 @@ public class AddressbookResource {
 	}
 
 	@GET
-	@Path("/contact/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
+	@Path("/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ProfileDTO getContactProfileById(@PathParam(PROFILE_ID) long profileId) {
 
@@ -127,7 +124,7 @@ public class AddressbookResource {
 	}
 	
 	@GET
-	@Path("/contact/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
+	@Path("/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
 	@Produces(MediaType.TEXT_HTML)
 	public String getContactProfileByIdAsHtml(@PathParam(PROFILE_ID) long profileId) {
 		final ProfileDTO profile = getContactProfileById(profileId);
@@ -135,7 +132,7 @@ public class AddressbookResource {
 	}
 	
 	@POST
-	@Path("/contact/{" + CONTACT_ID + "}/profile")
+	@Path("/{" + CONTACT_ID + "}/profile")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addNewContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileNewDTO profile) {
 		// TODO: input-validation
@@ -153,20 +150,5 @@ public class AddressbookResource {
 		final URI location = uriBuilders.owner().resolveContactProfileURI(contact.getId().get(), newContactProfile.getId().get());		
 		return Response.created(location).build();
 	}
-	
-	
-	// TODO: getRemoteProfile(URI) into client, then normal procedure to addNewContactProfile(profile)
-	// TODO: node acts as a proxy for the client, who first retrieves and looks at the profile before adding it to the addressbook
-	// TODO: in case remote-node is not up at the time client requests the profile, profile could be polled, fetched and stored in temporary stash on node ... 
-
-	//	@POST
-//	@Path("/contact/{id}/remote-profile")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public void addNewRemoteProfile(@PathParam("id") long contactId, URI profileURI) {
-//		// TODO: input-validation
-//		// TODO: implement this
-//		// TODO: return created Profile URI
-//		// return Response.created(uri)
-//	}
 
 }

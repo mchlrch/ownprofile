@@ -40,8 +40,8 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 
 	// --------------------------------------------
 	
-	public URI getContactURI() {
-		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "getContacts");
+	public URI getContactsURI() {
+		final UriBuilder builder = createUriBuilder(AddressbookResource.class);
 		return builder.build();
 	}
 	

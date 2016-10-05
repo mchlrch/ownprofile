@@ -17,7 +17,7 @@ public enum Section {
 	public URI getLocation(OwnerUriBuilder uriBuilder) {
 		switch (this) {
 		case Addressbook:
-			return uriBuilder.getContactURI();
+			return uriBuilder.getContactsURI();
 		case OwnerProfiles:
 			return uriBuilder.getOwnerProfileURI();
 		default:
