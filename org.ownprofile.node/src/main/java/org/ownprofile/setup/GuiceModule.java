@@ -37,8 +37,8 @@ public class GuiceModule extends AbstractModule {
 		
 		bind(UriBuilders.class).in(ServletScopes.REQUEST);
 		
-		bind(org.ownprofile.boundary.owner.resources.AddressbookTemplate.class);
-		bind(org.ownprofile.boundary.owner.resources.OwnerApiProfileTemplate.class);
+		bind(org.ownprofile.boundary.owner.resources.ContactsTemplate.class);
+		bind(org.ownprofile.boundary.owner.resources.OwnprofilesTemplate.class);
 		
 		bind(org.ownprofile.boundary.common.PageHeaderExt.class);
 		bind(org.ownprofile.boundary.common.HtmlExt.class);

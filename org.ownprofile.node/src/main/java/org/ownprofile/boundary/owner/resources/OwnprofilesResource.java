@@ -26,7 +26,7 @@ import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ProfileEntity;
 
 @Path("/ownprofiles")
-public class OwnerApiProfileResource {
+public class OwnprofilesResource {
 
 	@Inject
 	private ProfileDomainService profileService;
@@ -35,12 +35,12 @@ public class OwnerApiProfileResource {
 	private ProfileConverter converter;
 	
 	@Inject
-	private OwnerApiProfileTemplate template;
+	private OwnprofilesTemplate template;
 	
 	private final UriBuilders uriBuilders;
 	
 	@Inject
-	public OwnerApiProfileResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
+	public OwnprofilesResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
 		this.uriBuilders = uriBuilders.init(uriInfo);
 	}
 

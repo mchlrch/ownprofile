@@ -34,10 +34,8 @@ import org.ownprofile.profile.entity.ProfileHandle;
 import org.ownprofile.profile.entity.ProfileSource;
 
 @Path("/contacts")
-public class AddressbookResource {
+public class ContactsResource {
 
-	// TODO: sub resource (locator) for addressbook-bound profiles?
-	
 	@Inject
 	private AddressbookDomainService addressbookService;
 
@@ -48,12 +46,12 @@ public class AddressbookResource {
 	private ProfileConverter profileConverter;
 	
 	@Inject
-	private AddressbookTemplate template;
+	private ContactsTemplate template;
 	
 	private final UriBuilders uriBuilders;
 	
 	@Inject
-	public AddressbookResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
+	public ContactsResource(@Context final UriInfo uriInfo, UriBuilders uriBuilders) {
 		this.uriBuilders = uriBuilders.init(uriInfo);
 	}
 	

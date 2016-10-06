@@ -8,7 +8,7 @@ import org.ownprofile.boundary.common.HtmlExt
 import org.ownprofile.boundary.common.PageHeaderExt
 import org.ownprofile.boundary.common.Section
 
-class OwnerApiProfileTemplate {
+class OwnprofilesTemplate {
 
 	@Inject extension DomainExt domainExt
 	@Inject extension HtmlExt htmlExt

@@ -11,8 +11,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.AbstractUriBuilder;
 import org.ownprofile.boundary.BoundaryConstants;
-import org.ownprofile.boundary.owner.resources.AddressbookResource;
-import org.ownprofile.boundary.owner.resources.OwnerApiProfileResource;
+import org.ownprofile.boundary.owner.resources.ContactsResource;
+import org.ownprofile.boundary.owner.resources.OwnprofilesResource;
 
 public class OwnerUriBuilder extends AbstractUriBuilder {
 	
@@ -41,32 +41,32 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 	// --------------------------------------------
 	
 	public URI getContactsURI() {
-		final UriBuilder builder = createUriBuilder(AddressbookResource.class);
+		final UriBuilder builder = createUriBuilder(ContactsResource.class);
 		return builder.build();
 	}
 	
 	public URI resolveContactURI(Long contactId) {
-		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "getContactById");
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "getContactById");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 
 	public URI resolveOwnerProfileURI(Long profileId) {
-		final UriBuilder builder = createUriBuilder(OwnerApiProfileResource.class, "getOwnerProfileById"); 
+		final UriBuilder builder = createUriBuilder(OwnprofilesResource.class, "getOwnerProfileById"); 
 		return builder.resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
 	public URI getOwnerProfileURI() {
-		final UriBuilder builder = createUriBuilder(OwnerApiProfileResource.class); 
+		final UriBuilder builder = createUriBuilder(OwnprofilesResource.class); 
 		return builder.build();
 	}
 	
 	public URI resolveContactProfileURI(Long contactId, Long profileId) {
-		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "getContactProfileById");
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "getContactProfileById");
 		return builder.resolveTemplate(CONTACT_ID, contactId).resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
 	public URI resolveAddNewContactProfileURI(Long contactId) {
-		final UriBuilder builder = createUriBuilder(AddressbookResource.class, "addNewContactProfile");
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addNewContactProfile");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 	

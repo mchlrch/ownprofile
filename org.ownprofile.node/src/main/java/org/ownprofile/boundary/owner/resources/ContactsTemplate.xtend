@@ -10,7 +10,7 @@ import org.ownprofile.boundary.common.Section
 import org.ownprofile.boundary.owner.ContactAggregateDTO
 import org.ownprofile.boundary.owner.ContactDTO
 
-class AddressbookTemplate {
+class ContactsTemplate {
 
 	@Inject	extension DomainExt domainExt
 	@Inject	extension HtmlExt htmlExt
