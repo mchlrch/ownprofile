@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,6 +27,7 @@ import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactConverter;
 import org.ownprofile.boundary.owner.ContactDTO;
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
 import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.entity.ContactEntity;
@@ -105,6 +107,22 @@ public class ContactsResource {
 		
 		final URI location = uriBuilders.owner().resolveContactURI(newContact.getId().get());		
 		return Response.created(location).build();
+	}
+	
+	@GET
+	@Path("addNewContactHtmlForm")
+	@Produces(MediaType.TEXT_HTML)
+	public String addNewContactHtmlForm() {
+		return template.addNewContactForm().toString();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addNewContactFormSubmit(MultivaluedMap<String, String> formParams) {
+		ContactNewDTO in = new ContactNewDTO(formParams.getFirst(ContactHeaderDTO.P_PETNAME));
+		
+		Response r = addNewContact(in);
+		return Response.seeOther(r.getLocation()).build();
 	}
 
 	@GET
