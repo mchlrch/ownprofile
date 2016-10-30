@@ -9,4 +9,8 @@ public class BoundaryConstants {
 	
 	public static final String PROFILE_HANDLE = "profileHandle";
 	
+	public static final String FORM_ACTION_INPUT_NAME = "action";
+	public static final String FORM_ACTION_INPUT_VALUE_DELETE = "delete";
+	public static final String FORM_ACTION_INPUT_VALUE_UPDATE = "update";
+	
 }

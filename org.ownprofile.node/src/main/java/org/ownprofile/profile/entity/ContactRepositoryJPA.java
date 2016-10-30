@@ -38,6 +38,12 @@ public class ContactRepositoryJPA implements ContactRepository {
 	public void addContact(ContactEntity contact) {
 		em.get().persist(contact);
 	}
+	
+	@Transactional
+	public void deleteContact(ContactEntity contact) {
+		contact = em.get().find(ContactEntity.class, contact.getId().get());
+		em.get().remove(contact);
+	}
 
 	@Transactional
 	public Optional<ProfileEntity> getContactProfileById(long id) {

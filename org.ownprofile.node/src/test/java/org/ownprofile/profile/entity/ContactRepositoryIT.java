@@ -59,6 +59,14 @@ public class ContactRepositoryIT {
 	}
 	
 	@Test
+	public void shouldDeleteContact() {
+		final ContactEntity contactEntity = new ContactEntity("kottan");
+		repo.addContact(contactEntity);
+		
+		repo.deleteContact(contactEntity);
+	}
+	
+	@Test
 	public void shouldQueryForContactProfileById() {
 		repo.getContactProfileById(1L);
 	}

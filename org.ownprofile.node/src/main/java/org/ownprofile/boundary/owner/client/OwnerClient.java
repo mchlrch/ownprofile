@@ -40,6 +40,11 @@ public class OwnerClient extends AbstractClient {
 		final URI uri = this.ownerUriBuilder.getContactsURI();
 		return doPost(contact, uri);
 	}
+	
+	public void deleteContact(long contactId) {
+		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
+		doDelete(uri);
+	}
 
 	// -------------------------------
 	

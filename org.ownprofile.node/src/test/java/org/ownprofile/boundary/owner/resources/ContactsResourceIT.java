@@ -31,7 +31,7 @@ import org.ownprofile.profile.entity.RepoProxies;
 import org.ownprofile.profile.entity.TestProfileEntity;
 
 // each testmethod invokes at most one method on the resource
-public class AddressbookResourceIT {
+public class ContactsResourceIT {
 
 	// TODO: http://www.petervannes.nl/files/084d1067451c4f9a56f9b865984f803d-52.php
 	
@@ -125,6 +125,18 @@ public class AddressbookResourceIT {
 		
 		final URI expectedLocation = client.getUriBuilder().resolveContactURI(actual.getId().get());
 		Assert.assertEquals(expectedLocation, location);
+	}
+	
+	@Test
+	public void shouldDeleteContact() {
+		final Long contactId = this.kottan.getId().get();
+		
+		client.deleteContact(contactId);
+		
+		final ContactEntity actual = contactRepoMock.deletedContact;
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(this.kottan, actual);
+		
 	}
 
 	@Test

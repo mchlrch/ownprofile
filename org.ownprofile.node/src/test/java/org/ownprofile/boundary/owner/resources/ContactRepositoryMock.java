@@ -21,6 +21,7 @@ public class ContactRepositoryMock implements ContactRepository {
 	private final Map<Long, ProfileEntity> contactProfiles = new HashMap<Long, ProfileEntity>();
 
 	public ContactEntity addedContact;
+	public ContactEntity deletedContact;
 
 	private final Field contactIdField;
 
@@ -55,6 +56,13 @@ public class ContactRepositoryMock implements ContactRepository {
 
 		contact.getProfiles().forEach(p -> addContactProfile(p));
 	}
+	
+	@Override
+	public void deleteContact(ContactEntity contact) {
+		this.deletedContact = this.contacts.remove(contact.getId().get());
+		
+		this.deletedContact.getProfiles().forEach(p -> deleteContactProfile(p));
+	}
 
 	private Long initializeIdIfNull(ContactEntity contact) {
 		try {
@@ -76,6 +84,10 @@ public class ContactRepositoryMock implements ContactRepository {
 		}
 		
 		this.contactProfiles.put(id, profile);
+	}
+	
+	private void deleteContactProfile(ProfileEntity profile) {
+		this.contactProfiles.remove(profile.getId().get());
 	}
 
 	@Override

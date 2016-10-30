@@ -12,5 +12,7 @@ public interface ContactRepository {
 	public void addContact(ContactEntity contact);
 
 	public Optional<ProfileEntity> getContactProfileById(long id);
+	
+	public void deleteContact(ContactEntity contact);
 
 }

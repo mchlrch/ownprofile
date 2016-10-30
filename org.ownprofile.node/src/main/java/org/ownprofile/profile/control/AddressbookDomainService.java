@@ -54,4 +54,8 @@ public class AddressbookDomainService {
 		this.profileRepo.addProfile(newProfile);
 	}
 	
+	public void deleteContact(ContactEntity contact) {
+		this.contactRepo.deleteContact(contact);
+	}
+	
 }

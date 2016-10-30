@@ -39,4 +39,9 @@ public abstract class AbstractClient {
 		return response.getLocation();
 	}
 
+	protected void doDelete(URI uri) {
+		final WebTarget webTarget = this.client.target(uri);
+		webTarget.request(MediaType.APPLICATION_JSON).delete();
+	}
+	
 }

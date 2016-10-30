@@ -5,10 +5,12 @@ import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,8 +20,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
@@ -79,22 +83,30 @@ public class ContactsResource {
 	@GET
 	@Path("/{" + CONTACT_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContactAggregateDTO getContactById(@PathParam(CONTACT_ID) long id) {
-		
-		// TODO: handle unknown ID gracefully
-		final ContactEntity contact = this.addressbookService.getContactById(id).get();
-
-		final ContactAggregateDTO result = contactConverter.convertToAggregateView(contact, uriBuilders.owner()); 
-
-		return result;
+	public Response getContactById(@PathParam(CONTACT_ID) long id) {
+		final Optional<Pair<ContactEntity, ContactAggregateDTO>> contact = contactById(id);
+		return contact.map(c -> Response.ok(c.getRight()).build())
+				.orElse(Response.status(Status.NOT_FOUND).build());
 	}
 	
 	@GET
 	@Path("/{" + CONTACT_ID + "}")
 	@Produces(MediaType.TEXT_HTML)
-	public String getContactByIdAsHtml(@PathParam(CONTACT_ID) long id) {
-		final ContactAggregateDTO contact = getContactById(id);
-		return template.addressbookContactPage(contact).toString();
+	public Response getContactByIdAsHtml(@PathParam(CONTACT_ID) long id) {
+		final Optional<Pair<ContactEntity, ContactAggregateDTO>> contact = contactById(id);
+		return contact.map(c -> Response.ok(template.addressbookContactPage(c.getRight()).toString()).build())
+				.orElse(Response.status(Status.NOT_FOUND).build());
+	}
+	
+	private Optional<Pair<ContactEntity, ContactAggregateDTO>> contactById(long id) {
+		final Optional<ContactEntity> contact = this.addressbookService.getContactById(id);
+		
+		if (contact.isPresent()) {
+			final ContactAggregateDTO contactDto = contactConverter.convertToAggregateView(contact.get(), uriBuilders.owner()); 
+			return Optional.of(Pair.of(contact.get(), contactDto));
+		} else {
+			return Optional.empty();
+		}
 	}
 	
 	@POST
@@ -124,7 +136,21 @@ public class ContactsResource {
 		Response r = addNewContact(in);
 		return Response.seeOther(r.getLocation()).build();
 	}
-
+	
+	@DELETE
+	@Path("/{" + CONTACT_ID + "}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteContact(@PathParam(CONTACT_ID) long id) {
+		final Optional<Pair<ContactEntity, ContactAggregateDTO>> contact = contactById(id);
+		if (contact.isPresent()) {
+			addressbookService.deleteContact(contact.get().getLeft());
+			return Response.ok().build();
+			
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+	
 	@GET
 	@Path("/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)

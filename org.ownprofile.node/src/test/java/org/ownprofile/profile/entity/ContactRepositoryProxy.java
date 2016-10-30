@@ -26,5 +26,10 @@ public class ContactRepositoryProxy implements ContactRepository {
 	public Optional<ProfileEntity> getContactProfileById(long id) {
 		return this.delegate.getContactProfileById(id);
 	}
+	
+	@Override
+	public void deleteContact(ContactEntity contact) {
+		this.delegate.deleteContact(contact);
+	}
 
 }
