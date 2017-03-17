@@ -10,8 +10,8 @@ import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ContactRepository;
 import org.ownprofile.profile.entity.ContactRepositoryJPA;
-import org.ownprofile.profile.entity.ProfileRepository;
-import org.ownprofile.profile.entity.ProfileRepositoryJPA;
+import org.ownprofile.profile.entity.MyProfileRepository;
+import org.ownprofile.profile.entity.MyProfileRepositoryJPA;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.PersistFilter;
@@ -42,7 +42,7 @@ public class GuiceModule extends AbstractModule {
 		bind(UriBuilders.class).in(ServletScopes.REQUEST);
 		
 		bind(org.ownprofile.boundary.owner.resources.ContactsTemplate.class);
-		bind(org.ownprofile.boundary.owner.resources.OwnprofilesTemplate.class);
+		bind(org.ownprofile.boundary.owner.resources.MyProfilesTemplate.class);
 		
 		bind(org.ownprofile.boundary.common.PageHeaderExt.class);
 		bind(org.ownprofile.boundary.common.HtmlExt.class);
@@ -61,6 +61,6 @@ public class GuiceModule extends AbstractModule {
 	}
 	
 	protected void bindProfileRepository() {
-		bind(ProfileRepository.class).to(ProfileRepositoryJPA.class).in(ServletScopes.REQUEST);		
+		bind(MyProfileRepository.class).to(MyProfileRepositoryJPA.class).in(ServletScopes.REQUEST);		
 	}
 }

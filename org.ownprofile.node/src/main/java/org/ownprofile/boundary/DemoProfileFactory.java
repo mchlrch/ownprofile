@@ -12,7 +12,7 @@ import com.google.common.collect.Multimap;
 
 public class DemoProfileFactory {
 
-	public Iterable<ProfileNewDTO> createOwnerProfiles() {
+	public Iterable<ProfileNewDTO> createMyProfiles() {
 		final List<ProfileNewDTO> result = new ArrayList<ProfileNewDTO>();
 		result.add(createHomersProfile());
 		return result;

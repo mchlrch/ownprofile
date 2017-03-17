@@ -9,41 +9,41 @@ import javax.inject.Inject;
 
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
-import org.ownprofile.profile.entity.ProfileRepository;
+import org.ownprofile.profile.entity.MyProfileRepository;
 
 public class ProfileDomainService {
 
 	@Inject
-	private ProfileRepository profileRepo;
+	private MyProfileRepository profileRepo;
 	
-	public List<ProfileEntity> getOwnerProfiles() {
+	public List<ProfileEntity> getMyProfiles() {
 		
 		// TODO: profile filtering based on permissions
 		
-		final List<ProfileEntity> result = this.profileRepo.getAllOwnerProfiles();
+		final List<ProfileEntity> result = this.profileRepo.getMyProfiles();
 		return result;
 	}
 	
-	public Optional<ProfileEntity> getOwnerProfileById(long id) {
+	public Optional<ProfileEntity> getMyProfileById(long id) {
 		
 		// TODO: profile filtering based on permissions
 		
-		final Optional<ProfileEntity> result = this.profileRepo.getOwnerProfileById(id);
+		final Optional<ProfileEntity> result = this.profileRepo.getMyProfileById(id);
 		return result;
 	}
 	
-	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
+	public Optional<ProfileEntity> getMyProfileByHandle(ProfileHandle handle) {
 		
 		// TODO check permissions
 		
-		final Optional<ProfileEntity> result = this.profileRepo.getOwnerProfileByHandle(handle);
+		final Optional<ProfileEntity> result = this.profileRepo.getMyProfileByHandle(handle);
 		return result;
 		
 	}
 
-	public void addNewOwnerProfile(ProfileEntity newProfile) {
-		checkArgument(newProfile.isOwnerProfile(), "newProfile not an ownerProfile");		
-		this.profileRepo.addProfile(newProfile);
+	public void addNewMyProfile(ProfileEntity newProfile) {
+		checkArgument(newProfile.isMyProfile(), "newProfile not a myProfile");		
+		this.profileRepo.addMyProfile(newProfile);
 	}
 
 }

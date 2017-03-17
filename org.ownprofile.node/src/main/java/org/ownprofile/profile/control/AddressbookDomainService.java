@@ -10,12 +10,12 @@ import javax.inject.Inject;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepository;
 import org.ownprofile.profile.entity.ProfileEntity;
-import org.ownprofile.profile.entity.ProfileRepository;
+import org.ownprofile.profile.entity.MyProfileRepository;
 
 public class AddressbookDomainService {
 
 	@Inject
-	private ProfileRepository profileRepo;
+	private MyProfileRepository profileRepo;
 	
 	@Inject
 	private ContactRepository contactRepo;
@@ -51,7 +51,7 @@ public class AddressbookDomainService {
 		checkArgument(newProfile.isContactProfile(), "newProfile not a contactProfile");
 		
 		// TODO: rethink if ContactProfiles shouldn't be added via ContactRepository.addContactProfile()
-		this.profileRepo.addProfile(newProfile);
+		this.profileRepo.addMyProfile(newProfile);
 	}
 	
 	public void deleteContact(ContactEntity contact) {

@@ -19,18 +19,18 @@ import com.google.inject.persist.PersistService;
 public class ProfileRepositoryIT {
 
 	private static Injector injector;
-	private static ProfileRepositoryJPA repo;
+	private static MyProfileRepositoryJPA repo;
 
 	@BeforeClass
 	public static void before() {
 		injector = Guice.createInjector(SystemTestSession.createDefaultJpaModule(), new GuiceModule() {
 			@Override
 			protected void configure() {
-				bind(ProfileRepositoryJPA.class);
+				bind(MyProfileRepositoryJPA.class);
 			}
 		});
 
-		repo = injector.getInstance(ProfileRepositoryJPA.class);
+		repo = injector.getInstance(MyProfileRepositoryJPA.class);
 		injector.getInstance(PersistService.class).start();
 	}
 
@@ -42,20 +42,20 @@ public class ProfileRepositoryIT {
 	// =============================================================
 
 	@Test
-	public void shouldQueryForAllOwnerProfiles() {
-		final List<ProfileEntity> ownerProfiles = repo.getAllOwnerProfiles();
-		Assert.assertNotNull(ownerProfiles);
+	public void shouldQueryForAllMyProfiles() {
+		final List<ProfileEntity> myProfiles = repo.getMyProfiles();
+		Assert.assertNotNull(myProfiles);
 	}
 
 	@Test
-	public void shouldQueryForOwnerProfileById() {
-		repo.getOwnerProfileById(1L);
+	public void shouldQueryForMyProfileById() {
+		repo.getMyProfileById(1L);
 	}
 	
 	@Test
 	public void shouldAddProfile() {
 		final ProfileEntity profileEntity = new ProfileEntity(ProfileSource.createLocalSource(), "private", ProfileBody.createEmptyBody());
-		repo.addProfile(profileEntity);
+		repo.addMyProfile(profileEntity);
 	}
 
 }

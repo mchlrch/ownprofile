@@ -20,19 +20,19 @@ import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.IdInitializer;
 import org.ownprofile.profile.entity.ProfileEntity;
-import org.ownprofile.profile.entity.ProfileRepositoryMock;
+import org.ownprofile.profile.entity.MyProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
 import org.ownprofile.profile.entity.RepoProxies;
 import org.ownprofile.profile.entity.TestProfileEntity;
 
 // each testmethod invokes at most one method on the resource
-public class OwnerApiProfileResourceIT {
+public class MyProfilesResourceIT {
 
 	private static final RepoProxies repoProxies = new RepoProxies();
 	private static ServiceIntegrationTestSession session;
 
 	private TestOwnerClient client;
-	private ProfileRepositoryMock profileRepoMock;
+	private MyProfileRepositoryMock profileRepoMock;
 
 	@BeforeClass
 	public static void startJetty() throws Exception {
@@ -52,10 +52,10 @@ public class OwnerApiProfileResourceIT {
 		this.client = session.getOrCreateOwnerClient();
 		
 		final IdInitializer<ProfileEntity> profileIdInitializer = new IdInitializer<>(ProfileEntity.class);
-		this.profileRepoMock = new ProfileRepositoryMock(profileIdInitializer);
+		this.profileRepoMock = new MyProfileRepositoryMock(profileIdInitializer);
 		repoProxies.setProfileRepository(profileRepoMock);
 		
-		this.profileRepoMock.addProfile(createOwnerProfile());
+		this.profileRepoMock.addMyProfile(createMyProfile());
 	}
 
 	@After
@@ -63,7 +63,7 @@ public class OwnerApiProfileResourceIT {
 		repoProxies.clearDelegates();
 	}
 	
-	private ProfileEntity createOwnerProfile() {
+	private ProfileEntity createMyProfile() {
 		return TestProfileEntity.createOwnProfile(this.profileRepoMock.profileIdSource().nextId(), ProfileSource.createLocalSource(), "private");
 		// new TestProfileEntity(92L, ProfileSource.createRemoteSource("http://localhost"), "professional");
 	}
@@ -71,41 +71,41 @@ public class OwnerApiProfileResourceIT {
 	// -------------------------------------------------------------
 
 	@Test
-	public void shouldGetOwnerProfiles() {
-		final List<ProfileDTO> profiles = client.getOwnerProfiles();
+	public void shouldGetMyProfiles() {
+		final List<ProfileDTO> profiles = client.getMyProfiles();
 
-		Assert.assertEquals(profileRepoMock.getAllOwnerProfiles().size(), profiles.size());
+		Assert.assertEquals(profileRepoMock.getMyProfiles().size(), profiles.size());
 
-		final Iterator<ProfileEntity> expectedIt = profileRepoMock.getAllOwnerProfiles().iterator();
+		final Iterator<ProfileEntity> expectedIt = profileRepoMock.getMyProfiles().iterator();
 		final Iterator<ProfileDTO> actualIt = profiles.iterator();
 		while (expectedIt.hasNext()) {
-			ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqualOnOwnerAPI(expectedIt.next(), actualIt.next(), client.getUriBuilder());
+			ProfileDtoOutCompareUtil.assertMyProfileContentIsEqualOnOwnerAPI(expectedIt.next(), actualIt.next(), client.getUriBuilder());
 		}
 	}
 	
 	@Test
-	public void shouldGetOwnerProfileById() {
+	public void shouldGetMyProfileById() {
 		final Long profileId = profileRepoMock.addedProfile.getId().get();
-		final ProfileDTO profile = client.getOwnerProfileById(profileId);
+		final ProfileDTO profile = client.getMyProfileById(profileId);
 
 		Assert.assertNotNull(profile);
 
-		final ProfileEntity expected = profileRepoMock.getOwnerProfileById(profileId).get();				
-		ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
+		final ProfileEntity expected = profileRepoMock.getMyProfileById(profileId).get();				
+		ProfileDtoOutCompareUtil.assertMyProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
 	}
 
 	@Test
-	public void shouldAddNewOwnerProfile() {
+	public void shouldAddNewMyProfile() {
 		final Map<String, Object> body = Collections.emptyMap();
 		final ProfileNewDTO newProfile = new ProfileNewDTO("public", body);
 
-		final URI location = client.addNewOwnerProfile(newProfile);
+		final URI location = client.addNewMyProfile(newProfile);
 
 		final ProfileEntity actual = profileRepoMock.addedProfile;
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		
-		final URI expectedLocation = client.getUriBuilder().resolveOwnerProfileURI(actual.getId().get());
+		final URI expectedLocation = client.getUriBuilder().resolveMyProfileURI(actual.getId().get());
 		Assert.assertEquals(expectedLocation, location);
 	}
 

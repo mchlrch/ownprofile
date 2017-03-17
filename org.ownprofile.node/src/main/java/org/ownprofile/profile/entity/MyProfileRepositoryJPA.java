@@ -9,23 +9,23 @@ import javax.persistence.Query;
 
 import com.google.inject.Provider;
 
-public class ProfileRepositoryJPA implements ProfileRepository {
+public class MyProfileRepositoryJPA implements MyProfileRepository {
 	
 	@Inject Provider<EntityManager> em;
 	
-	public List<ProfileEntity> getAllOwnerProfiles() {
+	public List<ProfileEntity> getMyProfiles() {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL");
 		final List<?> queryResult = q.getResultList();
 		return (List<ProfileEntity>) queryResult;
 	}
 	
-	public Optional<ProfileEntity> getOwnerProfileById(long id) {
+	public Optional<ProfileEntity> getMyProfileById(long id) {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL AND p.id = " + id);
 		return extractSingleResult(q);
 	}
 	
 	
-	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
+	public Optional<ProfileEntity> getMyProfileByHandle(ProfileHandle handle) {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NULL AND p.handle = " + handle);
 		return extractSingleResult(q);
 	}
@@ -41,7 +41,7 @@ public class ProfileRepositoryJPA implements ProfileRepository {
 		}
 	}
 	
-	public void addProfile(ProfileEntity profile) {
+	public void addMyProfile(ProfileEntity profile) {
 		em.get().persist(profile);
 	}
 

@@ -27,7 +27,7 @@ import org.ownprofile.profile.entity.IdInitializer;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
-import org.ownprofile.profile.entity.ProfileRepositoryMock;
+import org.ownprofile.profile.entity.MyProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
 import org.ownprofile.profile.entity.RepoProxies;
 import org.ownprofile.profile.entity.TestProfileEntity;
@@ -42,7 +42,7 @@ public class ContactsResourceIT {
 
 	private TestOwnerClient client;
 	private ContactRepositoryMock contactRepoMock;
-	private ProfileRepositoryMock profileRepoMock;
+	private MyProfileRepositoryMock profileRepoMock;
 	
 	private ContactEntity kottan;
 
@@ -67,7 +67,7 @@ public class ContactsResourceIT {
 		
 		final IdInitializer<ProfileEntity> profileIdInitializer = new IdInitializer<>(ProfileEntity.class);
 		this.contactRepoMock = new ContactRepositoryMock(profileIdInitializer);
-		this.profileRepoMock = new ProfileRepositoryMock(profileIdInitializer);
+		this.profileRepoMock = new MyProfileRepositoryMock(profileIdInitializer);
 		repoProxies.setContactRepository(contactRepoMock);
 		repoProxies.setProfileRepository(profileRepoMock);
 		

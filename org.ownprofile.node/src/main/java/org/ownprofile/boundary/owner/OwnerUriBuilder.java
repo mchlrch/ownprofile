@@ -50,13 +50,12 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 
-	// TODO: rename to myprofile
-	public URI resolveOwnerProfileURI(Long profileId) {
+	public URI resolveMyProfileURI(Long profileId) {
 		final UriBuilder builder = createUriBuilder(MyProfilesResource.class, "getMyProfileById"); 
 		return builder.resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
-	public URI getOwnerProfileURI() {
+	public URI getMyProfileURI() {
 		final UriBuilder builder = createUriBuilder(MyProfilesResource.class); 
 		return builder.build();
 	}

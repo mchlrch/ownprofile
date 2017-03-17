@@ -23,13 +23,13 @@ public class ProfileConverterTest {
 	private final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromDummyBase();
 
 	@Test
-	public void shouldCreateOwnerProfileEntityFromDto() throws Exception {
+	public void shouldCreateMyProfileEntityFromDto() throws Exception {
 		final Map<String, Object> body = new HashMap<String, Object>();
 		body.put("firstName", "adolf");
 		body.put("lastName", "kottan");
 		final ProfileNewDTO dto = new ProfileNewDTO("private", body);
 
-		final ProfileEntity target = converter.createEntityForOwnerProfile(dto);
+		final ProfileEntity target = converter.createEntityForMyProfile(dto);
 		
 		assertCorrectConversion(dto, target);
 	}
@@ -51,11 +51,11 @@ public class ProfileConverterTest {
 	}
 
 	@Test
-	public void shouldConvertOwnerProfileEntity2HeaderDto() throws Exception {
+	public void shouldConvertMyProfileEntity2HeaderDto() throws Exception {
 		final ProfileEntity entity = TestProfileEntity.createOwnProfile(42L, ProfileSource.createLocalSource(), "professional");
 
-		final ProfileHeaderDTO target = this.converter.convertOwnerProfileToHeaderView(entity, this.uriBuilder);
-		ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqual(entity, target, this.uriBuilder);
+		final ProfileHeaderDTO target = this.converter.convertMyProfileToHeaderView(entity, this.uriBuilder);
+		ProfileDtoOutCompareUtil.assertMyProfileContentIsEqual(entity, target, this.uriBuilder);
 	}
 	
 	@Test
@@ -69,12 +69,12 @@ public class ProfileConverterTest {
 	}
 	
 	@Test
-	public void shouldConvertOwnerProfileEntity2Dto() throws Exception {
+	public void shouldConvertMyProfileEntity2Dto() throws Exception {
 		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"adolf\",\"lastName\":\"kottan\"}");
 		final ProfileEntity entity = TestProfileEntity.createOwnProfile(42L, ProfileSource.createLocalSource(), "professional", body);
 
-		final ProfileDTO target = this.converter.convertOwnerProfileToView(entity, this.uriBuilder);
-		ProfileDtoOutCompareUtil.assertOwnerProfileContentIsEqualOnOwnerAPI(entity, target, this.uriBuilder);
+		final ProfileDTO target = this.converter.convertMyProfileToView(entity, this.uriBuilder);
+		ProfileDtoOutCompareUtil.assertMyProfileContentIsEqualOnOwnerAPI(entity, target, this.uriBuilder);
 	}
 	
 	@Test

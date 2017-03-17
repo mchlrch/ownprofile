@@ -28,9 +28,9 @@ public class ProfileConverter {
 		this.jsonMapper = jsonMapper;
 	}
 	
-	public ProfileHeaderDTO convertOwnerProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
-		final URI href = uriBuilder.resolveOwnerProfileURI(in.getId().get());
-		final ProfileHeaderDTO out = ProfileHeaderDTO.createOwnerProfile(in.getId().get(), in.getHandle().get(), href, in.getProfileName());
+	public ProfileHeaderDTO convertMyProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final URI href = uriBuilder.resolveMyProfileURI(in.getId().get());
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createMyProfile(in.getId().get(), in.getHandle().get(), href, in.getProfileName());
 		return out;
 	}
 	
@@ -43,8 +43,8 @@ public class ProfileConverter {
 		return out;
 	}
 			
-	public ProfileDTO convertOwnerProfileToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
-		final ProfileHeaderDTO header = convertOwnerProfileToHeaderView(in, uriBuilder);
+	public ProfileDTO convertMyProfileToView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
+		final ProfileHeaderDTO header = convertMyProfileToHeaderView(in, uriBuilder);
 		return convertToView(in, header);
 	}
 	
@@ -67,7 +67,7 @@ public class ProfileConverter {
 	}
 
 	// TODO: make sure, this method ist ONLY used for creating new profiles !!!
-	public ProfileEntity createEntityForOwnerProfile(ProfileNewDTO in) {
+	public ProfileEntity createEntityForMyProfile(ProfileNewDTO in) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
 		final ProfileSource src = ProfileSource.createLocalSource();
 		final ProfileEntity out = ProfileEntity.createOwnProfile(src, in.profileName, body);

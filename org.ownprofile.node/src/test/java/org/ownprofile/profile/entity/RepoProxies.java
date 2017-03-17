@@ -8,7 +8,7 @@ import org.ownprofile.setup.GuiceModule;
  */
 public class RepoProxies {
 	private final ContactRepositoryProxy contactRepoProxy = new ContactRepositoryProxy();
-	private final ProfileRepositoryProxy profileRepoProxy = new ProfileRepositoryProxy();
+	private final MyProfileRepositoryProxy profileRepoProxy = new MyProfileRepositoryProxy();
 
 	public void clearDelegates() {
 		this.contactRepoProxy.delegate = null;
@@ -19,7 +19,7 @@ public class RepoProxies {
 		this.contactRepoProxy.delegate = contactRepo;
 	}
 
-	public void setProfileRepository(ProfileRepository profileRepo) {
+	public void setProfileRepository(MyProfileRepository profileRepo) {
 		this.profileRepoProxy.delegate = profileRepo;
 	}
 
@@ -37,7 +37,7 @@ public class RepoProxies {
 
 			@Override
 			protected void bindProfileRepository() {
-				bind(ProfileRepository.class).toInstance(profileRepoProxy);
+				bind(MyProfileRepository.class).toInstance(profileRepoProxy);
 			}
 		};
 	}

@@ -71,18 +71,18 @@ public class BlackboxIT {
 	// }
 
 	@Test
-	public void shouldCreateAndGetOwnerProfile() {
-		final List<ProfileDTO> prevProfiles = client.getOwnerProfiles();
+	public void shouldCreateAndGetMyProfile() {
+		final List<ProfileDTO> prevProfiles = client.getMyProfiles();
 
 		final ProfileNewDTO newProfile = this.createProfileOfHomerSimpson();
-		final URI newProfileLocation = client.addNewOwnerProfile(newProfile);
+		final URI newProfileLocation = client.addNewMyProfile(newProfile);
 
 		// fetch Profile by ID
 		final ProfileDTO createdProfile = client.doGet(ProfileDTO.class, newProfileLocation);
 		assertContentIsEqual(newProfile, createdProfile);
 
 		// fetch all Profiles
-		final List<ProfileDTO> createdProfiles = client.getOwnerProfiles();
+		final List<ProfileDTO> createdProfiles = client.getMyProfiles();
 		createdProfiles.removeAll(prevProfiles);
 
 		Assert.assertEquals(1, createdProfiles.size());

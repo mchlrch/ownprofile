@@ -60,19 +60,18 @@ public class OwnerClient extends AbstractClient {
 	
 	// -------------------------------
 	
-	public List<ProfileDTO> getOwnerProfiles() {
-		final URI uri = this.ownerUriBuilder.getOwnerProfileURI();
+	public List<ProfileDTO> getMyProfiles() {
+		final URI uri = this.ownerUriBuilder.getMyProfileURI();
 		return doGet(new GenericType<List<ProfileDTO>>() {}, uri);
 	}
 
-	// TODO: rename to myprofile
-	public ProfileDTO getOwnerProfileById(long profileId) {
-		final URI uri = this.ownerUriBuilder.resolveOwnerProfileURI(profileId);
+	public ProfileDTO getMyProfileById(long profileId) {
+		final URI uri = this.ownerUriBuilder.resolveMyProfileURI(profileId);
 		return doGet(ProfileDTO.class, uri);
 	}
 	
-	public URI addNewOwnerProfile(ProfileNewDTO newProfile) {
-		final URI uri = this.ownerUriBuilder.getOwnerProfileURI();
+	public URI addNewMyProfile(ProfileNewDTO newProfile) {
+		final URI uri = this.ownerUriBuilder.getMyProfileURI();
 		return doPost(newProfile, uri);
 	}
 	

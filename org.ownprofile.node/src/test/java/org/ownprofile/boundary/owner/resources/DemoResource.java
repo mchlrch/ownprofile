@@ -47,20 +47,20 @@ public class DemoResource {
 	@Inject
 	private ContactConverter contactConverter;
 
-	private void addNewOwnerProfile(ProfileNewDTO profile) {
-		final ProfileEntity newProfile = this.profileConverter.createEntityForOwnerProfile(profile);
-		this.profileService.addNewOwnerProfile(newProfile);
+	private void addNewMyProfile(ProfileNewDTO profile) {
+		final ProfileEntity newProfile = this.profileConverter.createEntityForMyProfile(profile);
+		this.profileService.addNewMyProfile(newProfile);
 	}
 
 	@POST
-	@Path("/init-ownerprofiles")
+	@Path("/init-myprofiles")
 	public Response initDemoProfiles(@Context UriInfo uriInfo) {
-		for (ProfileNewDTO p : this.demoProfileFactory.createOwnerProfiles()) {
-			this.addNewOwnerProfile(p);
+		for (ProfileNewDTO p : this.demoProfileFactory.createMyProfiles()) {
+			this.addNewMyProfile(p);
 		}
 
 		final OwnerUriBuilder uriBuilder = OwnerUriBuilder.fromUriInfo(uriInfo);
-		URI uri = uriBuilder.getOwnerProfileURI();
+		URI uri = uriBuilder.getMyProfileURI();
 		return Response.seeOther(uri).build();
 	}
 	

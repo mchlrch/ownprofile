@@ -80,12 +80,12 @@ public class ProfileEntity {
 		return Optional.ofNullable(this.contact);
 	}
 	
-	public boolean isOwnerProfile() {
+	public boolean isMyProfile() {
 		return this.contact == null;
 	}
 	
 	public boolean isContactProfile() {
-		return ! isOwnerProfile();
+		return ! isMyProfile();
 	}
 
 	public ProfileSource getSource() {

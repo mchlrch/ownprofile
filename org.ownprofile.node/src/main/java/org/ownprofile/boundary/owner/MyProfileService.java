@@ -11,7 +11,7 @@ import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.entity.ProfileEntity;
-import org.ownprofile.profile.entity.ProfileRepository;
+import org.ownprofile.profile.entity.MyProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class MyProfileService {
 	final Logger logger = LoggerFactory.getLogger(MyProfileService.class);
 
 	@Inject
-	private ProfileRepository profileRepo;
+	private MyProfileRepository profileRepo;
 
 	@Inject
 	private ProfileConverter converter;
@@ -32,10 +32,10 @@ public class MyProfileService {
 
 	@Transactional
 	public List<ProfileDTO> getMyProfiles() {
-		final List<ProfileEntity> profiles = profileRepo.getAllOwnerProfiles();
+		final List<ProfileEntity> profiles = profileRepo.getMyProfiles();
 
 		final List<ProfileDTO> result = profiles.stream()
-				.map(p -> converter.convertOwnerProfileToView(p, uriBuilders.owner()))
+				.map(p -> converter.convertMyProfileToView(p, uriBuilders.owner()))
 				.collect(Collectors.toList());
 
 		return result;
@@ -43,10 +43,10 @@ public class MyProfileService {
 
 	@Transactional
 	public Optional<ProfileDTO> getMyProfileById(long id) {
-		final Optional<ProfileEntity> profile = profileRepo.getOwnerProfileById(id);
+		final Optional<ProfileEntity> profile = profileRepo.getMyProfileById(id);
 
 		final Optional<ProfileDTO> result = profile
-				.map(p -> Optional.of(converter.convertOwnerProfileToView(p, uriBuilders.owner())))
+				.map(p -> Optional.of(converter.convertMyProfileToView(p, uriBuilders.owner())))
 				.orElse(Optional.empty());
 
 		return result;
@@ -54,8 +54,8 @@ public class MyProfileService {
 
 	@Transactional
 	public Long addNewMyProfile(ProfileNewDTO profile) {
-		final ProfileEntity newProfile = converter.createEntityForOwnerProfile(profile);
-		profileRepo.addProfile(newProfile);
+		final ProfileEntity newProfile = converter.createEntityForMyProfile(profile);
+		profileRepo.addMyProfile(newProfile);
 		return newProfile.getId().get();
 	}
 

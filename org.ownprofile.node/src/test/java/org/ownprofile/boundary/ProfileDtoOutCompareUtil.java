@@ -14,8 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ProfileDtoOutCompareUtil {
 
-	public static void assertOwnerProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
-		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveOwnerProfileURI(profile.getId().get()));
+	public static void assertMyProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
+		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveMyProfileURI(profile.getId().get()));
 	}
 	
 	public static void assertContactProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
@@ -48,8 +48,8 @@ public class ProfileDtoOutCompareUtil {
 		// TODO: String sourceLocation
 	}
 	
-	public static void assertOwnerProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
-		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveOwnerProfileURI(profile.getId().get()));
+	public static void assertMyProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
+		assertContentIsEqual(expected, actual, (profile) -> uriBuilder.resolveMyProfileURI(profile.getId().get()));
 	}
 	
 	public static void assertContactProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {

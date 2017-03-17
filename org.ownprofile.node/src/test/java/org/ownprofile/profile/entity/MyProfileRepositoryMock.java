@@ -10,15 +10,15 @@ import java.util.Optional;
 
 import org.ownprofile.profile.entity.IdInitializer.IdSource;
 
-public class ProfileRepositoryMock implements ProfileRepository {
+public class MyProfileRepositoryMock implements MyProfileRepository {
 	private final IdInitializer<ProfileEntity> profileIdInitializer;
 
-	private final Map<Long, ProfileEntity> ownerProfiles = new HashMap<Long, ProfileEntity>();
-	private final Map<ProfileHandle, ProfileEntity> ownerProfilesByHandle = new HashMap<ProfileHandle, ProfileEntity>();
+	private final Map<Long, ProfileEntity> myProfiles = new HashMap<Long, ProfileEntity>();
+	private final Map<ProfileHandle, ProfileEntity> myProfilesByHandle = new HashMap<ProfileHandle, ProfileEntity>();
 	
 	public ProfileEntity addedProfile;
 
-	public ProfileRepositoryMock(IdInitializer<ProfileEntity> profileIdInitializer) {
+	public MyProfileRepositoryMock(IdInitializer<ProfileEntity> profileIdInitializer) {
 		this.profileIdInitializer = checkNotNull(profileIdInitializer);
 	}
 	
@@ -27,34 +27,34 @@ public class ProfileRepositoryMock implements ProfileRepository {
 	}
 
 	@Override
-	public List<ProfileEntity> getAllOwnerProfiles() {
-		return new ArrayList<ProfileEntity>(ownerProfiles.values());
+	public List<ProfileEntity> getMyProfiles() {
+		return new ArrayList<ProfileEntity>(myProfiles.values());
 	}
 
 	@Override
-	public Optional<ProfileEntity> getOwnerProfileById(long id) {
-		return Optional.ofNullable(ownerProfiles.get(id));
+	public Optional<ProfileEntity> getMyProfileById(long id) {
+		return Optional.ofNullable(myProfiles.get(id));
 	}
 	
 	@Override
-	public Optional<ProfileEntity> getOwnerProfileByHandle(ProfileHandle handle) {
-		return Optional.ofNullable(ownerProfilesByHandle.get(handle));
+	public Optional<ProfileEntity> getMyProfileByHandle(ProfileHandle handle) {
+		return Optional.ofNullable(myProfilesByHandle.get(handle));
 	}
 
 	@Override
-	public void addProfile(ProfileEntity profile) {
+	public void addMyProfile(ProfileEntity profile) {
 		final Long id = profileIdInitializer.initIdIfNull(profile);
-		if (ownerProfiles.containsKey(id)) {
+		if (myProfiles.containsKey(id)) {
 			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with id[%d]", id));
 		}
 		
 		final ProfileHandle handle = profile.getHandle().get();
-		if (ownerProfilesByHandle.containsKey(handle)) {
+		if (myProfilesByHandle.containsKey(handle)) {
 			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with handle[%s]", handle));
 		}
 
-		this.ownerProfiles.put(id, profile);
-		this.ownerProfilesByHandle.put(handle, profile);
+		this.myProfiles.put(id, profile);
+		this.myProfilesByHandle.put(handle, profile);
 		this.addedProfile = profile;
 	}
 

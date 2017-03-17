@@ -31,7 +31,7 @@ public class MyProfilesResource {
 	private MyProfileService pService;
 	
 	@Inject
-	private OwnprofilesTemplate template;
+	private MyProfilesTemplate template;
 	
 	private final UriBuilders uriBuilders;
 	
@@ -51,7 +51,7 @@ public class MyProfilesResource {
 	@Produces(MediaType.TEXT_HTML)
 	public String getMyProfilesAsHtml() {
 		final List<ProfileDTO> myProfiles = getMyProfiles();
-		return template.ownerProfilesOverviewPage(myProfiles).toString();
+		return template.myProfilesOverviewPage(myProfiles).toString();
 	}
 	
 	@GET
@@ -70,7 +70,7 @@ public class MyProfilesResource {
 	public Response getMyProfileByIdAsHtml(@PathParam(PROFILE_ID) long id) {
 		final Optional<ProfileDTO> profile = pService.getMyProfileById(id);
 		return profile
-				.map(p -> Response.ok(template.ownerProfilePage(p).toString()).build())
+				.map(p -> Response.ok(template.myProfilePage(p).toString()).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());
 	}
 
@@ -78,7 +78,7 @@ public class MyProfilesResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addNewMyProfile(ProfileNewDTO profile) {
 		final Long profileId = pService.addNewMyProfile(profile);
-		final URI location = uriBuilders.owner().resolveOwnerProfileURI(profileId);
+		final URI location = uriBuilders.owner().resolveMyProfileURI(profileId);
 		return Response.created(location).build();
 	}
 		

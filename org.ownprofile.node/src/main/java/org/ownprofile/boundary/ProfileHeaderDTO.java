@@ -53,7 +53,7 @@ public class ProfileHeaderDTO {
 	@JsonProperty(P_CONTAINER)
 	public final ContactHeaderDTO container;
 	
-	public static ProfileHeaderDTO createOwnerProfile(Long id, ProfileHandle handle, URI href, String profileName) {
+	public static ProfileHeaderDTO createMyProfile(Long id, ProfileHandle handle, URI href, String profileName) {
 		return new ProfileHeaderDTO(
 				ProfileType.Owner,
 				ProfileSource.Local,

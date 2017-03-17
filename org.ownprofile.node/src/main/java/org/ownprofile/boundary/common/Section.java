@@ -19,8 +19,7 @@ public enum Section {
 		case Contacts:
 			return uriBuilder.getContactsURI();
 		case MyProfiles:
-			// TODO: rename to getMyProfilesURI() ...
-			return uriBuilder.getOwnerProfileURI();
+			return uriBuilder.getMyProfileURI();
 		default:
 			throw new IllegalStateException();
 		}
