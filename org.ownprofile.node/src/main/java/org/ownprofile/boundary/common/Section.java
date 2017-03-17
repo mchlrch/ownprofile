@@ -6,7 +6,7 @@ import org.ownprofile.boundary.owner.OwnerUriBuilder;
 
 public enum Section {
 
-	Addressbook("addressbook"), OwnerProfiles("owner profiles");
+	Contacts("contacts"), MyProfiles("my profiles");
 
 	public final String title;
 
@@ -16,9 +16,10 @@ public enum Section {
 
 	public URI getLocation(OwnerUriBuilder uriBuilder) {
 		switch (this) {
-		case Addressbook:
+		case Contacts:
 			return uriBuilder.getContactsURI();
-		case OwnerProfiles:
+		case MyProfiles:
+			// TODO: rename to getMyProfilesURI() ...
 			return uriBuilder.getOwnerProfileURI();
 		default:
 			throw new IllegalStateException();

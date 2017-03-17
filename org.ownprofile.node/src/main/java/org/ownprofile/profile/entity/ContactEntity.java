@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
 
 @Entity
 public class ContactEntity {
@@ -57,9 +58,13 @@ public class ContactEntity {
 		this.profiles.add(profile);
 	}
 	
+	void updateFromDto(ContactHeaderDTO dto) {
+		setPetname(dto.petname);
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("ContactEntity: %s", this.petname);
 	}
-
+	
 }

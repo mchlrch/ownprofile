@@ -4,6 +4,8 @@ import org.ownprofile.boundary.DemoProfileFactory;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactConverter;
+import org.ownprofile.boundary.owner.ContactService;
+import org.ownprofile.boundary.owner.MyProfileService;
 import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.control.ProfileDomainService;
 import org.ownprofile.profile.entity.ContactRepository;
@@ -26,6 +28,8 @@ public class GuiceModule extends AbstractModule {
 		bindContactRepository();
 		bindProfileRepository();
 		
+		bind(ContactService.class).in(ServletScopes.REQUEST);
+		bind(MyProfileService.class).in(ServletScopes.REQUEST);
 		bind(AddressbookDomainService.class).in(ServletScopes.REQUEST);
 		bind(ProfileDomainService.class).in(ServletScopes.REQUEST);
 		

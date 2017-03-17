@@ -7,21 +7,20 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
+
 import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
 
 public class ContactRepositoryJPA implements ContactRepository {
 	
 	@Inject Provider<EntityManager> em;
 	
-	@Transactional
 	public List<ContactEntity> getAllContacts() {
 		final Query q = this.em.get().createQuery("SELECT o FROM " + ContactEntity.class.getName() + " AS o");
 		final List queryResult = q.getResultList();
 		return (List<ContactEntity>) queryResult;
 	}
 	
-	@Transactional
 	public Optional<ContactEntity> getContactById(long id) {
 		final Query q = this.em.get().createQuery("SELECT o FROM " + ContactEntity.class.getName() + " AS o WHERE o.id = " + id);
 		final List queryResult = q.getResultList();
@@ -34,18 +33,15 @@ public class ContactRepositoryJPA implements ContactRepository {
 		}
 	}
 	
-	@Transactional
 	public void addContact(ContactEntity contact) {
 		em.get().persist(contact);
 	}
 	
-	@Transactional
 	public void deleteContact(ContactEntity contact) {
 		contact = em.get().find(ContactEntity.class, contact.getId().get());
 		em.get().remove(contact);
 	}
 
-	@Transactional
 	public Optional<ProfileEntity> getContactProfileById(long id) {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NOT NULL AND p.id = " + id);
 		final List queryResult = q.getResultList();
@@ -56,6 +52,15 @@ public class ContactRepositoryJPA implements ContactRepository {
 		} else {
 			throw new IllegalStateException();
 		}
+	}
+	
+	public void addContactProfile(ProfileEntity profile) {
+		em.get().persist(profile);
+	}
+	
+	@Override
+	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+		contact.updateFromDto(updateDto);
 	}
 	
 }

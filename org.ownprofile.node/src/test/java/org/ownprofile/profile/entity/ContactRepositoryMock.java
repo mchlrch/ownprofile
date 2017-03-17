@@ -1,37 +1,38 @@
-package org.ownprofile.boundary.owner.resources;
+package org.ownprofile.profile.entity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ownprofile.profile.entity.ContactEntity;
-import org.ownprofile.profile.entity.ContactRepository;
-import org.ownprofile.profile.entity.IdSource;
-import org.ownprofile.profile.entity.ProfileEntity;
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.profile.entity.IdInitializer.IdSource;
 
 public class ContactRepositoryMock implements ContactRepository {
-	public final IdSource contactIdSource = new IdSource();
+	private final IdInitializer<ContactEntity> contactIdInitializer = new IdInitializer<>(ContactEntity.class);
+	private final IdInitializer<ProfileEntity> profileIdInitializer;
 
 	private final Map<Long, ContactEntity> contacts = new HashMap<Long, ContactEntity>();
 	private final Map<Long, ProfileEntity> contactProfiles = new HashMap<Long, ProfileEntity>();
 
 	public ContactEntity addedContact;
 	public ContactEntity deletedContact;
+	
+	public ProfileEntity addedContactProfile;
 
-	private final Field contactIdField;
-
-	public ContactRepositoryMock() {
-		try {
-			this.contactIdField = ContactEntity.class.getDeclaredField("id");
-			this.contactIdField.setAccessible(true);
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+	public ContactRepositoryMock(IdInitializer<ProfileEntity> profileIdInitializer) {
+		this.profileIdInitializer = checkNotNull(profileIdInitializer);
+	}
+	
+	public IdSource profileIdSource() {
+		return profileIdInitializer.idSource;
+	}
+	
+	public IdSource contactIdSource() {
+		return contactIdInitializer.idSource;
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class ContactRepositoryMock implements ContactRepository {
 
 	@Override
 	public void addContact(ContactEntity contact) {
-		final Long id = initializeIdIfNull(contact);
+		final Long id = contactIdInitializer.initIdIfNull(contact);
 		if (contacts.containsKey(id)) {
 			throw new IllegalStateException(String.format("Repo already contains ContactEntity with id[%d]", id));
 		}
@@ -63,27 +64,20 @@ public class ContactRepositoryMock implements ContactRepository {
 		
 		this.deletedContact.getProfiles().forEach(p -> deleteContactProfile(p));
 	}
-
-	private Long initializeIdIfNull(ContactEntity contact) {
-		try {
-			Long id = (Long) contactIdField.get(contact);
-			if (id == null) {
-				id = this.contactIdSource.nextId();
-				this.contactIdField.set(contact, id);
-			}
-			return id;
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+	
+	@Override
+	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+		contact.updateFromDto(updateDto);
 	}
 
-	private void addContactProfile(ProfileEntity profile) {
-		final Long id = checkNotNull(profile.getId().get());
+	public void addContactProfile(ProfileEntity profile) {
+		final Long id = profileIdInitializer.initIdIfNull(profile);
 		if (contactProfiles.containsKey(id)) {
 			throw new IllegalStateException(String.format("Repo already contains ProfileEntity with id[%d]", id));
 		}
 		
 		this.contactProfiles.put(id, profile);
+		this.addedContactProfile = profile;
 	}
 	
 	private void deleteContactProfile(ProfileEntity profile) {

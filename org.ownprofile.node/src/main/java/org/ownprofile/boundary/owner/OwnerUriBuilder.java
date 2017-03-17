@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import org.ownprofile.boundary.AbstractUriBuilder;
 import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.owner.resources.ContactsResource;
-import org.ownprofile.boundary.owner.resources.OwnprofilesResource;
+import org.ownprofile.boundary.owner.resources.MyProfilesResource;
 
 public class OwnerUriBuilder extends AbstractUriBuilder {
 	
@@ -50,13 +50,14 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 
+	// TODO: rename to myprofile
 	public URI resolveOwnerProfileURI(Long profileId) {
-		final UriBuilder builder = createUriBuilder(OwnprofilesResource.class, "getOwnerProfileById"); 
+		final UriBuilder builder = createUriBuilder(MyProfilesResource.class, "getMyProfileById"); 
 		return builder.resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
 	public URI getOwnerProfileURI() {
-		final UriBuilder builder = createUriBuilder(OwnprofilesResource.class); 
+		final UriBuilder builder = createUriBuilder(MyProfilesResource.class); 
 		return builder.build();
 	}
 	

@@ -8,6 +8,7 @@ import org.ownprofile.boundary.common.HtmlExt
 import org.ownprofile.boundary.common.PageHeaderExt
 import org.ownprofile.boundary.common.Section
 
+// TODO:rename to myprofiles
 class OwnprofilesTemplate {
 
 	@Inject extension DomainExt domainExt
@@ -19,7 +20,7 @@ class OwnprofilesTemplate {
 			'''
 				«profile.asLink»
 			'''
-		].ul.html(Section.OwnerProfiles.title, pageHeader)
+		].ul.html(Section.MyProfiles.title, pageHeader)
 	}
 	
 	def ownerProfilePage(ProfileDTO profile) {

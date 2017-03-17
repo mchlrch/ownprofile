@@ -22,6 +22,8 @@ import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
 import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
+import org.ownprofile.profile.entity.ContactRepositoryMock;
+import org.ownprofile.profile.entity.IdInitializer;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
@@ -63,8 +65,9 @@ public class ContactsResourceIT {
 		// TODO: once we have shared API <if>, we could dynamically proxy OwnerClient
 		// .. and assert that each method got invoked exactly once after all testcases have run
 		
-		this.contactRepoMock = new ContactRepositoryMock();
-		this.profileRepoMock = new ProfileRepositoryMock();
+		final IdInitializer<ProfileEntity> profileIdInitializer = new IdInitializer<>(ProfileEntity.class);
+		this.contactRepoMock = new ContactRepositoryMock(profileIdInitializer);
+		this.profileRepoMock = new ProfileRepositoryMock(profileIdInitializer);
 		repoProxies.setContactRepository(contactRepoMock);
 		repoProxies.setProfileRepository(profileRepoMock);
 		
@@ -78,10 +81,10 @@ public class ContactsResourceIT {
 	}
 	
 	private ContactEntity createContactWithProfileForKottan() {
-		final TestContactEntity result = new TestContactEntity(this.contactRepoMock.contactIdSource.nextId(), "kottan");
+		final TestContactEntity result = new TestContactEntity(this.contactRepoMock.contactIdSource().nextId(), "kottan");
 		
 		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"Alfred\",\"lastName\":\"Kottan\",\"address\":{\"city\":\"Wien\"}}");
-		TestProfileEntity.createContactProfile(this.profileRepoMock.profileIdSource.nextId(), result, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "privat", body);
+		TestProfileEntity.createContactProfile(this.profileRepoMock.profileIdSource().nextId(), result, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "privat", body);
 		
 		return result;
 	}
@@ -161,7 +164,7 @@ public class ContactsResourceIT {
 
 		final URI location = client.addNewContactProfile(contactId, newProfile);
 
-		final ProfileEntity actual = profileRepoMock.addedProfile;
+		final ProfileEntity actual = contactRepoMock.addedContactProfile;
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		

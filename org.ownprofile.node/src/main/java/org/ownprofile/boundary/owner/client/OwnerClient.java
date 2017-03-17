@@ -65,6 +65,7 @@ public class OwnerClient extends AbstractClient {
 		return doGet(new GenericType<List<ProfileDTO>>() {}, uri);
 	}
 
+	// TODO: rename to myprofile
 	public ProfileDTO getOwnerProfileById(long profileId) {
 		final URI uri = this.ownerUriBuilder.resolveOwnerProfileURI(profileId);
 		return doGet(ProfileDTO.class, uri);

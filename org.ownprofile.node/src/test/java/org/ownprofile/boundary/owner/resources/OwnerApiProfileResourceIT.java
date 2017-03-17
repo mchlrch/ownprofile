@@ -18,6 +18,7 @@ import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
+import org.ownprofile.profile.entity.IdInitializer;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
@@ -50,7 +51,8 @@ public class OwnerApiProfileResourceIT {
 	public void setup() throws URISyntaxException {
 		this.client = session.getOrCreateOwnerClient();
 		
-		this.profileRepoMock = new ProfileRepositoryMock();
+		final IdInitializer<ProfileEntity> profileIdInitializer = new IdInitializer<>(ProfileEntity.class);
+		this.profileRepoMock = new ProfileRepositoryMock(profileIdInitializer);
 		repoProxies.setProfileRepository(profileRepoMock);
 		
 		this.profileRepoMock.addProfile(createOwnerProfile());
@@ -62,7 +64,7 @@ public class OwnerApiProfileResourceIT {
 	}
 	
 	private ProfileEntity createOwnerProfile() {
-		return TestProfileEntity.createOwnProfile(this.profileRepoMock.profileIdSource.nextId(), ProfileSource.createLocalSource(), "private");
+		return TestProfileEntity.createOwnProfile(this.profileRepoMock.profileIdSource().nextId(), ProfileSource.createLocalSource(), "private");
 		// new TestProfileEntity(92L, ProfileSource.createRemoteSource("http://localhost"), "professional");
 	}
 

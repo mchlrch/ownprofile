@@ -32,6 +32,8 @@ public class JettyLauncher {
 		
 		final Server server = createAndSetupServer(port, guiceInjector);
 		
+		System.out.println("### http://localhost:9080/webapi/contacts");
+		
 		server.start();
 		server.join();
 	}

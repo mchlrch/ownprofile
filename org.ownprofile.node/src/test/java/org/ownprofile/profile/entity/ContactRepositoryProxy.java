@@ -3,6 +3,8 @@ package org.ownprofile.profile.entity;
 import java.util.List;
 import java.util.Optional;
 
+import org.ownprofile.boundary.owner.ContactHeaderDTO;
+
 public class ContactRepositoryProxy implements ContactRepository {
 
 	public ContactRepository delegate;
@@ -28,8 +30,18 @@ public class ContactRepositoryProxy implements ContactRepository {
 	}
 	
 	@Override
+	public void addContactProfile(ProfileEntity profile) {
+		delegate.addContactProfile(profile);
+	}
+	
+	@Override
 	public void deleteContact(ContactEntity contact) {
 		this.delegate.deleteContact(contact);
+	}
+	
+	@Override
+	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+		this.delegate.updateContact(contact, updateDto);
 	}
 
 }

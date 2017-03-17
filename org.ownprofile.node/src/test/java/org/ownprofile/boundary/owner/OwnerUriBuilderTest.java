@@ -30,7 +30,7 @@ public class OwnerUriBuilderTest {
 		Assert.assertNotNull(String.format("%s returned null", method), location);
 	}
 
-	@Parameterized.Parameters
+	@Parameterized.Parameters(name="{0}")
 	public static List<Object[]> data() {
 		final List<Object[]> data = new ArrayList<Object[]>();
 
