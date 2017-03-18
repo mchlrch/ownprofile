@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.boundary.owner.ContactNewDTO;
 
 @Entity
 public class ContactEntity {
@@ -30,13 +31,13 @@ public class ContactEntity {
 	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="contact")
 	private List<ProfileEntity> profiles = new ArrayList<ProfileEntity>();
 	
-	public ContactEntity(String petname) {
-		this.petname = petname;
-	}
-	
 	protected ContactEntity() {
 	}
 	
+	protected ContactEntity(Builder b) {
+		this.petname = b.petname;
+	}
+
 	public Optional<Long> getId() {
 		return Optional.ofNullable(this.id);
 	}
@@ -45,10 +46,6 @@ public class ContactEntity {
 		return this.petname;
 	}
 	
-	public void setPetname(String petname) {
-		this.petname = petname;
-	}
-
 	public List<ProfileEntity> getProfiles() {
 		return Collections.unmodifiableList(this.profiles);
 	}
@@ -58,13 +55,35 @@ public class ContactEntity {
 		this.profiles.add(profile);
 	}
 	
-	void updateFromDto(ContactHeaderDTO dto) {
-		setPetname(dto.petname);
+	protected void updateFromDto(ContactHeaderDTO dto) {
+		this.petname = dto.petname;
 	}
 	
 	@Override
 	public String toString() {
 		return String.format("ContactEntity: %s", this.petname);
+	}
+	
+	// ----------------------------------------
+	public static class Builder extends EntityBuilder<ContactEntity> {
+		
+		private String petname;
+		
+        public Builder fromDto(ContactNewDTO dto) {
+        	withPetname(dto.petname);
+        	return this;        	
+        }
+        
+        public Builder withPetname(String petname) {
+            this.petname = petname;
+            return this;
+        }
+        
+        @Override
+        protected ContactEntity create() {
+        	final ContactEntity result = new ContactEntity(this);
+        	return result;
+        }
 	}
 	
 }

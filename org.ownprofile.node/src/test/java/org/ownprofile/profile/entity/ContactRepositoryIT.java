@@ -38,7 +38,7 @@ public class ContactRepositoryIT {
 	public static void after() {
 		injector.getInstance(PersistService.class).stop();
 	}
-	
+
 	// =============================================================
 
 	@Test
@@ -51,21 +51,25 @@ public class ContactRepositoryIT {
 	public void shouldQueryForContactById() {
 		repo.getContactById(1L);
 	}
-	
+
 	@Test
 	public void shouldAddContact() {
-		final ContactEntity contactEntity = new ContactEntity("kottan");
+		final ContactEntity contactEntity = new ContactEntity.Builder()
+				.withPetname("kottan")
+				.build();
 		repo.addContact(contactEntity);
 	}
-	
+
 	@Test
 	public void shouldDeleteContact() {
-		final ContactEntity contactEntity = new ContactEntity("kottan");
+		final ContactEntity contactEntity = new ContactEntity.Builder()
+				.withPetname("kottan")
+				.build();
 		repo.addContact(contactEntity);
-		
+
 		repo.deleteContact(contactEntity);
 	}
-	
+
 	@Test
 	public void shouldQueryForContactProfileById() {
 		repo.getContactProfileById(1L);

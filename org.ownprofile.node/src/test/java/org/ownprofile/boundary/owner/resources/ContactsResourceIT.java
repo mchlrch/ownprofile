@@ -81,7 +81,9 @@ public class ContactsResourceIT {
 	}
 	
 	private ContactEntity createContactWithProfileForKottan() {
-		final TestContactEntity result = new TestContactEntity(this.contactRepoMock.contactIdSource().nextId(), "kottan");
+		final long contactId = contactRepoMock.contactIdSource().nextId();
+		final TestContactEntity result = new TestContactEntity(contactId, new ContactEntity.Builder()
+				.withPetname("kottan"));
 		
 		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"Alfred\",\"lastName\":\"Kottan\",\"address\":{\"city\":\"Wien\"}}");
 		TestProfileEntity.createContactProfile(this.profileRepoMock.profileIdSource().nextId(), result, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "privat", body);

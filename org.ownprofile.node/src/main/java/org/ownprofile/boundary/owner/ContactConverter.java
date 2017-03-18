@@ -49,7 +49,7 @@ public class ContactConverter {
 	}
 
 	public ContactEntity createEntity(ContactNewDTO in) {
-		final ContactEntity out = new ContactEntity(in.petname);
+		final ContactEntity out = new ContactEntity.Builder().fromDto(in).build();
 		return out;
 	}
 	

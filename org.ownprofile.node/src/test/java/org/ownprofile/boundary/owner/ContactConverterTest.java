@@ -33,7 +33,8 @@ public class ContactConverterTest {
 	
 	@Test
 	public void shouldConvertEntity2Dto() throws Exception {
-		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
+		final ContactEntity entity = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan+"));
 		TestProfileEntity.createContactProfile(27L, entity, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "test2");
 
 		final ContactDTO target = this.converter.convertToView(entity, this.uriBuilder);
@@ -42,7 +43,8 @@ public class ContactConverterTest {
 	
 	@Test
 	public void shouldConvertEntity2AggregateDto() throws Exception {
-		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
+		final ContactEntity entity = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan+"));
 		TestProfileEntity.createContactProfile(27L, entity, ProfileHandle.createRandomHandle(), ProfileSource.createLocalSource(), "test2");
 
 		final ContactAggregateDTO target = this.converter.convertToAggregateView(entity, this.uriBuilder);

@@ -41,7 +41,8 @@ public class ProfileConverterTest {
 		body.put("lastName", "kottan");
 		final ProfileNewDTO dto = new ProfileNewDTO("private", body);
 
-		final TestContactEntity contact = new TestContactEntity(42L, "kottan");
+		final TestContactEntity contact = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan"));
 		final ProfileHandle pHandle = ProfileHandle.createRandomHandle();
 		final ProfileSource pSource = ProfileSource.createLocalSource();
 		
@@ -60,7 +61,8 @@ public class ProfileConverterTest {
 	
 	@Test
 	public void shouldConvertContactProfileEntity2HeaderDto() throws Exception {
-		final TestContactEntity contact = new TestContactEntity(42L, "kottan");
+		final TestContactEntity contact = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan"));
 		final ProfileHandle pHandle = ProfileHandle.createRandomHandle();
 		final ProfileEntity entity = TestProfileEntity.createContactProfile(42L, contact, pHandle, ProfileSource.createLocalSource(), "professional");
 
@@ -79,7 +81,8 @@ public class ProfileConverterTest {
 	
 	@Test
 	public void shouldConvertContactProfileEntity2Dto() throws Exception {
-		final TestContactEntity contact = new TestContactEntity(42L, "kottan");
+		final TestContactEntity contact = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan"));
 		final ProfileHandle pHandle = ProfileHandle.createRandomHandle();
 		final ProfileBody body = ProfileBody.createBody("{\"firstName\":\"adolf\",\"lastName\":\"kottan\"}");
 		final ProfileEntity entity = TestProfileEntity.createContactProfile(42L, contact, pHandle, ProfileSource.createLocalSource(), "professional", body);

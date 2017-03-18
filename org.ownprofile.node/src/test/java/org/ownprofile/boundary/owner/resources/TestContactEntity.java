@@ -4,8 +4,8 @@ import org.ownprofile.profile.entity.ContactEntity;
 
 public class TestContactEntity extends ContactEntity {
 
-	public TestContactEntity(Long id, String petname) {
-		super(petname);
+	public TestContactEntity(Long id, ContactEntity.Builder b) {
+		super(b);
 		this.id = id;
 	}
 }

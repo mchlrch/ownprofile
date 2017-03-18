@@ -11,7 +11,8 @@ public class ContactHeaderConverterTest {
 
 	@Test
 	public void shouldConvertEntity2HeaderDto() throws Exception {
-		final ContactEntity entity = new TestContactEntity(42L, "kottan+");
+		final ContactEntity entity = new TestContactEntity(42L, new ContactEntity.Builder()
+				.withPetname("kottan+"));
 		final ContactHeaderDTO target = this.converter.convertToHeaderView(entity, this.uriBuilder);
 		ContactDtoOutCompareUtil.assertContentIsEqual(entity, target, uriBuilder);
 	}
