@@ -70,7 +70,7 @@ public class ProfileConverter {
 	public ProfileEntity createEntityForMyProfile(ProfileNewDTO in) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
 		final ProfileSource src = ProfileSource.createLocalSource();
-		final ProfileEntity out = ProfileEntity.createOwnProfile(src, in.profileName, body);
+		final ProfileEntity out = ProfileEntity.createMyProfile(src, in.profileName, body);
 		return out;
 	}
 	
@@ -81,7 +81,7 @@ public class ProfileConverter {
 		return out;
 	}
 	
-	private ProfileBody serializeBodyToJSON(Map<String, Object> body) {
+	public ProfileBody serializeBodyToJSON(Map<String, Object> body) {
 		try {
 			final String bodyAsJson = jsonMapper.writeValueAsString(body);
 			return ProfileBody.createBody(bodyAsJson);

@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.ownprofile.boundary.ProfileConverter;
+import org.ownprofile.boundary.ProfileDTO;
+import org.ownprofile.boundary.ProfileNewDTO;
 
 @Entity
 public class ProfileEntity {
@@ -35,38 +38,44 @@ public class ProfileEntity {
 	private ProfileBody body;
 
 	public static ProfileEntity createContactProfile(ContactEntity contact, ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
-		final ProfileEntity result = new ProfileEntity(contact, handle, source, profileName, body);
+		final Builder b = new Builder()
+			.withContact(contact)
+			.withHandle(handle)
+			.withSource(source)
+			.withName(profileName)
+			.withBody(body);
+		
+		final ProfileEntity result = b.create();
 		return result;
 	}
 	
-	public static ProfileEntity createOwnProfile(ProfileSource source, String profileName, ProfileBody body) {
-		final ProfileEntity result = new ProfileEntity(source, profileName, body);
+	public static ProfileEntity createMyProfile(ProfileSource source, String profileName, ProfileBody body) {
+		final Builder b = new Builder()
+				.withHandle(ProfileHandle.createRandomHandle())
+				.withSource(source)
+				.withName(profileName)
+				.withBody(body);
+			
+		final ProfileEntity result = b.create();
 		return result;
-	}
-	
-	protected ProfileEntity(ContactEntity contact, ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
-		this(handle, source, profileName, body);
-		checkNotNull(contact, "contact is null");
-
-		this.contact = contact;
-		contact.addProfile0(this);
-	}
-	
-	protected ProfileEntity(ProfileSource source, String profileName, ProfileBody body) {
-		this(ProfileHandle.createRandomHandle(), source, profileName, body);
-	}
-	
-	protected ProfileEntity(ProfileHandle handle, ProfileSource source, String profileName, ProfileBody body) {
-		this.handle = checkNotNull(handle, "handle is null");
-		this.source = checkNotNull(source, "source is null");
-		this.body = checkNotNull(body, "body is null");
-
-		this.profileName = profileName;
 	}
 	
 	protected ProfileEntity() {
 	}
 	
+	protected ProfileEntity(Builder b) {
+		if (b.contact != null) {
+			this.contact = b.contact;
+			this.contact.addProfile0(this);
+		}
+		
+		this.handle = checkNotNull(b.handle, "handle is null");
+		this.source = checkNotNull(b.source, "source is null");
+		this.body = checkNotNull(b.body, "body is null");
+
+		this.profileName = b.profileName;
+	}
+
 	public Optional<Long> getId() {
 		return Optional.ofNullable(this.id);
 	}
@@ -96,17 +105,68 @@ public class ProfileEntity {
 		return this.profileName;
 	}
 	
-	public void setProfileName(String profileName) {
-		this.profileName = profileName;
-	}
-
 	public ProfileBody getBody() {
 		return this.body;
+	}
+	
+	// TODO: remove/resolve dependency to ProfileConverter
+	protected void updateFromDto(ProfileDTO dto, ProfileConverter converter) {
+		this.profileName = dto.header.profileName;
+		this.body = converter.serializeBodyToJSON(dto.body);
 	}
 
 	@Override
 	public String toString() {
 		return String.format("ProfileEntity: %s [%s]", this.profileName, this.source);
+	}
+	
+	// ----------------------------------------
+	public static class Builder extends EntityBuilder<ProfileEntity> {
+
+		private ContactEntity contact; 
+		private ProfileHandle handle;
+		private ProfileSource source;
+		private String profileName;
+		private ProfileBody body;
+		
+		// TODO: remove/resolve dependency to ProfileConverter
+		public Builder fromDto(ProfileNewDTO dto, ProfileConverter converter) {
+			withName(dto.profileName);
+			withBody(converter.serializeBodyToJSON(dto.body));
+			return this;
+		}
+		
+		public Builder withContact(ContactEntity contact) {
+			this.contact = contact;
+			return this;
+		}
+		
+		public Builder withHandle(ProfileHandle handle) {
+			this.handle = handle;
+			return this;
+		}
+
+		public Builder withSource(ProfileSource source) {
+			this.source = source;
+			return this;
+		}
+		
+		public Builder withName(String profileName) {
+			this.profileName = profileName;
+			return this;
+		}
+		
+		public Builder withBody(ProfileBody body) {
+			this.body = body;
+			return this;
+		}
+		
+		@Override
+		protected ProfileEntity create() {
+			final ProfileEntity result = new ProfileEntity(this);
+			return result;
+		}
+		
 	}
 
 }

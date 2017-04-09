@@ -54,7 +54,7 @@ public class ProfileRepositoryIT {
 	
 	@Test
 	public void shouldAddProfile() {
-		final ProfileEntity profileEntity = new ProfileEntity(ProfileSource.createLocalSource(), "private", ProfileBody.createEmptyBody());
+		final ProfileEntity profileEntity = ProfileEntity.createMyProfile(ProfileSource.createLocalSource(), "private", ProfileBody.createEmptyBody());
 		repo.addMyProfile(profileEntity);
 	}
 
