@@ -75,4 +75,8 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.build();
 	}
 	
+	public URI resolveEditContactHtmlFormURI(Long contactId) {
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "editContactHtmlForm");
+		return builder.resolveTemplate(CONTACT_ID, contactId).build();
+	}
 }

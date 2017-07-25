@@ -65,11 +65,28 @@ class ContactsTemplate {
 		'''.html(Section.Contacts.title, pageHeader)
 	}
 	
+	def editContactForm(ContactAggregateDTO contact) {
+		'''
+			<form action="«uriBuilders.owner.resolveContactURI(contact.header.id)»" method="post">
+			  <fieldset>
+			    <legend>Edit Contact:</legend>
+			    
+			    «ContactHeaderDTO.P_PETNAME.toFirstUpper»:<br>
+			    <input type="text" name="«ContactHeaderDTO.P_PETNAME»" size="64" value="«contact.header.petname»"><br><br>
+			    
+			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_SUBMIT_EDIT»">
+			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_CANCEL_EDIT»">
+			    <input type="reset">
+			  </fieldset>
+			</form>
+		'''.html(contact.asTitle, pageHeader)
+	}
+	
 	def deleteAndEditButtons(long contactId) {
 		'''
 			<form action="«uriBuilders.owner.resolveContactURI(contactId)»" method="post">
 			  <fieldset>
-«««			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT»">
+			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT»">
 			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE»">
 			  </fieldset>
 			</form>

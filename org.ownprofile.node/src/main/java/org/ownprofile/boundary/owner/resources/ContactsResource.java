@@ -117,21 +117,35 @@ public class ContactsResource {
 		// return Response.status(Status.NOT_FOUND).build();
 	}
 	
+	@GET
+	@Path("/{" + CONTACT_ID + "}/editContactHtmlForm")
+	@Produces(MediaType.TEXT_HTML)
+	public Response editContactHtmlForm(@PathParam(CONTACT_ID) long id) {
+		final Optional<ContactAggregateDTO> contact = contactService.getContactById(id);
+		return contact
+				.map(c -> Response.ok(template.editContactForm(c).toString()).build())
+				.orElse(Response.status(Status.NOT_FOUND).build());
+	}
+	
 	@POST
 	@Path("/{" + CONTACT_ID + "}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response formSubmit(@PathParam(CONTACT_ID) long id, MultivaluedMap<String, String> formParams) {
-		final Optional<ContactAggregateDTO> contact = contactService.getContactById(id);
-		if (!contact.isPresent()) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
 
-		// edit, delete, submit(-edit)
+		// edit, delete, submit(-edit), cancel(-edit)
 		final String actionValue = formParams.getFirst(BoundaryConstants.ContactForm.ACTION_INPUT_NAME);
+		
 		switch (actionValue) {
+		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT:
+			{
+				final URI location = uriBuilders.owner().resolveEditContactHtmlFormURI(id);
+				return Response.seeOther(location).build();
+			}
+			// break;
+			
 		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE:
+			// TODO: return Status.NOT_FOUND if necessary
 			contactService.deleteContact(id);
-			// TODO: return Status.NOT_FOUND if delete failed
 
 			{
 				final URI location = uriBuilders.owner().getContactsURI();
@@ -139,6 +153,25 @@ public class ContactsResource {
 			}
 			// break;
 
+		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_SUBMIT_EDIT:
+			final String petname = formParams.getFirst(ContactHeaderDTO.P_PETNAME);
+			final ContactHeaderDTO updateDto = new ContactHeaderDTO(id, null, petname);
+			
+			// TODO: return Status.NOT_FOUND if necessary
+			contactService.updateContact(id, updateDto);
+			{
+				final URI location = uriBuilders.owner().resolveContactURI(id);
+				return Response.seeOther(location).build();
+			}
+			// break;
+
+		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_CANCEL_EDIT:
+			{
+				final URI location = uriBuilders.owner().resolveContactURI(id);
+				return Response.seeOther(location).build();
+			}
+			// break;
+		
 		default:
 			return Response.status(Status.BAD_REQUEST).build();
 		}

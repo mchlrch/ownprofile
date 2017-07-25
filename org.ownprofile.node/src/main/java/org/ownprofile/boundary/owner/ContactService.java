@@ -72,6 +72,13 @@ public class ContactService {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(id);
 		contact.ifPresent(c -> contactRepo.deleteContact(c));
 	}
+	
+	// TODO: testcase: updateContact mit unbekannter ID, return boolean
+	@Transactional
+	public void updateContact(long id, ContactHeaderDTO updateDto) {
+		final Optional<ContactEntity> contact = contactRepo.getContactById(id);
+		contact.ifPresent(c -> contactRepo.updateContact(c, updateDto));
+	}
 
 	@Transactional
 	public Optional<ProfileDTO> getContactProfileById(long profileId) {
