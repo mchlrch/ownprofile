@@ -11,6 +11,7 @@ import org.ownprofile.boundary.common.Section
 import org.ownprofile.boundary.owner.ContactAggregateDTO
 import org.ownprofile.boundary.owner.ContactDTO
 import org.ownprofile.boundary.owner.ContactHeaderDTO
+import org.ownprofile.boundary.BoundaryConstants
 
 class ContactsTemplate {
 
@@ -32,13 +33,17 @@ class ContactsTemplate {
 	}
 
 	def contactPage(ContactAggregateDTO contact) {
-		contact.profiles.map [ profile |
-			'''
-				<hr/>
-				«profile.asLinkedTitle.h2»
-				«profile.section»
-			'''
-		].concat.html(contact.asTitle, pageHeader)
+		'''
+			«deleteAndEditButtons(contact.header.id)»
+			<hr/>
+			«contact.profiles.map [ profile |
+				'''
+					<hr/>
+					«profile.asLinkedTitle.h2»
+					«profile.section»
+				'''
+			].concat»
+		'''.html(contact.asTitle, pageHeader)
 	}
 
 	def contactProfilePage(ProfileDTO profile) {
@@ -58,6 +63,17 @@ class ContactsTemplate {
 			  </fieldset>
 			</form>
 		'''.html(Section.Contacts.title, pageHeader)
+	}
+	
+	def deleteAndEditButtons(long contactId) {
+		'''
+			<form action="«uriBuilders.owner.resolveContactURI(contactId)»" method="post">
+			  <fieldset>
+«««			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT»">
+			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE»">
+			  </fieldset>
+			</form>
+		'''
 	}
 
 }

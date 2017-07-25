@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.UriBuilders;
@@ -114,6 +115,33 @@ public class ContactsResource {
 
 		// TODO: handle unknown ID gracefully
 		// return Response.status(Status.NOT_FOUND).build();
+	}
+	
+	@POST
+	@Path("/{" + CONTACT_ID + "}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response formSubmit(@PathParam(CONTACT_ID) long id, MultivaluedMap<String, String> formParams) {
+		final Optional<ContactAggregateDTO> contact = contactService.getContactById(id);
+		if (!contact.isPresent()) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		// edit, delete, submit(-edit)
+		final String actionValue = formParams.getFirst(BoundaryConstants.ContactForm.ACTION_INPUT_NAME);
+		switch (actionValue) {
+		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE:
+			contactService.deleteContact(id);
+			// TODO: return Status.NOT_FOUND if delete failed
+
+			{
+				final URI location = uriBuilders.owner().getContactsURI();
+				return Response.seeOther(location).build();
+			}
+			// break;
+
+		default:
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 	}
 
 	@GET

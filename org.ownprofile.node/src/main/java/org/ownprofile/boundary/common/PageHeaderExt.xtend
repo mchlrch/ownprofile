@@ -10,7 +10,7 @@ class PageHeaderExt {
 	@Inject	UriBuilders uriBuilders
 
 	def String pageHeader() '''
-		«FOR section : Section.values SEPARATOR "|"»
+		«FOR section : Section.values SEPARATOR " | "»
 			«section.getLocation(uriBuilders.owner).link(section.title)»
 		«ENDFOR»
 	'''
