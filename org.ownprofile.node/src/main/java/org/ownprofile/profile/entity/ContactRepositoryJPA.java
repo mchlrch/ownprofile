@@ -20,7 +20,8 @@ public class ContactRepositoryJPA implements ContactRepository {
 		final List queryResult = q.getResultList();
 		return (List<ContactEntity>) queryResult;
 	}
-	
+
+	// TODO: why not simply do it like this? : contact = em.get().find(ContactEntity.class, contact.getId().get());
 	public Optional<ContactEntity> getContactById(long id) {
 		final Query q = this.em.get().createQuery("SELECT o FROM " + ContactEntity.class.getName() + " AS o WHERE o.id = " + id);
 		final List queryResult = q.getResultList();
@@ -38,7 +39,6 @@ public class ContactRepositoryJPA implements ContactRepository {
 	}
 	
 	public void deleteContact(ContactEntity contact) {
-		contact = em.get().find(ContactEntity.class, contact.getId().get());
 		em.get().remove(contact);
 	}
 

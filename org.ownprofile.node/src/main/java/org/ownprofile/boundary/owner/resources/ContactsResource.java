@@ -110,11 +110,13 @@ public class ContactsResource {
 	@Path("/{" + CONTACT_ID + "}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteContact(@PathParam(CONTACT_ID) long id) {
-		contactService.deleteContact(id);
-		return Response.ok().build();
-
-		// TODO: handle unknown ID gracefully
-		// return Response.status(Status.NOT_FOUND).build();
+		final boolean contactDeleted = contactService.deleteContact(id);
+		
+		if (contactDeleted) {
+			return Response.ok().build();			
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	
 	@GET

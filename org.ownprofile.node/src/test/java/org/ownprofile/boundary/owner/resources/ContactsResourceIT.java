@@ -108,7 +108,7 @@ public class ContactsResourceIT {
 
 	@Test
 	public void shouldGetContactById() {
-		final Long contactId = this.kottan.getId().get();
+		final Long contactId = kottan.getId().get();
 		
 		final ContactAggregateDTO contact = client.getContactById(contactId);
 
@@ -134,19 +134,29 @@ public class ContactsResourceIT {
 	
 	@Test
 	public void shouldDeleteContact() {
-		final Long contactId = this.kottan.getId().get();
+		final Long contactId = kottan.getId().get();
 		
-		client.deleteContact(contactId);
+		final boolean contactDeleted = client.deleteContact(contactId);
 		
+		Assert.assertTrue(contactDeleted);
 		final ContactEntity actual = contactRepoMock.deletedContact;
 		Assert.assertNotNull(actual);
-		Assert.assertEquals(this.kottan, actual);
+		Assert.assertEquals(kottan, actual);
+	}
+	
+	@Test
+	public void deleteInexistentContact() {
+		contactRepoMock.deleteContact(kottan);		
+		final Long contactId = kottan.getId().get();
 		
+		final boolean contactDeleted = client.deleteContact(contactId);
+		
+		Assert.assertFalse(contactDeleted);
 	}
 
 	@Test
 	public void shouldGetContactProfileById() {
-		final Long profileId = this.kottan.getProfiles().iterator().next().getId().get();
+		final Long profileId = kottan.getProfiles().iterator().next().getId().get();
 		
 		final ProfileDTO profile = client.getContactProfileById(profileId);
 		
@@ -158,7 +168,7 @@ public class ContactsResourceIT {
 	
 	@Test
 	public void shouldAddNewContactProfile() {
-		final Long contactId = this.kottan.getId().get();
+		final Long contactId = kottan.getId().get();
 		Assert.assertNotNull(contactId);
 		
 		final Map<String, Object> body = Collections.emptyMap();

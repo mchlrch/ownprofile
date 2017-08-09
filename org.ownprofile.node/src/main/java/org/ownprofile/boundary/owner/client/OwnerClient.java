@@ -41,9 +41,9 @@ public class OwnerClient extends AbstractClient {
 		return doPost(contact, uri);
 	}
 	
-	public void deleteContact(long contactId) {
+	public boolean deleteContact(long contactId) {
 		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
-		doDelete(uri);
+		return doDelete(uri);
 	}
 
 	// -------------------------------

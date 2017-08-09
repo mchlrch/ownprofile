@@ -66,11 +66,11 @@ public class ContactService {
 		return newContact.getId().get();
 	}
 
-	// TODO: testcase: deleteContact mit unbekannter ID, return boolean
 	@Transactional
-	public void deleteContact(long id) {
+	public boolean deleteContact(long id) {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(id);
 		contact.ifPresent(c -> contactRepo.deleteContact(c));
+		return contact.isPresent();
 	}
 	
 	// TODO: testcase: updateContact mit unbekannter ID, return boolean
