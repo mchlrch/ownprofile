@@ -20,6 +20,7 @@ public class ContactRepositoryMock implements ContactRepository {
 
 	public ContactEntity addedContact;
 	public ContactEntity deletedContact;
+	public ContactEntity updatedContact;
 	
 	public ProfileEntity addedContactProfile;
 
@@ -68,6 +69,7 @@ public class ContactRepositoryMock implements ContactRepository {
 	@Override
 	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
 		contact.updateFromDto(updateDto);
+		this.updatedContact = contact;
 	}
 
 	public void addContactProfile(ProfileEntity profile) {

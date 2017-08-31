@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
@@ -20,6 +21,7 @@ import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
 import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.client.Result;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepositoryMock;
@@ -132,13 +134,39 @@ public class ContactsResourceIT {
 		Assert.assertEquals(expectedLocation, location);
 	}
 	
+	@Ignore @Test
+	public void shouldUpdateContact() {
+		final Long contactId = kottan.getId().get();
+		final String petnameUpdate = "Polizeimajor Adolf Kottan";
+		final ContactNewDTO contactUpdate = new ContactNewDTO(petnameUpdate);
+		
+		final Result<Void> contactUpdated = client.updateContact(contactId, contactUpdate);
+		
+		Assert.assertTrue(contactUpdated.isSuccess());
+		final ContactEntity actual = contactRepoMock.updatedContact;
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(kottan, actual);
+		Assert.assertEquals(petnameUpdate, kottan.getPetname());
+	}
+	
+	@Ignore @Test
+	public void updateInexistentContact() {
+		contactRepoMock.deleteContact(kottan);		
+		final Long contactId = kottan.getId().get();
+		final ContactNewDTO contactUpdate = new ContactNewDTO("foo");
+		
+		final Result<Void> contactUpdated = client.updateContact(contactId, contactUpdate);
+		
+		Assert.assertTrue(contactUpdated.isFail());
+	}
+	
 	@Test
 	public void shouldDeleteContact() {
 		final Long contactId = kottan.getId().get();
 		
-		final boolean contactDeleted = client.deleteContact(contactId);
+		final Result<Void> contactDeleted = client.deleteContact(contactId);
 		
-		Assert.assertTrue(contactDeleted);
+		Assert.assertTrue(contactDeleted.isSuccess());
 		final ContactEntity actual = contactRepoMock.deletedContact;
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(kottan, actual);
@@ -149,9 +177,9 @@ public class ContactsResourceIT {
 		contactRepoMock.deleteContact(kottan);		
 		final Long contactId = kottan.getId().get();
 		
-		final boolean contactDeleted = client.deleteContact(contactId);
+		final Result<Void> contactDeleted = client.deleteContact(contactId);
 		
-		Assert.assertFalse(contactDeleted);
+		Assert.assertTrue(contactDeleted.isFail());
 	}
 
 	@Test

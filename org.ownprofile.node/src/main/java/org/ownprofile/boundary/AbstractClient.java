@@ -3,6 +3,8 @@ package org.ownprofile.boundary;
 import java.net.URI;
 import javax.ws.rs.core.Response.Status;
 
+import org.ownprofile.boundary.owner.client.Result;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -40,20 +42,17 @@ public abstract class AbstractClient {
 		return response.getLocation();
 	}
 
-	protected boolean doDelete(URI uri) {
+	protected Result<Void> doDelete(URI uri) {
 		final WebTarget webTarget = this.client.target(uri);
 		final Response response = webTarget.request(MediaType.APPLICATION_JSON).delete();
 		
 		switch (Status.fromStatusCode(response.getStatus())) {
 		case OK:
-			return true;
-		case NOT_FOUND:
-			return false;
+			return Result.success();
 
 		default:
-			throw new RuntimeException(
-					String.format("Unexpected HTTP status: %d upon %s on %s",
-							response.getStatus(), "DELETE", webTarget));
+			return Result.fail("Delete failed. Server responded with HTTP %d upon %s on %s",
+							response.getStatus(), "DELETE", uri);
 		}
 	}
 

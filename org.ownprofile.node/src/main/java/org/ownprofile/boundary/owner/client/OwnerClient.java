@@ -41,7 +41,13 @@ public class OwnerClient extends AbstractClient {
 		return doPost(contact, uri);
 	}
 	
-	public boolean deleteContact(long contactId) {
+	public Result<Void> updateContact(long contactId, ContactNewDTO contact) {
+		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
+		throw new RuntimeException("implementation pending ...");
+//		return doPut(__);
+	}
+	
+	public Result<Void> deleteContact(long contactId) {
 		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
 		return doDelete(uri);
 	}
