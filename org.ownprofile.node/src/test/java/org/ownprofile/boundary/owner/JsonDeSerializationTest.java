@@ -10,7 +10,7 @@ public class JsonDeSerializationTest {
 	@Test
 	public void shouldDeSerializeContactNewDTO() throws Exception {
 		final String expected = readJsonForThisMethod();
-		assertDeSerializationRoundtrip(ContactNewDTO.class, expected);
+		assertDeSerializationRoundtrip(ContactCreateAndUpdateDTO.class, expected);
 	}
 
 	@Test

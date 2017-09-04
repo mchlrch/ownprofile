@@ -14,7 +14,7 @@ import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.boundary.owner.ContactDTO;
-import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.setup.GuiceModule;
 
@@ -50,7 +50,7 @@ public class BlackboxIT {
 	public void shouldCreateAndGetContact() {
 		final List<ContactDTO> prevContacts = client.getContacts();
 
-		final ContactNewDTO newContact = new ContactNewDTO("homer");
+		final ContactCreateAndUpdateDTO newContact = new ContactCreateAndUpdateDTO("homer");
 		final URI newContactLocation = client.addNewContact(newContact);
 
 		// fetch Contact by ID
@@ -107,7 +107,7 @@ public class BlackboxIT {
 		return result;
 	}
 
-	private static void assertContentIsEqual(ContactNewDTO expected, ContactDTO actual) {
+	private static void assertContentIsEqual(ContactCreateAndUpdateDTO expected, ContactDTO actual) {
 		Assert.assertNotNull(expected);
 		Assert.assertNotNull(actual);
 

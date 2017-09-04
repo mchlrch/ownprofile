@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -18,10 +18,10 @@ public class DemoProfileFactory {
 		return result;
 	}
 	
-	public Multimap<ContactNewDTO, ProfileNewDTO> createContactProfiles() {
-		final Multimap<ContactNewDTO, ProfileNewDTO> result = ArrayListMultimap.create();
+	public Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> createContactProfiles() {
+		final Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> result = ArrayListMultimap.create();
 		
-		final ContactNewDTO moesContact = createMoesContact();
+		final ContactCreateAndUpdateDTO moesContact = createMoesContact();
 		final ProfileNewDTO moesProfile = createMoesProfile();
 		result.put(moesContact, moesProfile);
 		
@@ -46,8 +46,8 @@ public class DemoProfileFactory {
 		return result;
 	}
 	
-	private ContactNewDTO createMoesContact() {
-		final ContactNewDTO result = new ContactNewDTO("moe");
+	private ContactCreateAndUpdateDTO createMoesContact() {
+		final ContactCreateAndUpdateDTO result = new ContactCreateAndUpdateDTO("moe");
 		return result;
 	}
 	

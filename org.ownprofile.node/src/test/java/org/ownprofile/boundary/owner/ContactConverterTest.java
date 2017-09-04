@@ -23,7 +23,7 @@ public class ContactConverterTest {
 	
 	@Test
 	public void shouldCreateEntityFromDto() throws Exception {
-		final ContactNewDTO dto = new ContactNewDTO("kottan");
+		final ContactCreateAndUpdateDTO dto = new ContactCreateAndUpdateDTO("kottan");
 
 		final ContactEntity target = converter.createEntity(dto);
 		

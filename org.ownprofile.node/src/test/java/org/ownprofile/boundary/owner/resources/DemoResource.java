@@ -18,7 +18,7 @@ import org.ownprofile.boundary.DemoProfileFactory;
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.owner.ContactConverter;
-import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
 import org.ownprofile.profile.control.AddressbookDomainService;
 import org.ownprofile.profile.control.ProfileDomainService;
@@ -67,9 +67,9 @@ public class DemoResource {
 	@POST
 	@Path("/init-addressbook")
 	public Response initAddressbook(@Context UriInfo uriInfo) {
-		final Multimap<ContactNewDTO, ProfileNewDTO> contactProfiles = this.demoProfileFactory.createContactProfiles(); 
+		final Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> contactProfiles = this.demoProfileFactory.createContactProfiles(); 
 		
-		for (ContactNewDTO contact : contactProfiles.keySet()) {
+		for (ContactCreateAndUpdateDTO contact : contactProfiles.keySet()) {
 			final ContactEntity newContact = this.contactConverter.createEntity(contact);		
 			this.addressbookService.addNewContact(newContact);
 			

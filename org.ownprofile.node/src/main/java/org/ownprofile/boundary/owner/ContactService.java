@@ -60,7 +60,7 @@ public class ContactService {
 	}
 
 	@Transactional
-	public Long addNewContact(ContactNewDTO contact) {
+	public Long addNewContact(ContactCreateAndUpdateDTO contact) {
 		final ContactEntity newContact = contactConverter.createEntity(contact);
 		contactRepo.addContact(newContact);
 		return newContact.getId().get();
@@ -73,11 +73,11 @@ public class ContactService {
 		return contact.isPresent();
 	}
 	
-	// TODO: testcase: updateContact mit unbekannter ID, return boolean
 	@Transactional
-	public void updateContact(long id, ContactHeaderDTO updateDto) {
+	public boolean updateContact(long id, ContactCreateAndUpdateDTO updateDto) {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(id);
 		contact.ifPresent(c -> contactRepo.updateContact(c, updateDto));
+		return contact.isPresent();
 	}
 
 	@Transactional

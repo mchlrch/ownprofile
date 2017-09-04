@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.profile.entity.IdInitializer.IdSource;
 
 public class ContactRepositoryMock implements ContactRepository {
@@ -67,7 +67,7 @@ public class ContactRepositoryMock implements ContactRepository {
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
 		contact.updateFromDto(updateDto);
 		this.updatedContact = contact;
 	}

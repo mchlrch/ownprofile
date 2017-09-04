@@ -3,7 +3,7 @@ package org.ownprofile.profile.entity;
 import java.util.List;
 import java.util.Optional;
 
-import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 public interface ContactRepository {
 
@@ -19,6 +19,6 @@ public interface ContactRepository {
 	
 	public void deleteContact(ContactEntity contact);
 	
-	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto);
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto);
 
 }

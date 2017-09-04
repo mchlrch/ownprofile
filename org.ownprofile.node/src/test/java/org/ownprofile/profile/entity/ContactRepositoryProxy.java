@@ -3,7 +3,7 @@ package org.ownprofile.profile.entity;
 import java.util.List;
 import java.util.Optional;
 
-import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 public class ContactRepositoryProxy implements ContactRepository {
 
@@ -40,7 +40,7 @@ public class ContactRepositoryProxy implements ContactRepository {
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
 		this.delegate.updateContact(contact, updateDto);
 	}
 

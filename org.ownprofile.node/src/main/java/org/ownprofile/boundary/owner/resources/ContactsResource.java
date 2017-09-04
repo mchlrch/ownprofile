@@ -12,6 +12,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,9 +28,9 @@ import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactHeaderDTO;
-import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.boundary.owner.ContactService;
 
 @Path("/contacts")
@@ -84,7 +85,7 @@ public class ContactsResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addNewContact(ContactNewDTO contact) {
+	public Response addNewContact(ContactCreateAndUpdateDTO contact) {
 		final Long contactId = contactService.addNewContact(contact);
 		final URI location = uriBuilders.owner().resolveContactURI(contactId);
 		return Response.created(location).build();
@@ -100,10 +101,23 @@ public class ContactsResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response addNewContactFormSubmit(MultivaluedMap<String, String> formParams) {
-		ContactNewDTO in = new ContactNewDTO(formParams.getFirst(ContactHeaderDTO.P_PETNAME));
+		ContactCreateAndUpdateDTO in = new ContactCreateAndUpdateDTO(formParams.getFirst(ContactHeaderDTO.P_PETNAME));
 
 		Response r = addNewContact(in);
 		return Response.seeOther(r.getLocation()).build();
+	}
+	
+	@PUT
+	@Path("/{" + CONTACT_ID + "}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateContact(@PathParam(CONTACT_ID) long id, ContactCreateAndUpdateDTO updateDto) {
+		final boolean contactUpdated = contactService.updateContact(id, updateDto);
+		
+		if (contactUpdated) {
+			return Response.ok().build();			
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 
 	@DELETE
@@ -140,30 +154,34 @@ public class ContactsResource {
 		switch (actionValue) {
 		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT:
 			{
+				// TODO: return Status.NOT_FOUND if necessary
 				final URI location = uriBuilders.owner().resolveEditContactHtmlFormURI(id);
 				return Response.seeOther(location).build();
 			}
 			// break;
 			
 		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE:
-			// TODO: return Status.NOT_FOUND if necessary
-			contactService.deleteContact(id);
-
-			{
+			final boolean contactDeleted = contactService.deleteContact(id);
+			
+			if (contactDeleted) {
 				final URI location = uriBuilders.owner().getContactsURI();
 				return Response.seeOther(location).build();
+			} else {
+				return Response.status(Status.NOT_FOUND).build();
 			}
 			// break;
 
 		case BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_SUBMIT_EDIT:
 			final String petname = formParams.getFirst(ContactHeaderDTO.P_PETNAME);
-			final ContactHeaderDTO updateDto = new ContactHeaderDTO(id, null, petname);
+			final ContactCreateAndUpdateDTO updateDto = new ContactCreateAndUpdateDTO(petname);
 			
-			// TODO: return Status.NOT_FOUND if necessary
-			contactService.updateContact(id, updateDto);
-			{
+			final boolean contactUpdated = contactService.updateContact(id, updateDto);
+			
+			if (contactUpdated) {
 				final URI location = uriBuilders.owner().resolveContactURI(id);
 				return Response.seeOther(location).build();
+			} else {
+				return Response.status(Status.NOT_FOUND).build();
 			}
 			// break;
 

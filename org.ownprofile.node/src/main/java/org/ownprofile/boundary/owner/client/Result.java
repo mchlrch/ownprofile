@@ -64,6 +64,13 @@ public class Result<T> {
 			return fail;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s: %s",
+				isSuccess ? "SUCCESS" : "FAIL",
+				isSuccess ? successValue : fail);
+	}
 
 	// ------------------------------
 	public static class Fail {

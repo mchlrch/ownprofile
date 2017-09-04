@@ -11,25 +11,24 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
-import org.ownprofile.boundary.owner.ContactNewDTO;
 import org.ownprofile.boundary.owner.client.Result;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepositoryMock;
 import org.ownprofile.profile.entity.IdInitializer;
+import org.ownprofile.profile.entity.MyProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileBody;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.ProfileHandle;
-import org.ownprofile.profile.entity.MyProfileRepositoryMock;
 import org.ownprofile.profile.entity.ProfileSource;
 import org.ownprofile.profile.entity.RepoProxies;
 import org.ownprofile.profile.entity.TestProfileEntity;
@@ -122,7 +121,7 @@ public class ContactsResourceIT {
 	
 	@Test
 	public void shouldAddNewContact() {
-		final ContactNewDTO newContact = new ContactNewDTO("schrammel");
+		final ContactCreateAndUpdateDTO newContact = new ContactCreateAndUpdateDTO("schrammel");
 		
 		final URI location = client.addNewContact(newContact);
 		
@@ -134,11 +133,11 @@ public class ContactsResourceIT {
 		Assert.assertEquals(expectedLocation, location);
 	}
 	
-	@Ignore @Test
+	@Test
 	public void shouldUpdateContact() {
 		final Long contactId = kottan.getId().get();
 		final String petnameUpdate = "Polizeimajor Adolf Kottan";
-		final ContactNewDTO contactUpdate = new ContactNewDTO(petnameUpdate);
+		final ContactCreateAndUpdateDTO contactUpdate = new ContactCreateAndUpdateDTO(petnameUpdate);
 		
 		final Result<Void> contactUpdated = client.updateContact(contactId, contactUpdate);
 		
@@ -149,11 +148,11 @@ public class ContactsResourceIT {
 		Assert.assertEquals(petnameUpdate, kottan.getPetname());
 	}
 	
-	@Ignore @Test
+	@Test
 	public void updateInexistentContact() {
 		contactRepoMock.deleteContact(kottan);		
 		final Long contactId = kottan.getId().get();
-		final ContactNewDTO contactUpdate = new ContactNewDTO("foo");
+		final ContactCreateAndUpdateDTO contactUpdate = new ContactCreateAndUpdateDTO("foo");
 		
 		final Result<Void> contactUpdated = client.updateContact(contactId, contactUpdate);
 		

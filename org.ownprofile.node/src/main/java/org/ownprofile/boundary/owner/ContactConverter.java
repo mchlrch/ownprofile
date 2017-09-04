@@ -48,7 +48,7 @@ public class ContactConverter {
 		return out;
 	}
 
-	public ContactEntity createEntity(ContactNewDTO in) {
+	public ContactEntity createEntity(ContactCreateAndUpdateDTO in) {
 		final ContactEntity out = new ContactEntity.Builder().fromDto(in).build();
 		return out;
 	}

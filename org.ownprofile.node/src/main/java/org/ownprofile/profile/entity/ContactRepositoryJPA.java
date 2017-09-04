@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.ownprofile.boundary.owner.ContactHeaderDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 import com.google.inject.Provider;
 
@@ -59,7 +59,7 @@ public class ContactRepositoryJPA implements ContactRepository {
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactHeaderDTO updateDto) {
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
 		contact.updateFromDto(updateDto);
 	}
 	

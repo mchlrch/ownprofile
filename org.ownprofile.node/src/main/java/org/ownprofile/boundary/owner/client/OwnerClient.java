@@ -11,7 +11,7 @@ import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
-import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
 
 public class OwnerClient extends AbstractClient {
@@ -36,15 +36,14 @@ public class OwnerClient extends AbstractClient {
 		return doGet(ContactAggregateDTO.class, uri);
 	}
 	
-	public URI addNewContact(ContactNewDTO contact) {
+	public URI addNewContact(ContactCreateAndUpdateDTO contact) {
 		final URI uri = this.ownerUriBuilder.getContactsURI();
 		return doPost(contact, uri);
 	}
 	
-	public Result<Void> updateContact(long contactId, ContactNewDTO contact) {
+	public Result<Void> updateContact(long contactId, ContactCreateAndUpdateDTO contact) {
 		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
-		throw new RuntimeException("implementation pending ...");
-//		return doPut(__);
+		return doPut(contact, uri);
 	}
 	
 	public Result<Void> deleteContact(long contactId) {

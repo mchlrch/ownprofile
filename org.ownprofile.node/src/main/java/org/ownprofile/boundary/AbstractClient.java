@@ -42,6 +42,21 @@ public abstract class AbstractClient {
 		return response.getLocation();
 	}
 
+	protected Result<Void> doPut(Object obj, URI uri) {
+		final WebTarget webTarget = this.client.target(uri);
+		final Response response = webTarget.request(MediaType.APPLICATION_JSON).put(Entity.json(obj));
+		
+		switch (Status.fromStatusCode(response.getStatus())) {
+		case OK:
+			return Result.success();
+
+		default:
+			return Result.fail("PUT failed. Server responded with HTTP %d on %s",
+							response.getStatus(), uri);
+		}
+	}
+	
+	
 	protected Result<Void> doDelete(URI uri) {
 		final WebTarget webTarget = this.client.target(uri);
 		final Response response = webTarget.request(MediaType.APPLICATION_JSON).delete();
@@ -51,8 +66,8 @@ public abstract class AbstractClient {
 			return Result.success();
 
 		default:
-			return Result.fail("Delete failed. Server responded with HTTP %d upon %s on %s",
-							response.getStatus(), "DELETE", uri);
+			return Result.fail("DELETE failed. Server responded with HTTP %d on %s",
+							response.getStatus(), uri);
 		}
 	}
 

@@ -15,8 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.ownprofile.boundary.owner.ContactHeaderDTO;
-import org.ownprofile.boundary.owner.ContactNewDTO;
+import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 @Entity
 public class ContactEntity {
@@ -55,7 +54,7 @@ public class ContactEntity {
 		this.profiles.add(profile);
 	}
 	
-	protected void updateFromDto(ContactHeaderDTO dto) {
+	protected void updateFromDto(ContactCreateAndUpdateDTO dto) {
 		this.petname = dto.petname;
 	}
 	
@@ -69,7 +68,7 @@ public class ContactEntity {
 		
 		private String petname;
 		
-        public Builder fromDto(ContactNewDTO dto) {
+        public Builder fromDto(ContactCreateAndUpdateDTO dto) {
         	withPetname(dto.petname);
         	return this;        	
         }
