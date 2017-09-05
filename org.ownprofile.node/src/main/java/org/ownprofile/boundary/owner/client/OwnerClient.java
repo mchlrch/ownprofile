@@ -54,7 +54,7 @@ public class OwnerClient extends AbstractClient {
 	// -------------------------------
 	
 	public ProfileDTO getContactProfileById(long profileId) {		
-		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(-1L, profileId);
+		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(profileId);
 		return doGet(ProfileDTO.class, uri);
 	}
 

@@ -36,7 +36,7 @@ public class ProfileConverter {
 	
 	public ProfileHeaderDTO convertContactProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final ContactEntity contact = in.getContact().get();
-		final URI href = uriBuilder.resolveContactProfileURI(contact.getId().get(), in.getId().get());
+		final URI href = uriBuilder.resolveContactProfileURI(in.getId().get());
 		final ContactHeaderDTO container = contactHeaderConverter.convertToHeaderView(contact, uriBuilder);
 		final org.ownprofile.boundary.ProfileSource source = in.getSource().isRemote() ? org.ownprofile.boundary.ProfileSource.Remote : org.ownprofile.boundary.ProfileSource.Local;
 		final ProfileHeaderDTO out = ProfileHeaderDTO.createContactProfile(source, in.getHandle().get(), href, in.getProfileName(), container);

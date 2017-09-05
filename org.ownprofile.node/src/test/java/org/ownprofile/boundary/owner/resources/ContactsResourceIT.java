@@ -12,8 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
@@ -36,8 +34,6 @@ import org.ownprofile.profile.entity.TestProfileEntity;
 // each testmethod invokes at most one method on the resource
 public class ContactsResourceIT {
 
-	// TODO: http://www.petervannes.nl/files/084d1067451c4f9a56f9b865984f803d-52.php
-	
 	private static final RepoProxies repoProxies = new RepoProxies();
 	private static ServiceIntegrationTestSession session;
 
@@ -180,18 +176,6 @@ public class ContactsResourceIT {
 		
 		Assert.assertTrue(contactDeleted.isFail());
 	}
-
-	@Test
-	public void shouldGetContactProfileById() {
-		final Long profileId = kottan.getProfiles().iterator().next().getId().get();
-		
-		final ProfileDTO profile = client.getContactProfileById(profileId);
-		
-		Assert.assertNotNull(profile);
-		
-		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
-		ProfileDtoOutCompareUtil.assertContactProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
-	}
 	
 	@Test
 	public void shouldAddNewContactProfile() {
@@ -207,7 +191,7 @@ public class ContactsResourceIT {
 		Assert.assertNotNull(actual);
 		Assert.assertEquals(newProfile.profileName, actual.getProfileName());
 		
-		final URI expectedLocation = client.getUriBuilder().resolveContactProfileURI(contactId, actual.getId().get());
+		final URI expectedLocation = client.getUriBuilder().resolveContactProfileURI(actual.getId().get());
 		Assert.assertEquals(expectedLocation, location);
 	}
 	

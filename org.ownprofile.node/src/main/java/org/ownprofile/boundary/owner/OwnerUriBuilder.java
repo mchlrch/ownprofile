@@ -11,6 +11,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.AbstractUriBuilder;
 import org.ownprofile.boundary.BoundaryConstants;
+import org.ownprofile.boundary.owner.resources.ContactProfilesResource;
 import org.ownprofile.boundary.owner.resources.ContactsResource;
 import org.ownprofile.boundary.owner.resources.MyProfilesResource;
 
@@ -50,21 +51,6 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 
-	public URI resolveMyProfileURI(Long profileId) {
-		final UriBuilder builder = createUriBuilder(MyProfilesResource.class, "getMyProfileById"); 
-		return builder.resolveTemplate(PROFILE_ID, profileId).build();
-	}
-	
-	public URI getMyProfileURI() {
-		final UriBuilder builder = createUriBuilder(MyProfilesResource.class); 
-		return builder.build();
-	}
-	
-	public URI resolveContactProfileURI(Long contactId, Long profileId) {
-		final UriBuilder builder = createUriBuilder(ContactsResource.class, "getContactProfileById");
-		return builder.resolveTemplate(CONTACT_ID, contactId).resolveTemplate(PROFILE_ID, profileId).build();
-	}
-	
 	public URI resolveAddNewContactProfileURI(Long contactId) {
 		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addNewContactProfile");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
@@ -79,4 +65,24 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		final UriBuilder builder = createUriBuilder(ContactsResource.class, "editContactHtmlForm");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
+
+	// --------------------------------------------
+	
+	public URI resolveContactProfileURI(Long profileId) {
+		final UriBuilder builder = createUriBuilder(ContactProfilesResource.class, "getContactProfileById");
+		return builder.resolveTemplate(PROFILE_ID, profileId).build();
+	}
+	
+	// --------------------------------------------
+	
+	public URI resolveMyProfileURI(Long profileId) {
+		final UriBuilder builder = createUriBuilder(MyProfilesResource.class, "getMyProfileById"); 
+		return builder.resolveTemplate(PROFILE_ID, profileId).build();
+	}
+	
+	public URI getMyProfileURI() {
+		final UriBuilder builder = createUriBuilder(MyProfilesResource.class); 
+		return builder.build();
+	}
+	
 }

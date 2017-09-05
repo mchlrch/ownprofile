@@ -1,7 +1,6 @@
 package org.ownprofile.boundary.owner.resources;
 
 import static org.ownprofile.boundary.BoundaryConstants.CONTACT_ID;
-import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 
 import java.net.URI;
 import java.util.List;
@@ -24,7 +23,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.BoundaryConstants;
-import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
@@ -197,36 +195,13 @@ public class ContactsResource {
 		}
 	}
 
-	@GET
-	@Path("/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getContactProfileById(@PathParam(PROFILE_ID) long profileId) {
-		final Optional<ProfileDTO> profile = contactService.getContactProfileById(profileId);
-
-		// TODO: return Profile with header-link to contact -> how do we test
-		// this on client-side?
-		return profile
-				.map(p -> Response.ok(p).build())
-				.orElse(Response.status(Status.NOT_FOUND).build());
-	}
-
-	@GET
-	@Path("/{" + CONTACT_ID + "}/profile/{" + PROFILE_ID + "}")
-	@Produces(MediaType.TEXT_HTML)
-	public Response getContactProfileByIdAsHtml(@PathParam(PROFILE_ID) long profileId) {
-		final Optional<ProfileDTO> profile = contactService.getContactProfileById(profileId);
-		return profile
-				.map(p -> Response.ok(template.contactProfilePage(p).toString()).build())
-				.orElse(Response.status(Status.NOT_FOUND).build());
-	}
-
 	@POST
-	@Path("/{" + CONTACT_ID + "}/profile")
+	@Path("/{" + CONTACT_ID + "}/profiles")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addNewContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileNewDTO profile) {
 		final Optional<Long> profileId = contactService.addNewContactProfile(contactId, profile);
 		return profileId
-				.map(pid -> Response.created(uriBuilders.owner().resolveContactProfileURI(contactId, pid)).build())
+				.map(pid -> Response.created(uriBuilders.owner().resolveContactProfileURI(pid)).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());
 	}
 

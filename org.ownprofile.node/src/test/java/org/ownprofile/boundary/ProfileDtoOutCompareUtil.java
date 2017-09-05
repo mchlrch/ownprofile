@@ -20,9 +20,8 @@ public class ProfileDtoOutCompareUtil {
 	
 	public static void assertContactProfileContentIsEqual(ProfileEntity expected, ProfileHeaderDTO actual, OwnerUriBuilder uriBuilder) {
 		assertContentIsEqual(expected, actual, (profile) -> {
-			final long contactId = profile.getContact().get().getId().get();
 			final long profileId = profile.getId().get();			
-			return uriBuilder.resolveContactProfileURI(contactId, profileId);
+			return uriBuilder.resolveContactProfileURI(profileId);
 		});
 	}
 	
@@ -54,9 +53,8 @@ public class ProfileDtoOutCompareUtil {
 	
 	public static void assertContactProfileContentIsEqualOnOwnerAPI(ProfileEntity expected, ProfileDTO actual, OwnerUriBuilder uriBuilder) {
 		assertContentIsEqual(expected, actual, (profile) -> {
-			final long contactId = profile.getContact().get().getId().get();
 			final long profileId = profile.getId().get();			
-			return uriBuilder.resolveContactProfileURI(contactId, profileId);
+			return uriBuilder.resolveContactProfileURI(profileId);
 		});
 	}
 
