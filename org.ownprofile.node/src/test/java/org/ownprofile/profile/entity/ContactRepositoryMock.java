@@ -23,6 +23,8 @@ public class ContactRepositoryMock implements ContactRepository {
 	public ContactEntity updatedContact;
 	
 	public ProfileEntity addedContactProfile;
+	public ProfileEntity deletedContactProfile;
+	//public ProfileEntity updatedContactProfile;
 
 	public ContactRepositoryMock(IdInitializer<ProfileEntity> profileIdInitializer) {
 		this.profileIdInitializer = checkNotNull(profileIdInitializer);
@@ -72,6 +74,14 @@ public class ContactRepositoryMock implements ContactRepository {
 		this.updatedContact = contact;
 	}
 
+	// ----------------------
+	
+	@Override
+	public Optional<ProfileEntity> getContactProfileById(long id) {
+		return Optional.ofNullable(contactProfiles.get(id));
+	}
+	
+	@Override
 	public void addContactProfile(ProfileEntity profile) {
 		final Long id = profileIdInitializer.initIdIfNull(profile);
 		if (contactProfiles.containsKey(id)) {
@@ -82,13 +92,10 @@ public class ContactRepositoryMock implements ContactRepository {
 		this.addedContactProfile = profile;
 	}
 	
-	private void deleteContactProfile(ProfileEntity profile) {
-		this.contactProfiles.remove(profile.getId().get());
-	}
-
 	@Override
-	public Optional<ProfileEntity> getContactProfileById(long id) {
-		return Optional.ofNullable(contactProfiles.get(id));
+	public void deleteContactProfile(ProfileEntity profile) {
+		this.contactProfiles.remove(profile.getId().get());
+		this.deletedContactProfile = profile;
 	}
 
 }

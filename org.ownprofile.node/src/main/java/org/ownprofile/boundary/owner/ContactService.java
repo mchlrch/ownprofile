@@ -108,5 +108,12 @@ public class ContactService {
 			return Optional.empty();
 		}
 	}
+	
+	@Transactional
+	public boolean deleteContactProfile(long id) {
+		final Optional<ProfileEntity> profile = contactRepo.getContactProfileById(id);
+		profile.ifPresent(p -> contactRepo.deleteContactProfile(p));
+		return profile.isPresent();
+	}
 
 }

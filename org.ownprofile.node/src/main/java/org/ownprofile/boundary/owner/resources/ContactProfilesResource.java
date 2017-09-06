@@ -6,6 +6,7 @@ import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -57,6 +58,19 @@ public class ContactProfilesResource {
 		return profile
 				.map(p -> Response.ok(template.contactProfilePage(p).toString()).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());
+	}
+	
+	@DELETE
+	@Path("/{" + PROFILE_ID + "}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteContactProfile(@PathParam(PROFILE_ID) long id) {
+		final boolean profileDeleted = contactService.deleteContactProfile(id);
+		
+		if (profileDeleted) {
+			return Response.ok().build();			
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 
 }

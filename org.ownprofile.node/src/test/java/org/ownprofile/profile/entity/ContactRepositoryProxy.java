@@ -23,16 +23,6 @@ public class ContactRepositoryProxy implements ContactRepository {
 	public void addContact(ContactEntity contact) {
 		this.delegate.addContact(contact);
 	}
-
-	@Override
-	public Optional<ProfileEntity> getContactProfileById(long id) {
-		return this.delegate.getContactProfileById(id);
-	}
-	
-	@Override
-	public void addContactProfile(ProfileEntity profile) {
-		delegate.addContactProfile(profile);
-	}
 	
 	@Override
 	public void deleteContact(ContactEntity contact) {
@@ -43,5 +33,22 @@ public class ContactRepositoryProxy implements ContactRepository {
 	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
 		this.delegate.updateContact(contact, updateDto);
 	}
+	
+	// -----------------------------
 
+	@Override
+	public Optional<ProfileEntity> getContactProfileById(long id) {
+		return this.delegate.getContactProfileById(id);
+	}
+	
+	@Override
+	public void addContactProfile(ProfileEntity profile) {
+		delegate.addContactProfile(profile);
+	}
+
+	@Override
+	public void deleteContactProfile(ProfileEntity profile) {
+		delegate.deleteContactProfile(profile);
+	}
+	
 }

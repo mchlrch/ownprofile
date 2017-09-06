@@ -1,11 +1,5 @@
 package org.ownprofile.boundary.owner.resources;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -14,12 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
-import org.ownprofile.boundary.ProfileNewDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
-import org.ownprofile.boundary.owner.ContactAggregateDTO;
-import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
-import org.ownprofile.boundary.owner.ContactDTO;
-import org.ownprofile.boundary.owner.ContactDtoOutCompareUtil;
 import org.ownprofile.boundary.owner.client.Result;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.ContactEntity;
@@ -44,6 +33,7 @@ public class ContactProfilesResourceIT {
 	private MyProfileRepositoryMock profileRepoMock;
 	
 	private ContactEntity kottan;
+	private ProfileEntity kottansProfile;
 
 	@BeforeClass
 	public static void startJetty() throws Exception {
@@ -61,8 +51,6 @@ public class ContactProfilesResourceIT {
 	@Before
 	public void setup() {
 		this.client = session.getOrCreateOwnerClient();
-		// TODO: once we have shared API <if>, we could dynamically proxy OwnerClient
-		// .. and assert that each method got invoked exactly once after all testcases have run
 		
 		final IdInitializer<ProfileEntity> profileIdInitializer = new IdInitializer<>(ProfileEntity.class);
 		this.contactRepoMock = new ContactRepositoryMock(profileIdInitializer);
@@ -71,7 +59,13 @@ public class ContactProfilesResourceIT {
 		repoProxies.setProfileRepository(profileRepoMock);
 		
 		this.kottan = createContactWithProfileForKottan();
+		this.kottansProfile = kottan.getProfiles().iterator().next();
+		
 		this.contactRepoMock.addContact(kottan);
+		
+		// sanity checks
+		Assert.assertNotNull(this.kottan);
+		Assert.assertNotNull(this.kottansProfile);
 	}
 	
 	@After
@@ -94,7 +88,7 @@ public class ContactProfilesResourceIT {
 		
 	@Test
 	public void shouldGetContactProfileById() {
-		final Long profileId = kottan.getProfiles().iterator().next().getId().get();
+		final Long profileId = kottansProfile.getId().get();
 		
 		final ProfileDTO profile = client.getContactProfileById(profileId);
 		
@@ -102,6 +96,29 @@ public class ContactProfilesResourceIT {
 		
 		final ProfileEntity expected = contactRepoMock.getContactProfileById(profileId).get();
 		ProfileDtoOutCompareUtil.assertContactProfileContentIsEqualOnOwnerAPI(expected, profile, client.getUriBuilder());
+	}
+	
+	@Test
+	public void shouldDeleteContactProfile() {
+		final Long profileId = kottansProfile.getId().get();
+		
+		final Result<Void> profileDeleted = client.deleteContactProfile(profileId);
+		
+		Assert.assertTrue(profileDeleted.isSuccess());
+		final ProfileEntity actual = contactRepoMock.deletedContactProfile;
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(kottansProfile, actual);
+	}
+	
+	@Test
+	public void deleteInexistentContactProfile() {
+		contactRepoMock.deleteContact(kottan);		
+		final Long profileId = kottansProfile.getId().get();
+		
+		final Result<Void> profileDeleted = client.deleteContactProfile(profileId);
+		
+		Assert.assertTrue(profileDeleted.isFail());
+		Assert.assertTrue("HTTP 404 expected", profileDeleted.getFail().getMessage().contains("404"));
 	}
 	
 }

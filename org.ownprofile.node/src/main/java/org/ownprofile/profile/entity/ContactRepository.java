@@ -13,12 +13,16 @@ public interface ContactRepository {
 
 	public void addContact(ContactEntity contact);
 
+	public void deleteContact(ContactEntity contact);
+	
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto);
+	
+	// ----------------------------
+	
 	public Optional<ProfileEntity> getContactProfileById(long id);
 	
 	public void addContactProfile(ProfileEntity profile);
 	
-	public void deleteContact(ContactEntity contact);
-	
-	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto);
+	public void deleteContactProfile(ProfileEntity profile);
 
 }

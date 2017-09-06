@@ -63,6 +63,11 @@ public class OwnerClient extends AbstractClient {
 		return doPost(newProfile, uri);
 	}
 	
+	public Result<Void> deleteContactProfile(long profileId) {
+		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(profileId);
+		return doDelete(uri);
+	}
+	
 	// -------------------------------
 	
 	public List<ProfileDTO> getMyProfiles() {

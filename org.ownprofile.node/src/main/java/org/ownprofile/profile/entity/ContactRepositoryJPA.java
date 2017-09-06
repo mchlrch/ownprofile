@@ -15,6 +15,7 @@ public class ContactRepositoryJPA implements ContactRepository {
 	
 	@Inject Provider<EntityManager> em;
 	
+	@Override
 	public List<ContactEntity> getAllContacts() {
 		final Query q = this.em.get().createQuery("SELECT o FROM " + ContactEntity.class.getName() + " AS o");
 		final List queryResult = q.getResultList();
@@ -22,6 +23,7 @@ public class ContactRepositoryJPA implements ContactRepository {
 	}
 
 	// TODO: why not simply do it like this? : contact = em.get().find(ContactEntity.class, contact.getId().get());
+	@Override
 	public Optional<ContactEntity> getContactById(long id) {
 		final Query q = this.em.get().createQuery("SELECT o FROM " + ContactEntity.class.getName() + " AS o WHERE o.id = " + id);
 		final List queryResult = q.getResultList();
@@ -34,14 +36,24 @@ public class ContactRepositoryJPA implements ContactRepository {
 		}
 	}
 	
+	@Override
 	public void addContact(ContactEntity contact) {
 		em.get().persist(contact);
 	}
 	
+	@Override
 	public void deleteContact(ContactEntity contact) {
 		em.get().remove(contact);
 	}
-
+	
+	@Override
+	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
+		contact.updateFromDto(updateDto);
+	}
+	
+	// -------------------------------
+	
+	@Override
 	public Optional<ProfileEntity> getContactProfileById(long id) {
 		final Query q = this.em.get().createQuery("SELECT p FROM " + ProfileEntity.class.getName() + " AS p WHERE p.contact IS NOT NULL AND p.id = " + id);
 		final List queryResult = q.getResultList();
@@ -54,13 +66,14 @@ public class ContactRepositoryJPA implements ContactRepository {
 		}
 	}
 	
+	@Override
 	public void addContactProfile(ProfileEntity profile) {
 		em.get().persist(profile);
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
-		contact.updateFromDto(updateDto);
+	public void deleteContactProfile(ProfileEntity profile) {
+		em.get().remove(profile);
 	}
 	
 }

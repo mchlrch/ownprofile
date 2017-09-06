@@ -175,6 +175,7 @@ public class ContactsResourceIT {
 		final Result<Void> contactDeleted = client.deleteContact(contactId);
 		
 		Assert.assertTrue(contactDeleted.isFail());
+		Assert.assertTrue("HTTP 404 expected",  contactDeleted.getFail().getMessage().contains("404"));
 	}
 	
 	@Test
