@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.profile.entity.IdInitializer.IdSource;
+import org.ownprofile.profile.entity.ProfileEntity.Struct;
 
 public class ContactRepositoryMock implements ContactRepository {
 	private final IdInitializer<ContactEntity> contactIdInitializer = new IdInitializer<>(ContactEntity.class);
@@ -24,7 +24,7 @@ public class ContactRepositoryMock implements ContactRepository {
 	
 	public ProfileEntity addedContactProfile;
 	public ProfileEntity deletedContactProfile;
-	//public ProfileEntity updatedContactProfile;
+	public ProfileEntity updatedContactProfile;
 
 	public ContactRepositoryMock(IdInitializer<ProfileEntity> profileIdInitializer) {
 		this.profileIdInitializer = checkNotNull(profileIdInitializer);
@@ -69,8 +69,8 @@ public class ContactRepositoryMock implements ContactRepository {
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
-		contact.updateFromDto(updateDto);
+	public void updateContact(ContactEntity contact, ContactEntity.Struct update) {
+		contact.updateFromStruct(update);
 		this.updatedContact = contact;
 	}
 
@@ -90,6 +90,12 @@ public class ContactRepositoryMock implements ContactRepository {
 		
 		this.contactProfiles.put(id, profile);
 		this.addedContactProfile = profile;
+	}
+	
+	@Override
+	public void updateProfile(ProfileEntity profile, Struct update) {
+		profile.updateFromStruct(update);
+		this.updatedContactProfile = profile;
 	}
 	
 	@Override

@@ -49,8 +49,21 @@ public class ContactConverter {
 	}
 
 	public ContactEntity createEntity(ContactCreateAndUpdateDTO in) {
-		final ContactEntity out = new ContactEntity.Builder().fromDto(in).build();
+		final ContactEntity.Builder builder = new ContactEntity.Builder();
+		fillStruct(in, builder);
+
+		final ContactEntity out = builder.build(); 
 		return out;
 	}
 	
+	public ContactEntity.Struct dto2struct(ContactCreateAndUpdateDTO in) {
+		final ContactEntity.Struct out = new ContactEntity.Struct();
+		fillStruct(in, out);
+		return out;
+	}
+
+	private <T extends ContactEntity.AbstractStruct<T>> void fillStruct(ContactCreateAndUpdateDTO in, T out) {
+		out.withPetname(in.petname);
+	}
+
 }

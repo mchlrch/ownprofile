@@ -12,23 +12,23 @@ import com.google.common.collect.Multimap;
 
 public class DemoProfileFactory {
 
-	public Iterable<ProfileNewDTO> createMyProfiles() {
-		final List<ProfileNewDTO> result = new ArrayList<ProfileNewDTO>();
+	public Iterable<ProfileCreateAndUpdateDTO> createMyProfiles() {
+		final List<ProfileCreateAndUpdateDTO> result = new ArrayList<ProfileCreateAndUpdateDTO>();
 		result.add(createHomersProfile());
 		return result;
 	}
 	
-	public Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> createContactProfiles() {
-		final Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> result = ArrayListMultimap.create();
+	public Multimap<ContactCreateAndUpdateDTO, ProfileCreateAndUpdateDTO> createContactProfiles() {
+		final Multimap<ContactCreateAndUpdateDTO, ProfileCreateAndUpdateDTO> result = ArrayListMultimap.create();
 		
 		final ContactCreateAndUpdateDTO moesContact = createMoesContact();
-		final ProfileNewDTO moesProfile = createMoesProfile();
+		final ProfileCreateAndUpdateDTO moesProfile = createMoesProfile();
 		result.put(moesContact, moesProfile);
 		
 		return result;
 	}
 
-	private ProfileNewDTO createHomersProfile() {
+	private ProfileCreateAndUpdateDTO createHomersProfile() {
 		final Map<String, Object> body = new HashMap<String, Object>();
 
 		body.put("firstName", "Homer");
@@ -42,7 +42,7 @@ public class DemoProfileFactory {
 		
 		body.put("web", "http://www.thesimpsons.com");
 
-		final ProfileNewDTO result = new ProfileNewDTO("private", body);
+		final ProfileCreateAndUpdateDTO result = new ProfileCreateAndUpdateDTO("private", body);
 		return result;
 	}
 	
@@ -51,13 +51,13 @@ public class DemoProfileFactory {
 		return result;
 	}
 	
-	private ProfileNewDTO createMoesProfile() {
+	private ProfileCreateAndUpdateDTO createMoesProfile() {
 		final Map<String, Object> body = new HashMap<String, Object>();
 
 		body.put("firstName", "Moe");
 		body.put("company", "Moes Tavern");
 		
-		final ProfileNewDTO result = new ProfileNewDTO("professional", body);
+		final ProfileCreateAndUpdateDTO result = new ProfileCreateAndUpdateDTO("professional", body);
 		return result;
 	}
 

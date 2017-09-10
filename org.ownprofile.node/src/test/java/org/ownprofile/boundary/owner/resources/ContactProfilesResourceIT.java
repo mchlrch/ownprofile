@@ -1,5 +1,8 @@
 package org.ownprofile.boundary.owner.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -8,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.Result;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
@@ -119,6 +123,39 @@ public class ContactProfilesResourceIT {
 		
 		Assert.assertTrue(profileDeleted.isFail());
 		Assert.assertTrue("HTTP 404 expected", profileDeleted.getFail().getMessage().contains("404"));
+	}
+	
+	@Test
+	public void shouldUpdateContactProfile() {
+		final Long profileId = kottansProfile.getId().get();
+		
+		final String profileNameUpdate = "dienstlich";
+		final Map<String, Object> bodyUpdate = new HashMap<>();
+		bodyUpdate.put("rank", "Polizeimajor");
+		final ProfileCreateAndUpdateDTO profileUpdate = new ProfileCreateAndUpdateDTO(profileNameUpdate, bodyUpdate);
+		
+		final Result<Void> profileUpdated = client.updateContactProfile(profileId, profileUpdate);
+		
+		Assert.assertTrue(profileUpdated.isSuccess());
+		final ProfileEntity actual = contactRepoMock.updatedContactProfile;
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(kottansProfile, actual);
+		Assert.assertEquals(profileNameUpdate, kottansProfile.getProfileName());
+		Assert.assertTrue(kottansProfile.getBody().getValueAsJson().contains("Polizeimajor"));
+	}
+	
+	@Test
+	public void updateInexistentContactProfile() {
+		contactRepoMock.deleteContact(kottan);		
+		final Long profileId = kottansProfile.getId().get();
+		
+		final String profileNameUpdate = "dienstlich";
+		final ProfileCreateAndUpdateDTO profileUpdate = new ProfileCreateAndUpdateDTO(profileNameUpdate, null);
+		
+		final Result<Void> profileUpdated = client.updateContactProfile(profileId, profileUpdate);
+		
+		Assert.assertTrue(profileUpdated.isFail());
+		Assert.assertTrue("HTTP 404 expected", profileUpdated.getFail().getMessage().contains("404"));
 	}
 	
 }

@@ -67,7 +67,7 @@ public class ProfileConverter {
 	}
 
 	// TODO: make sure, this method ist ONLY used for creating new profiles !!!
-	public ProfileEntity createEntityForMyProfile(ProfileNewDTO in) {
+	public ProfileEntity createEntityForMyProfile(ProfileCreateAndUpdateDTO in) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
 		final ProfileSource src = ProfileSource.createLocalSource();
 		final ProfileEntity out = ProfileEntity.createMyProfile(src, in.profileName, body);
@@ -75,13 +75,20 @@ public class ProfileConverter {
 	}
 	
 	// TODO: make sure, this method ist ONLY used for creating new profiles !!!
-	public ProfileEntity createEntityForContactProfile(ContactEntity contact, ProfileNewDTO in, ProfileHandle handle, ProfileSource src) {
+	public ProfileEntity createEntityForContactProfile(ContactEntity contact, ProfileCreateAndUpdateDTO in, ProfileHandle handle, ProfileSource src) {
 		final ProfileBody body = serializeBodyToJSON(in.body);
 		final ProfileEntity out = ProfileEntity.createContactProfile(contact, handle, src, in.profileName, body);
 		return out;
 	}
 	
-	public ProfileBody serializeBodyToJSON(Map<String, Object> body) {
+	public ProfileEntity.Struct dto2struct(ProfileCreateAndUpdateDTO in) {
+		final ProfileEntity.Struct out = new ProfileEntity.Struct();
+		out.withName(in.profileName);
+		out.withBody(serializeBodyToJSON(in.body));
+		return out;
+	}
+	
+	private ProfileBody serializeBodyToJSON(Map<String, Object> body) {
 		try {
 			final String bodyAsJson = jsonMapper.writeValueAsString(body);
 			return ProfileBody.createBody(bodyAsJson);

@@ -1,6 +1,5 @@
 package org.ownprofile.boundary.owner.resources;
 
-import static org.ownprofile.boundary.BoundaryConstants.CONTACT_ID;
 import static org.ownprofile.boundary.BoundaryConstants.PROFILE_ID;
 
 import java.util.Optional;
@@ -8,16 +7,18 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.ProfileDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactService;
 
@@ -58,6 +59,19 @@ public class ContactProfilesResource {
 		return profile
 				.map(p -> Response.ok(template.contactProfilePage(p).toString()).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());
+	}
+	
+	@PUT
+	@Path("/{" + PROFILE_ID + "}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateContactProfile(@PathParam(PROFILE_ID) long id, ProfileCreateAndUpdateDTO updateDto) {
+		final boolean profileUpdated = contactService.updateProfile(id, updateDto);
+		
+		if (profileUpdated) {
+			return Response.ok().build();			
+		} else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 	}
 	
 	@DELETE

@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
 import org.ownprofile.boundary.ProfileDtoOutCompareUtil;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.client.TestOwnerClient;
 import org.ownprofile.profile.entity.IdInitializer;
@@ -97,7 +97,7 @@ public class MyProfilesResourceIT {
 	@Test
 	public void shouldAddNewMyProfile() {
 		final Map<String, Object> body = Collections.emptyMap();
-		final ProfileNewDTO newProfile = new ProfileNewDTO("public", body);
+		final ProfileCreateAndUpdateDTO newProfile = new ProfileCreateAndUpdateDTO("public", body);
 
 		final URI location = client.addNewMyProfile(newProfile);
 

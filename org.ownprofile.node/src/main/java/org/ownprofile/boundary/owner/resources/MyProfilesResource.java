@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.MyProfileService;
 
@@ -76,7 +76,7 @@ public class MyProfilesResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addNewMyProfile(ProfileNewDTO profile) {
+	public Response addNewMyProfile(ProfileCreateAndUpdateDTO profile) {
 		final Long profileId = pService.addNewMyProfile(profile);
 		final URI location = uriBuilders.owner().resolveMyProfileURI(profileId);
 		return Response.created(location).build();

@@ -32,6 +32,15 @@ public class ContactConverterTest {
 	}
 	
 	@Test
+	public void shouldCreateStructFromDto() throws Exception {
+		final ContactCreateAndUpdateDTO dto = new ContactCreateAndUpdateDTO("kottan");
+
+		final ContactEntity.Struct target = converter.dto2struct(dto);
+		
+		Assert.assertNotNull(target);
+	}
+	
+	@Test
 	public void shouldConvertEntity2Dto() throws Exception {
 		final ContactEntity entity = new TestContactEntity(42L, new ContactEntity.Builder()
 				.withPetname("kottan+"));

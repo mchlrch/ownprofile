@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
+import org.ownprofile.profile.entity.ProfileEntity.Struct;
 
 import com.google.inject.Provider;
 
@@ -47,8 +47,8 @@ public class ContactRepositoryJPA implements ContactRepository {
 	}
 	
 	@Override
-	public void updateContact(ContactEntity contact, ContactCreateAndUpdateDTO updateDto) {
-		contact.updateFromDto(updateDto);
+	public void updateContact(ContactEntity contact, ContactEntity.Struct update) {
+		contact.updateFromStruct(update);
 	}
 	
 	// -------------------------------
@@ -69,6 +69,11 @@ public class ContactRepositoryJPA implements ContactRepository {
 	@Override
 	public void addContactProfile(ProfileEntity profile) {
 		em.get().persist(profile);
+	}
+	
+	@Override
+	public void updateProfile(ProfileEntity profile, Struct update) {
+		profile.updateFromStruct(update);
 	}
 	
 	@Override

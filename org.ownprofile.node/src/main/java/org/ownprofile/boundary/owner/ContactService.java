@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.entity.ContactEntity;
 import org.ownprofile.profile.entity.ContactRepository;
@@ -76,7 +76,10 @@ public class ContactService {
 	@Transactional
 	public boolean updateContact(long id, ContactCreateAndUpdateDTO updateDto) {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(id);
-		contact.ifPresent(c -> contactRepo.updateContact(c, updateDto));
+		
+		final ContactEntity.Struct update = contactConverter.dto2struct(updateDto); 
+		
+		contact.ifPresent(c -> contactRepo.updateContact(c, update));
 		return contact.isPresent();
 	}
 
@@ -90,7 +93,7 @@ public class ContactService {
 	}
 
 	@Transactional
-	public Optional<Long> addNewContactProfile(long contactId, ProfileNewDTO profile) {
+	public Optional<Long> addNewContactProfile(long contactId, ProfileCreateAndUpdateDTO profile) {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(contactId);
 
 		if (contact.isPresent()) {
@@ -107,6 +110,16 @@ public class ContactService {
 		} else {
 			return Optional.empty();
 		}
+	}
+	
+	@Transactional
+	public boolean updateProfile(long id, ProfileCreateAndUpdateDTO updateDto) {
+		final Optional<ProfileEntity> profile = contactRepo.getContactProfileById(id);
+		
+		final ProfileEntity.Struct update = profileConverter.dto2struct(updateDto); 
+		
+		profile.ifPresent(p -> contactRepo.updateProfile(p, update));
+		return profile.isPresent();
 	}
 	
 	@Transactional

@@ -11,9 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.ownprofile.boundary.ProfileConverter;
-import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
 
 @Entity
 public class ProfileEntity {
@@ -45,7 +42,7 @@ public class ProfileEntity {
 			.withName(profileName)
 			.withBody(body);
 		
-		final ProfileEntity result = b.create();
+		final ProfileEntity result = b.build();
 		return result;
 	}
 	
@@ -56,7 +53,7 @@ public class ProfileEntity {
 				.withName(profileName)
 				.withBody(body);
 			
-		final ProfileEntity result = b.create();
+		final ProfileEntity result = b.build();
 		return result;
 	}
 	
@@ -109,10 +106,9 @@ public class ProfileEntity {
 		return this.body;
 	}
 	
-	// TODO: remove/resolve dependency to ProfileConverter
-	protected void updateFromDto(ProfileDTO dto, ProfileConverter converter) {
-		this.profileName = dto.header.profileName;
-		this.body = converter.serializeBodyToJSON(dto.body);
+	protected void updateFromStruct(Struct update) {
+		this.profileName = update.profileName;
+		this.body = update.body;
 	}
 
 	@Override
@@ -121,52 +117,62 @@ public class ProfileEntity {
 	}
 	
 	// ----------------------------------------
-	public static class Builder extends EntityBuilder<ProfileEntity> {
+	public static abstract class AbstractStruct<T extends AbstractStruct<T>> {
 
-		private ContactEntity contact; 
-		private ProfileHandle handle;
-		private ProfileSource source;
-		private String profileName;
-		private ProfileBody body;
-		
-		// TODO: remove/resolve dependency to ProfileConverter
-		public Builder fromDto(ProfileNewDTO dto, ProfileConverter converter) {
-			withName(dto.profileName);
-			withBody(converter.serializeBodyToJSON(dto.body));
-			return this;
-		}
-		
-		public Builder withContact(ContactEntity contact) {
+		protected ContactEntity contact;
+		protected ProfileHandle handle;
+		protected ProfileSource source;
+		protected String profileName;
+		protected ProfileBody body;
+
+		protected abstract T self();
+
+		public T withContact(ContactEntity contact) {
 			this.contact = contact;
+			return self();
+		}
+
+		public T withHandle(ProfileHandle handle) {
+			this.handle = handle;
+			return self();
+		}
+
+		public T withSource(ProfileSource source) {
+			this.source = source;
+			return self();
+		}
+
+		public T withName(String profileName) {
+			this.profileName = profileName;
+			return self();
+		}
+
+		public T withBody(ProfileBody body) {
+			this.body = body;
+			return self();
+		}
+	}
+
+	public static class Struct extends AbstractStruct<Struct> {
+
+		@Override
+		protected Struct self() {
 			return this;
 		}
-		
-		public Builder withHandle(ProfileHandle handle) {
-			this.handle = handle;
+	}
+
+	public static class Builder extends AbstractStruct<Builder> {
+
+		@Override
+		protected Builder self() {
 			return this;
 		}
 
-		public Builder withSource(ProfileSource source) {
-			this.source = source;
-			return this;
-		}
-		
-		public Builder withName(String profileName) {
-			this.profileName = profileName;
-			return this;
-		}
-		
-		public Builder withBody(ProfileBody body) {
-			this.body = body;
-			return this;
-		}
-		
-		@Override
-		protected ProfileEntity create() {
+		public ProfileEntity build() {
 			final ProfileEntity result = new ProfileEntity(this);
 			return result;
 		}
-		
+
 	}
 
 }

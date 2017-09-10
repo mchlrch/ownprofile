@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 
 @Entity
 public class ContactEntity {
@@ -54,8 +53,8 @@ public class ContactEntity {
 		this.profiles.add(profile);
 	}
 	
-	protected void updateFromDto(ContactCreateAndUpdateDTO dto) {
-		this.petname = dto.petname;
+	protected void updateFromStruct(Struct update) {
+		this.petname = update.petname;
 	}
 	
 	@Override
@@ -64,25 +63,38 @@ public class ContactEntity {
 	}
 	
 	// ----------------------------------------
-	public static class Builder extends EntityBuilder<ContactEntity> {
+	public static abstract class AbstractStruct<T extends AbstractStruct<T>> {
+		protected String petname;
 		
-		private String petname;
+		protected abstract T self();
+
+		public T withPetname(String petname) {
+			this.petname = petname;
+			return self();
+		}
 		
-        public Builder fromDto(ContactCreateAndUpdateDTO dto) {
-        	withPetname(dto.petname);
-        	return this;        	
-        }
-        
-        public Builder withPetname(String petname) {
-            this.petname = petname;
-            return this;
-        }
-        
-        @Override
-        protected ContactEntity create() {
+	}
+	
+	public static class Struct extends AbstractStruct<Struct> {
+		
+		@Override
+		protected Struct self() {
+			return this;
+		}
+	}
+	
+	public static class Builder extends AbstractStruct<Builder> {
+		
+		@Override
+		protected Builder self() {
+			return this;
+		}
+		
+        public ContactEntity build() {
         	final ContactEntity result = new ContactEntity(this);
         	return result;
         }
+        
 	}
 	
 }

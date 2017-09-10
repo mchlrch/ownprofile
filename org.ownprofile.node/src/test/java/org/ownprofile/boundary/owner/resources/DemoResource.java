@@ -16,7 +16,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.DemoProfileFactory;
 import org.ownprofile.boundary.ProfileConverter;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.ContactConverter;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.OwnerUriBuilder;
@@ -47,7 +47,7 @@ public class DemoResource {
 	@Inject
 	private ContactConverter contactConverter;
 
-	private void addNewMyProfile(ProfileNewDTO profile) {
+	private void addNewMyProfile(ProfileCreateAndUpdateDTO profile) {
 		final ProfileEntity newProfile = this.profileConverter.createEntityForMyProfile(profile);
 		this.profileService.addNewMyProfile(newProfile);
 	}
@@ -55,7 +55,7 @@ public class DemoResource {
 	@POST
 	@Path("/init-myprofiles")
 	public Response initDemoProfiles(@Context UriInfo uriInfo) {
-		for (ProfileNewDTO p : this.demoProfileFactory.createMyProfiles()) {
+		for (ProfileCreateAndUpdateDTO p : this.demoProfileFactory.createMyProfiles()) {
 			this.addNewMyProfile(p);
 		}
 
@@ -67,13 +67,13 @@ public class DemoResource {
 	@POST
 	@Path("/init-addressbook")
 	public Response initAddressbook(@Context UriInfo uriInfo) {
-		final Multimap<ContactCreateAndUpdateDTO, ProfileNewDTO> contactProfiles = this.demoProfileFactory.createContactProfiles(); 
+		final Multimap<ContactCreateAndUpdateDTO, ProfileCreateAndUpdateDTO> contactProfiles = this.demoProfileFactory.createContactProfiles(); 
 		
 		for (ContactCreateAndUpdateDTO contact : contactProfiles.keySet()) {
 			final ContactEntity newContact = this.contactConverter.createEntity(contact);		
 			this.addressbookService.addNewContact(newContact);
 			
-			for (ProfileNewDTO p : contactProfiles.get(contact)) {
+			for (ProfileCreateAndUpdateDTO p : contactProfiles.get(contact)) {
 				final ProfileSource profileSource = ProfileSource.createLocalSource();
 				final ProfileHandle handle = ProfileHandle.createRandomHandle();
 				

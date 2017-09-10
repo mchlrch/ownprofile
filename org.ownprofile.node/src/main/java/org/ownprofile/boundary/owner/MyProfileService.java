@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import org.ownprofile.boundary.ProfileConverter;
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.profile.entity.ProfileEntity;
 import org.ownprofile.profile.entity.MyProfileRepository;
@@ -53,7 +53,7 @@ public class MyProfileService {
 	}
 
 	@Transactional
-	public Long addNewMyProfile(ProfileNewDTO profile) {
+	public Long addNewMyProfile(ProfileCreateAndUpdateDTO profile) {
 		final ProfileEntity newProfile = converter.createEntityForMyProfile(profile);
 		profileRepo.addMyProfile(newProfile);
 		return newProfile.getId().get();

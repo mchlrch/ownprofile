@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.SystemTestSession;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
@@ -74,7 +74,7 @@ public class BlackboxIT {
 	public void shouldCreateAndGetMyProfile() {
 		final List<ProfileDTO> prevProfiles = client.getMyProfiles();
 
-		final ProfileNewDTO newProfile = this.createProfileOfHomerSimpson();
+		final ProfileCreateAndUpdateDTO newProfile = this.createProfileOfHomerSimpson();
 		final URI newProfileLocation = client.addNewMyProfile(newProfile);
 
 		// fetch Profile by ID
@@ -91,7 +91,7 @@ public class BlackboxIT {
 
 	// ---------------------------------------------------
 
-	private ProfileNewDTO createProfileOfHomerSimpson() {
+	private ProfileCreateAndUpdateDTO createProfileOfHomerSimpson() {
 		final Map<String, Object> body = new HashMap<String, Object>();
 
 		body.put("firstName", "Homer");
@@ -103,7 +103,7 @@ public class BlackboxIT {
 
 		body.put("address", address);
 
-		final ProfileNewDTO result = new ProfileNewDTO("private", body);
+		final ProfileCreateAndUpdateDTO result = new ProfileCreateAndUpdateDTO("private", body);
 		return result;
 	}
 
@@ -115,7 +115,7 @@ public class BlackboxIT {
 		Assert.assertEquals(expected.petname, actual.header.petname);
 	}
 
-	private static void assertContentIsEqual(ProfileNewDTO expected, ProfileDTO actual) {
+	private static void assertContentIsEqual(ProfileCreateAndUpdateDTO expected, ProfileDTO actual) {
 		Assert.assertNotNull(expected);
 		Assert.assertNotNull(actual);
 

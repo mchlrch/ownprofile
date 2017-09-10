@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.BoundaryConstants;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
@@ -198,7 +198,7 @@ public class ContactsResource {
 	@POST
 	@Path("/{" + CONTACT_ID + "}/profiles")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addNewContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileNewDTO profile) {
+	public Response addNewContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileCreateAndUpdateDTO profile) {
 		final Optional<Long> profileId = contactService.addNewContactProfile(contactId, profile);
 		return profileId
 				.map(pid -> Response.created(uriBuilders.owner().resolveContactProfileURI(pid)).build())

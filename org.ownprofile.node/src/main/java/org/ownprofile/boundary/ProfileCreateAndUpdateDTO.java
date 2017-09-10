@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ P_PROFILENAME, P_BODY })
-public class ProfileNewDTO {
+public class ProfileCreateAndUpdateDTO {
 
 	@JsonProperty(P_PROFILENAME)
 	public final String profileName;
@@ -18,7 +18,7 @@ public class ProfileNewDTO {
 	@JsonProperty(P_BODY)
 	public final Map<String, Object> body;
 
-	public ProfileNewDTO(@JsonProperty(P_PROFILENAME) String profileName, @JsonProperty(P_BODY) Map<String, Object> body) {
+	public ProfileCreateAndUpdateDTO(@JsonProperty(P_PROFILENAME) String profileName, @JsonProperty(P_BODY) Map<String, Object> body) {
 		this.profileName = profileName;
 
 		if (body != null) {

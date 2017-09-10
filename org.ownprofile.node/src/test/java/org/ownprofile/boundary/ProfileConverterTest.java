@@ -27,7 +27,7 @@ public class ProfileConverterTest {
 		final Map<String, Object> body = new HashMap<String, Object>();
 		body.put("firstName", "adolf");
 		body.put("lastName", "kottan");
-		final ProfileNewDTO dto = new ProfileNewDTO("private", body);
+		final ProfileCreateAndUpdateDTO dto = new ProfileCreateAndUpdateDTO("private", body);
 
 		final ProfileEntity target = converter.createEntityForMyProfile(dto);
 		
@@ -39,7 +39,7 @@ public class ProfileConverterTest {
 		final Map<String, Object> body = new HashMap<String, Object>();
 		body.put("firstName", "adolf");
 		body.put("lastName", "kottan");
-		final ProfileNewDTO dto = new ProfileNewDTO("private", body);
+		final ProfileCreateAndUpdateDTO dto = new ProfileCreateAndUpdateDTO("private", body);
 
 		final TestContactEntity contact = new TestContactEntity(42L, new ContactEntity.Builder()
 				.withPetname("kottan"));
@@ -49,6 +49,18 @@ public class ProfileConverterTest {
 		final ProfileEntity target = converter.createEntityForContactProfile(contact, dto, pHandle, pSource);
 		
 		assertCorrectConversion(dto, Optional.of(contact), Optional.of(pHandle), Optional.of(pSource), target);
+	}
+	
+	@Test
+	public void shouldCreateStructFromDto() throws Exception {
+		final Map<String, Object> body = new HashMap<String, Object>();
+		body.put("firstName", "adolf");
+		body.put("lastName", "kottan");
+		final ProfileCreateAndUpdateDTO dto = new ProfileCreateAndUpdateDTO("private", body);
+		
+		final ProfileEntity.Struct target = converter.dto2struct(dto);
+		
+		Assert.assertNotNull(target);
 	}
 
 	@Test
@@ -92,11 +104,11 @@ public class ProfileConverterTest {
 	}
 	
 	
-	private void assertCorrectConversion(ProfileNewDTO dto, ProfileEntity target) throws Exception {
+	private void assertCorrectConversion(ProfileCreateAndUpdateDTO dto, ProfileEntity target) throws Exception {
 		assertCorrectConversion(dto, Optional.empty(), Optional.empty(), Optional.empty(), target);
 	}
 	
-	private void assertCorrectConversion(ProfileNewDTO dto, Optional<ContactEntity> contact, Optional<ProfileHandle> pHandle, Optional<ProfileSource> pSource, ProfileEntity target) throws Exception {
+	private void assertCorrectConversion(ProfileCreateAndUpdateDTO dto, Optional<ContactEntity> contact, Optional<ProfileHandle> pHandle, Optional<ProfileSource> pSource, ProfileEntity target) throws Exception {
 		Assert.assertNotNull(target);		
 		Assert.assertEquals(dto.profileName, target.getProfileName());
 		

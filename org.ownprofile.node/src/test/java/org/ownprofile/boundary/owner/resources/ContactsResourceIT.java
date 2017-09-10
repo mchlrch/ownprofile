@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.ServiceIntegrationTestSession;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
@@ -184,7 +184,7 @@ public class ContactsResourceIT {
 		Assert.assertNotNull(contactId);
 		
 		final Map<String, Object> body = Collections.emptyMap();
-		final ProfileNewDTO newProfile = new ProfileNewDTO("work", body);
+		final ProfileCreateAndUpdateDTO newProfile = new ProfileCreateAndUpdateDTO("work", body);
 
 		final URI location = client.addNewContactProfile(contactId, newProfile);
 

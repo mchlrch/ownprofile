@@ -22,7 +22,7 @@ public class JsonDeSerializationTest {
 	@Test
 	public void shouldDeSerializeProfileNewDTO() throws Exception {
 		final String expected = readJsonForThisMethod();
-		assertDeSerializationRoundtrip(ProfileNewDTO.class, expected);
+		assertDeSerializationRoundtrip(ProfileCreateAndUpdateDTO.class, expected);
 	}
 
 	@Test

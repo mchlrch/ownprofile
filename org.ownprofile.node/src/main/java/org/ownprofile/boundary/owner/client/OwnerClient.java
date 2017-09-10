@@ -8,7 +8,7 @@ import javax.ws.rs.core.GenericType;
 
 import org.ownprofile.boundary.AbstractClient;
 import org.ownprofile.boundary.ProfileDTO;
-import org.ownprofile.boundary.ProfileNewDTO;
+import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactDTO;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
@@ -41,9 +41,9 @@ public class OwnerClient extends AbstractClient {
 		return doPost(contact, uri);
 	}
 	
-	public Result<Void> updateContact(long contactId, ContactCreateAndUpdateDTO contact) {
+	public Result<Void> updateContact(long contactId, ContactCreateAndUpdateDTO contactUpdate) {
 		final URI uri = this.ownerUriBuilder.resolveContactURI(contactId);
-		return doPut(contact, uri);
+		return doPut(contactUpdate, uri);
 	}
 	
 	public Result<Void> deleteContact(long contactId) {
@@ -58,7 +58,7 @@ public class OwnerClient extends AbstractClient {
 		return doGet(ProfileDTO.class, uri);
 	}
 
-	public URI addNewContactProfile(long contactId, ProfileNewDTO newProfile) {
+	public URI addNewContactProfile(long contactId, ProfileCreateAndUpdateDTO newProfile) {
 		final URI uri = this.ownerUriBuilder.resolveAddNewContactProfileURI(contactId);
 		return doPost(newProfile, uri);
 	}
@@ -66,6 +66,11 @@ public class OwnerClient extends AbstractClient {
 	public Result<Void> deleteContactProfile(long profileId) {
 		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(profileId);
 		return doDelete(uri);
+	}
+	
+	public Result<Void> updateContactProfile(long profileId, ProfileCreateAndUpdateDTO profileUpdate) {
+		final URI uri = this.ownerUriBuilder.resolveContactProfileURI(profileId);
+		return doPut(profileUpdate, uri);
 	}
 	
 	// -------------------------------
@@ -80,7 +85,7 @@ public class OwnerClient extends AbstractClient {
 		return doGet(ProfileDTO.class, uri);
 	}
 	
-	public URI addNewMyProfile(ProfileNewDTO newProfile) {
+	public URI addNewMyProfile(ProfileCreateAndUpdateDTO newProfile) {
 		final URI uri = this.ownerUriBuilder.getMyProfileURI();
 		return doPost(newProfile, uri);
 	}
