@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.ownprofile.boundary.BoundaryConstants;
 import org.ownprofile.boundary.ProfileCreateAndUpdateDTO;
+import org.ownprofile.boundary.ProfileHeaderDTO;
 import org.ownprofile.boundary.UriBuilders;
 import org.ownprofile.boundary.owner.ContactAggregateDTO;
 import org.ownprofile.boundary.owner.ContactCreateAndUpdateDTO;
@@ -198,11 +199,29 @@ public class ContactsResource {
 	@POST
 	@Path("/{" + CONTACT_ID + "}/profiles")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addNewContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileCreateAndUpdateDTO profile) {
+	public Response addContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileCreateAndUpdateDTO profile) {
 		final Optional<Long> profileId = contactService.addNewContactProfile(contactId, profile);
 		return profileId
 				.map(pid -> Response.created(uriBuilders.owner().resolveContactProfileURI(pid)).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());
+	}
+	
+	@GET
+	@Path("/{" + CONTACT_ID + "}/profiles/addContactProfileHtmlForm")
+	@Produces(MediaType.TEXT_HTML)
+	public String addContactProfileHtmlForm(@PathParam(CONTACT_ID) long contactId) {
+		return template.addContactProfileForm(contactId).toString();
+	}
+	
+	@POST
+	@Path("/{" + CONTACT_ID + "}/profiles")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addContactProfileFormSubmit(@PathParam(CONTACT_ID) long contactId, MultivaluedMap<String, String> formParams) {
+		final String profileName = formParams.getFirst(ProfileHeaderDTO.P_PROFILENAME);
+		final ProfileCreateAndUpdateDTO in = new ProfileCreateAndUpdateDTO(profileName, null);
+
+		Response r = addContactProfile(contactId, in);
+		return Response.seeOther(r.getLocation()).build();
 	}
 
 }

@@ -59,7 +59,7 @@ public class OwnerClient extends AbstractClient {
 	}
 
 	public URI addNewContactProfile(long contactId, ProfileCreateAndUpdateDTO newProfile) {
-		final URI uri = this.ownerUriBuilder.resolveAddNewContactProfileURI(contactId);
+		final URI uri = this.ownerUriBuilder.resolveContactProfilesCollectionURI(contactId);
 		return doPost(newProfile, uri);
 	}
 	

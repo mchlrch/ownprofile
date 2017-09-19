@@ -50,11 +50,6 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		final UriBuilder builder = createUriBuilder(ContactsResource.class, "getContactById");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
-
-	public URI resolveAddNewContactProfileURI(Long contactId) {
-		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addNewContactProfile");
-		return builder.resolveTemplate(CONTACT_ID, contactId).build();
-	}
 	
 	public URI getAddNewContactHtmlFormURI() {
 		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addNewContactHtmlForm");
@@ -63,6 +58,16 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 	
 	public URI resolveEditContactHtmlFormURI(Long contactId) {
 		final UriBuilder builder = createUriBuilder(ContactsResource.class, "editContactHtmlForm");
+		return builder.resolveTemplate(CONTACT_ID, contactId).build();
+	}
+
+	public URI resolveContactProfilesCollectionURI(Long contactId) {
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addContactProfile");
+		return builder.resolveTemplate(CONTACT_ID, contactId).build();
+	}
+	
+	public URI resolveAddContactProfileHtmlFormURI(Long contactId) {
+		final UriBuilder builder = createUriBuilder(ContactsResource.class, "addContactProfileHtmlForm");
 		return builder.resolveTemplate(CONTACT_ID, contactId).build();
 	}
 

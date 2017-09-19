@@ -12,6 +12,7 @@ import org.ownprofile.boundary.owner.ContactAggregateDTO
 import org.ownprofile.boundary.owner.ContactDTO
 import org.ownprofile.boundary.owner.ContactHeaderDTO
 import org.ownprofile.boundary.BoundaryConstants
+import org.ownprofile.boundary.ProfileHeaderDTO
 
 class ContactsTemplate {
 
@@ -36,6 +37,7 @@ class ContactsTemplate {
 		'''
 			«deleteAndEditButtons(contact.header.id)»
 			<hr/>
+			«uriBuilders.owner.resolveAddContactProfileHtmlFormURI(contact.header.id).link("add profile")»
 			«contact.profiles.map [ profile |
 				'''
 					<hr/>
@@ -58,6 +60,21 @@ class ContactsTemplate {
 			    
 			    «ContactHeaderDTO.P_PETNAME.toFirstUpper»:<br>
 			    <input type="text" name="«ContactHeaderDTO.P_PETNAME»" size="64" value="petname"><br><br>
+			    
+			    <input type="submit" value="Submit">
+			  </fieldset>
+			</form>
+		'''.html(Section.Contacts.title, pageHeader)
+	}
+	
+	def addContactProfileForm(long contactId) {
+		'''
+			<form action="«uriBuilders.owner.resolveContactProfilesCollectionURI(contactId)»" method="post">
+			  <fieldset>
+			    <legend>Add New Profile:</legend>
+			    
+			    «ProfileHeaderDTO.P_PROFILENAME.toFirstUpper»:<br>
+			    <input type="text" name="«ProfileHeaderDTO.P_PROFILENAME»" size="64" value="profilename"><br><br>
 			    
 			    <input type="submit" value="Submit">
 			  </fieldset>
