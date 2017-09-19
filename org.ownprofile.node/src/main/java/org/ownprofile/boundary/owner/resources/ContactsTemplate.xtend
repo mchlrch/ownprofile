@@ -23,7 +23,7 @@ class ContactsTemplate {
 	
 	def contactsOverviewPage(List<ContactDTO> contacts) {
 		'''
-			«uriBuilders.owner.addNewContactHtmlFormURI.link("add contact")»
+			«uriBuilders.owner.addContactHtmlFormURI.link("add contact")»
 			«contacts.map [ contact |
 				'''
 					«contact.asLink»
@@ -52,7 +52,7 @@ class ContactsTemplate {
 		profile.section.html(profile.asTitle, pageHeader)
 	}
 	
-	def addNewContactForm() {
+	def addContactForm() {
 		'''
 			<form action="«Section.Contacts.getLocation(uriBuilders.owner)»" method="post">
 			  <fieldset>

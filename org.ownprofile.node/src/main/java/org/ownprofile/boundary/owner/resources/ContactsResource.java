@@ -84,25 +84,25 @@ public class ContactsResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addNewContact(ContactCreateAndUpdateDTO contact) {
-		final Long contactId = contactService.addNewContact(contact);
+	public Response addContact(ContactCreateAndUpdateDTO contact) {
+		final Long contactId = contactService.addContact(contact);
 		final URI location = uriBuilders.owner().resolveContactURI(contactId);
 		return Response.created(location).build();
 	}
 
 	@GET
-	@Path("addNewContactHtmlForm")
+	@Path("addContactHtmlForm")
 	@Produces(MediaType.TEXT_HTML)
-	public String addNewContactHtmlForm() {
-		return template.addNewContactForm().toString();
+	public String addContactHtmlForm() {
+		return template.addContactForm().toString();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response addNewContactFormSubmit(MultivaluedMap<String, String> formParams) {
+	public Response addContactFormSubmit(MultivaluedMap<String, String> formParams) {
 		ContactCreateAndUpdateDTO in = new ContactCreateAndUpdateDTO(formParams.getFirst(ContactHeaderDTO.P_PETNAME));
 
-		Response r = addNewContact(in);
+		Response r = addContact(in);
 		return Response.seeOther(r.getLocation()).build();
 	}
 	
@@ -200,7 +200,7 @@ public class ContactsResource {
 	@Path("/{" + CONTACT_ID + "}/profiles")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addContactProfile(@PathParam(CONTACT_ID) long contactId, ProfileCreateAndUpdateDTO profile) {
-		final Optional<Long> profileId = contactService.addNewContactProfile(contactId, profile);
+		final Optional<Long> profileId = contactService.addContactProfile(contactId, profile);
 		return profileId
 				.map(pid -> Response.created(uriBuilders.owner().resolveContactProfileURI(pid)).build())
 				.orElse(Response.status(Status.NOT_FOUND).build());

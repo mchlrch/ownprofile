@@ -60,7 +60,7 @@ public class ContactService {
 	}
 
 	@Transactional
-	public Long addNewContact(ContactCreateAndUpdateDTO contact) {
+	public Long addContact(ContactCreateAndUpdateDTO contact) {
 		final ContactEntity newContact = contactConverter.createEntity(contact);
 		contactRepo.addContact(newContact);
 		return newContact.getId().get();
@@ -93,7 +93,7 @@ public class ContactService {
 	}
 
 	@Transactional
-	public Optional<Long> addNewContactProfile(long contactId, ProfileCreateAndUpdateDTO profile) {
+	public Optional<Long> addContactProfile(long contactId, ProfileCreateAndUpdateDTO profile) {
 		final Optional<ContactEntity> contact = contactRepo.getContactById(contactId);
 
 		if (contact.isPresent()) {
