@@ -64,11 +64,11 @@ public class ProfileHeaderDTO {
 				null);
 	}
 	
-	public static ProfileHeaderDTO createContactProfile(ProfileSource source, ProfileHandle handle, URI href, String profileName, ContactHeaderDTO container) {
+	public static ProfileHeaderDTO createContactProfile(Long id, ProfileSource source, ProfileHandle handle, URI href, String profileName, ContactHeaderDTO container) {
 		return new ProfileHeaderDTO(
 				ProfileType.Peer,
 				source,
-				null,
+				checkNotNull(id),
 				checkNotNull(handle.asString()),
 				checkNotNull(href),
 				profileName,

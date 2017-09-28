@@ -1,7 +1,6 @@
 package org.ownprofile.boundary;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
 
 import org.ownprofile.boundary.owner.ContactHeaderConverter;
@@ -36,10 +35,11 @@ public class ProfileConverter {
 	
 	public ProfileHeaderDTO convertContactProfileToHeaderView(ProfileEntity in, OwnerUriBuilder uriBuilder) {
 		final ContactEntity contact = in.getContact().get();
-		final URI href = uriBuilder.resolveContactProfileURI(in.getId().get());
+		final long profileId = in.getId().get();
+		final URI href = uriBuilder.resolveContactProfileURI(profileId);
 		final ContactHeaderDTO container = contactHeaderConverter.convertToHeaderView(contact, uriBuilder);
 		final org.ownprofile.boundary.ProfileSource source = in.getSource().isRemote() ? org.ownprofile.boundary.ProfileSource.Remote : org.ownprofile.boundary.ProfileSource.Local;
-		final ProfileHeaderDTO out = ProfileHeaderDTO.createContactProfile(source, in.getHandle().get(), href, in.getProfileName(), container);
+		final ProfileHeaderDTO out = ProfileHeaderDTO.createContactProfile(profileId, source, in.getHandle().get(), href, in.getProfileName(), container);
 		return out;
 	}
 			
@@ -54,15 +54,10 @@ public class ProfileConverter {
 	}
 		
 	private ProfileDTO convertToView(ProfileEntity in, ProfileHeaderDTO header) {
-		Map<String, Object> body = Collections.emptyMap();
-		try {
-			body = jsonMapper.readValue(in.getBody().getValueAsJson(), new TypeReference<Map<String, Object>>() {
-			});
-		} catch (Exception ex) {
-			// TODO:
-			throw new RuntimeException(ex);
-		}
+		final String bodyAsJson = in.getBody().getValueAsJson();
+		final Map<String, Object> body = json2map(bodyAsJson);
 		final ProfileDTO out = new ProfileDTO(header, body);
+		out.bodyAsJson = bodyAsJson;
 		return out;
 	}
 
@@ -89,14 +84,31 @@ public class ProfileConverter {
 	}
 	
 	private ProfileBody serializeBodyToJSON(Map<String, Object> body) {
+		final String bodyAsJson = map2json(body);
+		return ProfileBody.createBody(bodyAsJson);
+	}
+	
+	public Map<String, Object> json2map(String json) {
 		try {
-			final String bodyAsJson = jsonMapper.writeValueAsString(body);
-			return ProfileBody.createBody(bodyAsJson);
-			
+			final Map<String, Object> result = jsonMapper.readValue(json, new TypeReference<Map<String, Object>>() {
+			});
+			return result;
+
 		} catch (Exception ex) {
 			// TODO:
 			throw new RuntimeException(ex);
-		}		
+		}
+	}
+
+	public String map2json(Map<String, Object> map) {
+		try {
+			final String result = jsonMapper.writeValueAsString(map);
+			return result;
+
+		} catch (Exception ex) {
+			// TODO:
+			throw new RuntimeException(ex);
+		}
 	}
 	
 }

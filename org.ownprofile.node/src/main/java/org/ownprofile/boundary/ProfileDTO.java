@@ -27,6 +27,10 @@ public class ProfileDTO {
 	
 	@JsonProperty(P_BODY)
 	public final Map<String, Object> body;
+	
+	// TODO: remove this workaround
+	// JSON representation of the body. a workaround used for the edit-contactProfile-form
+	public transient String bodyAsJson;
 
 	@SuppressWarnings("unused")
 	private ProfileDTO() {

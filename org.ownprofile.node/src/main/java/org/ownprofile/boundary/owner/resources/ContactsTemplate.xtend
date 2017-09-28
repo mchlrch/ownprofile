@@ -35,13 +35,14 @@ class ContactsTemplate {
 
 	def contactPage(ContactAggregateDTO contact) {
 		'''
-			«deleteAndEditButtons(contact.header.id)»
+			«contactDeleteAndEditButtons(contact.header.id)»
 			<hr/>
 			«uriBuilders.owner.resolveAddContactProfileHtmlFormURI(contact.header.id).link("add profile")»
 			«contact.profiles.map [ profile |
 				'''
 					<hr/>
 					«profile.asLinkedTitle.h2»
+					«contactProfileDeleteAndEditButtons(profile.header.id)»
 					«profile.section»
 				'''
 			].concat»
@@ -49,7 +50,11 @@ class ContactsTemplate {
 	}
 
 	def contactProfilePage(ProfileDTO profile) {
-		profile.section.html(profile.asTitle, pageHeader)
+		'''
+			«contactProfileDeleteAndEditButtons(profile.header.id)»
+			<hr/>
+			«profile.section»
+		'''.html(profile.asTitle, pageHeader)
 	}
 	
 	def addContactForm() {
@@ -99,12 +104,43 @@ class ContactsTemplate {
 		'''.html(contact.asTitle, pageHeader)
 	}
 	
-	def deleteAndEditButtons(long contactId) {
+	def editContactProfileForm(ProfileDTO profile) {
+		'''
+			<form action="«uriBuilders.owner.resolveContactProfileURI(profile.header.id)»" method="post">
+			  <fieldset>
+			    <legend>Edit Contact Profile:</legend>
+			    
+			    «ProfileHeaderDTO.P_PROFILENAME.toFirstUpper»:<br>
+			    <input type="text" name="«ProfileHeaderDTO.P_PROFILENAME»" size="64" value="«profile.header.profileName»"><br><br>
+			    
+			    «ProfileDTO.P_BODY.toFirstUpper»:<br>
+			    <textarea name="«ProfileDTO.P_BODY»" rows="32" cols="80">«profile.bodyAsJson»</textarea><br>
+			    
+			    <input type="submit" name="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_VALUE_SUBMIT_EDIT»">
+			    <input type="submit" name="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_VALUE_CANCEL_EDIT»">
+			    <input type="reset">
+			  </fieldset>
+			</form>
+		'''.html(profile.asTitle, pageHeader)
+	}
+	
+	private def contactDeleteAndEditButtons(long contactId) {
 		'''
 			<form action="«uriBuilders.owner.resolveContactURI(contactId)»" method="post">
 			  <fieldset>
 			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT»">
 			    <input type="submit" name="«BoundaryConstants.ContactForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE»">
+			  </fieldset>
+			</form>
+		'''
+	}
+	
+	private def contactProfileDeleteAndEditButtons(long contactId) {
+		'''
+			<form action="«uriBuilders.owner.resolveContactProfileURI(contactId)»" method="post">
+			  <fieldset>
+			    <input type="submit" name="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_EDIT»">
+			    <input type="submit" name="«BoundaryConstants.ContactProfileForm.ACTION_INPUT_NAME»" value="«BoundaryConstants.ContactForm.ACTION_INPUT_VALUE_DELETE»">
 			  </fieldset>
 			</form>
 		'''

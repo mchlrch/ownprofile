@@ -17,4 +17,12 @@ public class BoundaryConstants {
 		public static final String ACTION_INPUT_VALUE_CANCEL_EDIT = "Cancel";
 	}
 	
+	public static class ContactProfileForm {
+		public static final String ACTION_INPUT_NAME = "buttonAction";
+		public static final String ACTION_INPUT_VALUE_EDIT = "Edit";
+		public static final String ACTION_INPUT_VALUE_DELETE = "Delete";
+		public static final String ACTION_INPUT_VALUE_SUBMIT_EDIT = "Submit";
+		public static final String ACTION_INPUT_VALUE_CANCEL_EDIT = "Cancel";
+	}
+	
 }

@@ -78,6 +78,11 @@ public class OwnerUriBuilder extends AbstractUriBuilder {
 		return builder.resolveTemplate(PROFILE_ID, profileId).build();
 	}
 	
+	public URI resolveEditContactProfileHtmlFormURI(Long profileId) {
+		final UriBuilder builder = createUriBuilder(ContactProfilesResource.class, "editContactProfileHtmlForm");
+		return builder.resolveTemplate(PROFILE_ID, profileId).build();
+	}
+	
 	// --------------------------------------------
 	
 	public URI resolveMyProfileURI(Long profileId) {

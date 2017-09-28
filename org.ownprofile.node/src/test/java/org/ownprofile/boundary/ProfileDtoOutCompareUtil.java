@@ -34,7 +34,8 @@ public class ProfileDtoOutCompareUtil {
 				Assert.assertEquals(expected.getId().get(), actual.id);
 			}
 			public void typeIsPeer() {
-				Assert.assertNull(actual.id);
+//				Assert.assertNull(actual.id);
+				Assert.assertEquals(expected.getId().get(), actual.id);
 			}
 		});
 		

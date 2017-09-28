@@ -147,7 +147,7 @@ public class ContactsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response formSubmit(@PathParam(CONTACT_ID) long id, MultivaluedMap<String, String> formParams) {
 
-		// edit, delete, submit(-edit), cancel(-edit)
+		// edit-button, delete-button, edit-form-submit, edit-form-cancel
 		final String actionValue = formParams.getFirst(BoundaryConstants.ContactForm.ACTION_INPUT_NAME);
 		
 		switch (actionValue) {
