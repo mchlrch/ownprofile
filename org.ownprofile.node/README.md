@@ -1,7 +1,24 @@
-Requires JDK 1.8
+## Build
 
-Build and unit tests:
-  mvn clean test
+Environment:
+* JDK 8
+* Maven 3
 
-Build, unit and integration tests:
-  mvn clean verify
+Build followed by unit and integration tests:
+```sh
+mvn clean verify
+```
+
+
+## Run
+
+```sh
+mvn exec:java -Dexec.mainClass="org.ownprofile.JettyLauncher" -Dexec.args="config.properties"
+```
+
+Logging settings are in `src/main/resources/logback.xml`.
+
+
+## Run multiple nodes
+
+To run multiple nodes in parallel on the same computer, use a separate configuration file for each node. 

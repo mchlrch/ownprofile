@@ -16,25 +16,29 @@ import org.ownprofile.setup.JerseyConfig;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceFilter;
 
 public class JettyLauncher {
 	
-	public static final int DEFAULT_PORT = 9080;
-
 	public static void main(String[] args) throws Exception {
-		final int port = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_PORT;
-		final String persistenceUnit = "ownProfilePU";
+		final Config config = args.length > 0 ? Config.parseConfigFile(args[0]) : Config.parseDefaultConfigFile();
+		config.log();
 		
-		final Injector guiceInjector = GuiceSetup.createInjectorAndSetAsSingleton(new JpaPersistModule(persistenceUnit), new GuiceModule());		
+		final Module[] modules = new Module[] {
+				new JpaPersistModule(config.persistenceUnitName),
+				new GuiceModule()
+		};
+		final Injector guiceInjector = GuiceSetup.createInjectorAndSetAsSingleton(modules);		
 		
-		final Server server = createAndSetupServer(port, guiceInjector);
-		
-		System.out.println("### http://localhost:9080/webapi/contacts");
+		final Server server = createAndSetupServer(config.port, guiceInjector);
 		
 		server.start();
+		System.out.println(String.format("### http://localhost:%d%s/contacts",
+				config.port, BoundaryConstants.API_BASE_PATH));
+
 		server.join();
 	}
 	

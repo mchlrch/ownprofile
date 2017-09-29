@@ -11,3 +11,6 @@ ownprofile limits itself to the handling of (meta-)information concerning the co
 
 ### Status
 incubation, experimental
+
+### Build & Run
+For instructions on how to build and run the software, refer to the [README of org.ownprofile.node](tree/master/org.ownprofile.node). 

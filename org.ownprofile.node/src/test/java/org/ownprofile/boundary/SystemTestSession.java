@@ -3,12 +3,14 @@ package org.ownprofile.boundary;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.ownprofile.Config;
+
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 public class SystemTestSession extends ServiceIntegrationTestSession {
 
-	public static final String persistenceUnit = "ownProfilePU";
+	public static final String persistenceUnit = Config.DEFAULT_PERSISTENCE_UNIT_NAME;
 	
 	public static JpaPersistModule createDefaultJpaModule() {
 		return createJpaModule(persistenceUnit, Optional.of(String.format("jdbc:h2:db/ownprofile_%d", DEFAULT_PORT)));

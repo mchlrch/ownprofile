@@ -11,7 +11,7 @@ import com.google.inject.Module;
 public class DemoLauncher {
 
 	public static void main(String[] args) throws Exception {
-		IntegrationTestConfig config = new IntegrationTestConfig("http", "localhost", JettyLauncher.DEFAULT_PORT);
+		IntegrationTestConfig config = new IntegrationTestConfig("http", "localhost", Config.DEFAULT_PORT);
 
 		Optional<String> jdbcUrl = Optional.of("jdbc:h2:db/ownprofile_demo");
 		Module jpaModule = SystemTestSession.createJpaModule(SystemTestSession.persistenceUnit, jdbcUrl);
